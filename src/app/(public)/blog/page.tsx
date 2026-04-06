@@ -1,0 +1,533 @@
+import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import Container from "@/components/ui/Container";
+import {
+  ArrowRight,
+  BadgeCheck,
+  BookOpen,
+  BriefcaseBusiness,
+  CheckCircle2,
+  Globe,
+  Search,
+  Sparkles,
+  TrendingUp,
+} from "lucide-react";
+
+const siteUrl = "https://mobiz.mu";
+
+type BlogPost = {
+  title: string;
+  excerpt: string;
+  href: string;
+  category: string;
+  imageSrc: string;
+  imageAlt: string;
+  slug: string;
+};
+
+const posts: BlogPost[] = [
+  {
+    title: "How Mauritian businesses can look more premium online",
+    excerpt:
+      "A stronger online presence in Mauritius starts with better website presentation, cleaner branding, and a more executive digital image.",
+    href: "/blog/how-mauritian-businesses-can-look-more-premium-online",
+    slug: "how-mauritian-businesses-can-look-more-premium-online",
+    category: "Premium Presence",
+    imageSrc: "/images/blog/premium-online-presence-mauritius.png",
+    imageAlt:
+      "Premium online presence blog image showing an executive workspace for a Mauritius business",
+  },
+  {
+    title: "Why website design in Mauritius now needs a higher standard",
+    excerpt:
+      "Modern website design in Mauritius should be mobile-first, premium in presentation, and structured to build trust and convert better.",
+    href: "/blog/why-website-design-in-mauritius-now-needs-a-higher-standard",
+    slug: "why-website-design-in-mauritius-now-needs-a-higher-standard",
+    category: "Website Design",
+    imageSrc: "/images/blog/website-design-mauritius.png",
+    imageAlt:
+      "Website design blog image showing premium business website layouts for the Mauritius market",
+  },
+  {
+    title: "Digital marketing in Mauritius: what businesses should focus on first",
+    excerpt:
+      "From SEO in Mauritius to Meta Ads and Google Ads, the right digital marketing priorities can increase visibility and lead quality.",
+    href: "/blog/digital-marketing-in-mauritius-what-businesses-should-focus-on-first",
+    slug: "digital-marketing-in-mauritius-what-businesses-should-focus-on-first",
+    category: "Digital Marketing",
+    imageSrc: "/images/blog/digital-marketing-mauritius.png",
+    imageAlt:
+      "Digital marketing blog image showing executive strategy discussion and campaign planning",
+  },
+  {
+    title: "Accounting and tax support that gives businesses more clarity",
+    excerpt:
+      "Professional bookkeeping, VAT, payroll, and tax returns help Mauritian companies stay compliant while operating with more confidence.",
+    href: "/blog/accounting-and-tax-support-that-gives-businesses-more-clarity",
+    slug: "accounting-and-tax-support-that-gives-businesses-more-clarity",
+    category: "Accounting & Tax",
+    imageSrc: "/images/blog/accounting-tax-mauritius.png",
+    imageAlt:
+      "Accounting and tax blog image showing a premium finance and compliance workspace",
+  },
+  {
+    title: "Why logistics solutions matter for smoother business operations",
+    excerpt:
+      "Businesses in Mauritius benefit from stronger logistics support, cleaner delivery coordination, and more reliable import and export structure.",
+    href: "/blog/why-logistics-solutions-matter-for-smoother-business-operations",
+    slug: "why-logistics-solutions-matter-for-smoother-business-operations",
+    category: "Logistics",
+    imageSrc: "/images/blog/logistics-solutions-mauritius.png",
+    imageAlt:
+      "Logistics blog image showing delivery coordination and business operations support",
+  },
+  {
+    title: "Branding and business solutions that make companies look established",
+    excerpt:
+      "Professional brand assets, proposals, decks, and business plans help businesses in Mauritius present themselves with more authority.",
+    href: "/blog/branding-and-business-solutions-that-make-companies-look-established",
+    slug: "branding-and-business-solutions-that-make-companies-look-established",
+    category: "Branding",
+    imageSrc: "/images/blog/branding-business-solutions-mauritius.png",
+    imageAlt:
+      "Branding and business solutions blog image showing premium planning and consulting materials",
+  },
+  {
+    title: "Why WhatsApp-ready conversion matters for the Mauritius market",
+    excerpt:
+      "Mobile-first user journeys and WhatsApp-friendly contact flows can improve response speed, trust, and local conversion performance.",
+    href: "/blog/why-whatsapp-ready-conversion-matters-for-the-mauritius-market",
+    slug: "why-whatsapp-ready-conversion-matters-for-the-mauritius-market",
+    category: "Conversion",
+    imageSrc: "/images/blog/whatsapp-conversion-mauritius.png",
+    imageAlt:
+      "WhatsApp conversion blog image showing mobile-first communication for a Mauritius business",
+  },
+  {
+    title: "Business growth becomes easier when systems work together",
+    excerpt:
+      "When websites, marketing, accounting, quotations, and operational processes work together, growth becomes more manageable and more scalable.",
+    href: "/blog/business-growth-becomes-easier-when-systems-work-together",
+    slug: "business-growth-becomes-easier-when-systems-work-together",
+    category: "Business Growth",
+    imageSrc: "/images/blog/business-growth-systems-mauritius.png",
+    imageAlt:
+      "Business growth systems blog image showing reports analytics and executive operations planning",
+  },
+];
+
+export const metadata: Metadata = {
+  title:
+    "Blog | Premium Business Insights for Mauritius | MoBiz.mu",
+  description:
+    "Explore the MoBiz.mu blog for premium business insights in Mauritius across website design, SEO, digital marketing, accounting, logistics, branding, WhatsApp conversion, and business growth systems.",
+  keywords: [
+    "MoBiz.mu blog",
+    "Business blog Mauritius",
+    "Website design Mauritius blog",
+    "SEO Mauritius blog",
+    "Digital marketing Mauritius blog",
+    "Accounting Mauritius blog",
+    "Branding Mauritius blog",
+    "Logistics Mauritius blog",
+    "WhatsApp conversion Mauritius",
+  ],
+  alternates: {
+    canonical: `${siteUrl}/blog`,
+  },
+  openGraph: {
+    title: "MoBiz.mu Blog | Premium Business Insights for Mauritius",
+    description:
+      "Read premium business insights for Mauritius across websites, SEO, marketing, branding, accounting, logistics, and growth systems.",
+    url: `${siteUrl}/blog`,
+    siteName: "MoBiz.mu",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "MoBiz.mu Blog | Premium Business Insights for Mauritius",
+    description:
+      "Explore premium articles on websites, marketing, SEO, branding, logistics, and business growth in Mauritius.",
+  },
+};
+
+function BlogJsonLd() {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    name: "MoBiz.mu Blog",
+    url: `${siteUrl}/blog`,
+    description:
+      "Premium business insights for Mauritius across website design, digital marketing, SEO, accounting, logistics, branding, WhatsApp conversion, and growth systems.",
+    blogPost: posts.map((post) => ({
+      "@type": "BlogPosting",
+      headline: post.title,
+      url: `${siteUrl}${post.href}`,
+      image: `${siteUrl}${post.imageSrc}`,
+      description: post.excerpt,
+    })),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  );
+}
+
+function BlogCard({ post }: { post: BlogPost }) {
+  return (
+    <article className="group flex h-full flex-col overflow-hidden rounded-[28px] border border-[#e5eaf2] bg-[linear-gradient(180deg,#ffffff_0%,#fbfcff_100%)] shadow-[0_12px_30px_rgba(7,18,38,0.04)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_42px_rgba(7,18,38,0.08)]">
+      <div className="relative h-[230px] w-full overflow-hidden bg-slate-50 sm:h-[240px]">
+        <Image
+          src={post.imageSrc}
+          alt={post.imageAlt}
+          fill
+          sizes="(max-width: 767px) 100vw, (max-width: 1279px) 50vw, 33vw"
+          className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
+        />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent" />
+      </div>
+
+      <div className="flex flex-1 flex-col p-5 sm:p-6">
+        <div
+          className="inline-flex w-fit rounded-full border border-[#ead9a8] bg-[#fffdf7] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8b6a18] sm:text-[11px]"
+          style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
+        >
+          {post.category}
+        </div>
+
+        <h2
+          className="mt-4 text-balance text-[1.25rem] font-semibold tracking-tight text-[#071226] sm:text-[1.42rem]"
+          style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
+        >
+          {post.title}
+        </h2>
+
+        <p
+          className="mt-3 flex-1 text-[14px] leading-7 text-slate-600"
+          style={{ fontFamily: '"Poppins", sans-serif' }}
+        >
+          {post.excerpt}
+        </p>
+
+        <Link
+          href={post.href}
+          className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#071226] transition hover:text-[#8b6a18]"
+          style={{ fontFamily: '"Poppins", "Quicksand", sans-serif' }}
+          aria-label={`Read article: ${post.title}`}
+        >
+          Read Article
+          <ArrowRight className="h-4 w-4 text-[#caa43f] transition-transform duration-300 group-hover:translate-x-0.5" />
+        </Link>
+      </div>
+    </article>
+  );
+}
+
+export default function BlogPage() {
+  const featured = posts[0];
+  const restPosts = posts.slice(1);
+
+  return (
+    <>
+      <BlogJsonLd />
+
+      <main className="relative overflow-hidden bg-[linear-gradient(180deg,#f7f9fc_0%,#ffffff_18%,#ffffff_100%)] text-[#071226]">
+        <section className="relative isolate overflow-hidden border-b border-[#e8edf5]">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(207,174,82,0.13),transparent_30%),radial-gradient(circle_at_left,rgba(7,18,38,0.05),transparent_26%),linear-gradient(180deg,#f8fbff_0%,#ffffff_100%)]" />
+
+          <Container className="relative z-10 max-w-[1320px] px-4 py-14 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+            <div className="mx-auto max-w-5xl text-center">
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#d7dee9] bg-white/85 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#8b6a18] shadow-[0_10px_30px_rgba(7,18,38,0.05)]">
+                <BookOpen className="h-3.5 w-3.5" />
+                MoBiz.mu Blog
+              </div>
+
+              <h1
+                className="mt-5 text-balance text-4xl font-semibold tracking-tight text-[#071226] sm:text-5xl lg:text-[4rem] lg:leading-[1.02]"
+                style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
+              >
+                Premium Business Insights for Mauritius
+              </h1>
+
+              <p
+                className="mx-auto mt-5 max-w-4xl text-[15px] leading-8 text-[#44556f] sm:text-[16px] lg:text-[17px]"
+                style={{ fontFamily: '"Poppins", sans-serif' }}
+              >
+                Explore premium business insights for Mauritius across website design,
+                digital marketing, SEO, accounting, logistics, branding, WhatsApp
+                conversion, and scalable growth systems built for stronger authority,
+                better visibility, and long-term business performance.
+              </p>
+
+              <div className="mt-7 flex flex-wrap items-center justify-center gap-2.5">
+                {[
+                  "Website Design Mauritius",
+                  "SEO Mauritius",
+                  "Digital Marketing Mauritius",
+                  "Branding Mauritius",
+                  "Accounting Mauritius",
+                  "Business Growth Mauritius",
+                ].map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-full border border-[#e2e8f0] bg-white px-3 py-1.5 text-[11px] font-medium text-[#1d2d49] shadow-[0_8px_20px_rgba(7,18,38,0.04)] sm:text-xs"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </Container>
+        </section>
+
+        <section className="py-10 sm:py-12 lg:py-14">
+          <Container className="max-w-[1320px] px-4 sm:px-6 lg:px-8">
+            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+              {[
+                {
+                  title: "Premium Insights",
+                  text: "Articles are written to reflect a more executive business standard and stronger market relevance.",
+                  icon: Sparkles,
+                },
+                {
+                  title: "Mauritius-Focused",
+                  text: "The blog is shaped around local business needs, visibility priorities, and buyer expectations in Mauritius.",
+                  icon: Globe,
+                },
+                {
+                  title: "SEO Conscious",
+                  text: "Topics are designed to support stronger search relevance, authority, and internal linking depth.",
+                  icon: Search,
+                },
+                {
+                  title: "Growth Oriented",
+                  text: "Every article aims to help businesses improve trust, visibility, communication, and long-term performance.",
+                  icon: TrendingUp,
+                },
+              ].map((item) => {
+                const Icon = item.icon;
+                return (
+                  <div
+                    key={item.title}
+                    className="rounded-[26px] border border-[#e6ebf2] bg-white p-5 shadow-[0_16px_38px_rgba(7,18,38,0.05)]"
+                  >
+                    <div className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[linear-gradient(180deg,#071226_0%,#10224a_100%)] text-[#f3d77a] shadow-[0_12px_24px_rgba(7,18,38,0.14)]">
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <h2
+                      className="mt-4 text-lg font-semibold tracking-tight text-[#071226]"
+                      style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
+                    >
+                      {item.title}
+                    </h2>
+                    <p className="mt-2 text-[14px] leading-7 text-[#4a5b76]">
+                      {item.text}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </Container>
+        </section>
+
+        <section className="py-8 sm:py-10 lg:py-12">
+          <Container className="max-w-[1320px] px-4 sm:px-6 lg:px-8">
+            <div className="grid items-center gap-8 overflow-hidden rounded-[34px] border border-[#e5eaf2] bg-white p-6 shadow-[0_20px_48px_rgba(7,18,38,0.06)] sm:p-8 lg:grid-cols-[1.05fr_0.95fr] lg:p-10">
+              <div>
+                <div className="inline-flex rounded-full border border-[#dfc985] bg-[#fff9ea] px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#8b6a18]">
+                  Featured Article
+                </div>
+
+                <h2
+                  className="mt-5 text-balance text-3xl font-semibold tracking-tight text-[#071226] sm:text-4xl lg:text-[3rem]"
+                  style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
+                >
+                  {featured.title}
+                </h2>
+
+                <p
+                  className="mt-4 text-[15px] leading-8 text-[#44556f] sm:text-[16px]"
+                  style={{ fontFamily: '"Poppins", sans-serif' }}
+                >
+                  {featured.excerpt}
+                </p>
+
+                <div className="mt-6 flex items-center gap-3">
+                  <div
+                    className="inline-flex rounded-full border border-[#ead9a8] bg-[#fffdf7] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8b6a18] sm:text-[11px]"
+                    style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
+                  >
+                    {featured.category}
+                  </div>
+                </div>
+
+                <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                  <Link
+                    href={featured.href}
+                    className="group inline-flex min-w-[210px] items-center justify-center rounded-full border border-[#cfae52] bg-[linear-gradient(180deg,#071226_0%,#0a1733_55%,#0d2147_100%)] px-6 py-3.5 text-sm font-semibold text-[#f3d77a] shadow-[0_16px_34px_rgba(7,18,38,0.18)] transition-all duration-300 hover:-translate-y-0.5"
+                  >
+                    Read Featured Article
+                    <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+                  </Link>
+
+                  <Link
+                    href="/contact"
+                    className="inline-flex min-w-[210px] items-center justify-center rounded-full border border-[#d7dee9] bg-white px-6 py-3.5 text-sm font-semibold text-[#071226] shadow-[0_12px_28px_rgba(7,18,38,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#cfae52] hover:text-[#8b6a18]"
+                  >
+                    Work With MoBiz.mu
+                  </Link>
+                </div>
+              </div>
+
+              <Link
+                href={featured.href}
+                className="group relative block overflow-hidden rounded-[28px] border border-[#e5eaf2] bg-slate-50"
+              >
+                <div className="relative aspect-[16/11] w-full">
+                  <Image
+                    src={featured.imageSrc}
+                    alt={featured.imageAlt}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
+                  />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/15 via-transparent to-transparent" />
+                </div>
+              </Link>
+            </div>
+          </Container>
+        </section>
+
+        <section className="py-10 sm:py-12 lg:py-14">
+          <Container className="max-w-[1320px] px-4 sm:px-6 lg:px-8">
+            <div className="mb-8">
+              <div className="inline-flex rounded-full border border-[#dce4ef] bg-white px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#8b6a18]">
+                Latest Articles
+              </div>
+
+              <h2
+                className="mt-5 text-balance text-3xl font-semibold tracking-tight text-[#071226] sm:text-4xl"
+                style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
+              >
+                Explore More Premium Articles
+              </h2>
+            </div>
+
+            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+              {restPosts.map((post) => (
+                <BlogCard key={post.slug} post={post} />
+              ))}
+            </div>
+          </Container>
+        </section>
+
+        <section className="py-10 sm:py-12 lg:py-14">
+          <Container className="max-w-[1320px] px-4 sm:px-6 lg:px-8">
+            <div className="grid gap-8 overflow-hidden rounded-[34px] border border-[#e5eaf2] bg-[linear-gradient(180deg,#071226_0%,#0c1a3a_100%)] p-6 text-white shadow-[0_26px_60px_rgba(7,18,38,0.18)] sm:p-8 lg:grid-cols-[1.02fr_0.98fr] lg:p-10">
+              <div>
+                <div className="inline-flex rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#f3d77a]">
+                  Why This Blog Matters
+                </div>
+
+                <h2
+                  className="mt-5 text-balance text-3xl font-semibold tracking-tight sm:text-4xl lg:text-[2.8rem]"
+                  style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
+                >
+                  Better Content Helps Build Better Trust and Better Search Visibility
+                </h2>
+
+                <p className="mt-5 text-[15px] leading-8 text-white/78 sm:text-[16px]">
+                  A premium blog does more than publish articles. It helps a
+                  business build authority, improve SEO depth, educate clients,
+                  strengthen internal linking, and show that the company
+                  understands the market it serves. This blog is designed with
+                  exactly that role in mind.
+                </p>
+
+                <div className="mt-6 grid gap-3">
+                  {[
+                    "Supports search visibility and authority",
+                    "Helps potential clients understand service value",
+                    "Creates stronger internal linking across pages",
+                    "Builds trust through premium, relevant content",
+                  ].map((item) => (
+                    <div key={item} className="flex items-start gap-3">
+                      <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-[#f3d77a]" />
+                      <p className="text-sm leading-7 text-white/82">{item}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                {[
+                  "Website Design Insights",
+                  "SEO & Visibility",
+                  "Digital Marketing",
+                  "Branding & Authority",
+                  "Accounting & Operations",
+                  "Business Growth Systems",
+                ].map((item) => (
+                  <div
+                    key={item}
+                    className="rounded-2xl border border-white/10 bg-white/8 px-4 py-3 text-sm text-white/84"
+                  >
+                    {item}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Container>
+        </section>
+
+        <section className="py-14 sm:py-16 lg:py-18">
+          <Container className="max-w-[1100px] px-4 sm:px-6 lg:px-8">
+            <div className="overflow-hidden rounded-[34px] border border-[#eadcb0] bg-[linear-gradient(180deg,#fffaf0_0%,#ffffff_100%)] p-7 text-center shadow-[0_20px_46px_rgba(7,18,38,0.05)] sm:p-9 lg:p-12">
+              <div className="mx-auto max-w-3xl">
+                <div className="inline-flex items-center gap-2 rounded-full border border-[#ead8a1] bg-white px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#8b6a18]">
+                  <BriefcaseBusiness className="h-3.5 w-3.5" />
+                  Need Help With Your Business?
+                </div>
+
+                <h2
+                  className="mt-5 text-balance text-3xl font-semibold tracking-tight text-[#071226] sm:text-4xl lg:text-[3rem]"
+                  style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
+                >
+                  Let’s Turn Insight into Action
+                </h2>
+
+                <p className="mt-5 text-[15px] leading-8 text-[#44556f] sm:text-[16px]">
+                  If you want your business to look more premium, rank more
+                  strongly, convert better, or operate with more structure,
+                  MoBiz.mu can help you turn the right ideas into stronger
+                  execution.
+                </p>
+
+                <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                  <Link
+                    href="/contact"
+                    className="group inline-flex min-w-[220px] items-center justify-center rounded-full border border-[#cfae52] bg-[linear-gradient(180deg,#071226_0%,#0a1733_55%,#0d2147_100%)] px-6 py-3.5 text-sm font-semibold text-[#f3d77a] shadow-[0_16px_32px_rgba(7,18,38,0.18)] transition-all duration-300 hover:-translate-y-0.5"
+                  >
+                    Contact MoBiz.mu
+                    <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+                  </Link>
+
+                  <Link
+                    href="/services"
+                    className="inline-flex min-w-[220px] items-center justify-center rounded-full border border-[#d7dee9] bg-white px-6 py-3.5 text-sm font-semibold text-[#071226] shadow-[0_12px_28px_rgba(7,18,38,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#cfae52] hover:text-[#8b6a18]"
+                  >
+                    Explore Services
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </Container>
+        </section>
+      </main>
+    </>
+  );
+}
