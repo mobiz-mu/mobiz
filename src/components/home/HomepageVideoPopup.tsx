@@ -46,6 +46,8 @@ export default function HomepageVideoPopup() {
   useEffect(() => {
     if (!open) return;
 
+    window.dispatchEvent(new CustomEvent("mobiz:popup-video-open"));
+
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         handleClose();
@@ -64,7 +66,6 @@ export default function HomepageVideoPopup() {
       if (playPromise && typeof playPromise.catch === "function") {
         playPromise.catch(() => {
           // Browser may block autoplay with sound.
-          // Controls stay visible so the visitor can press play manually.
         });
       }
     }
@@ -82,6 +83,7 @@ export default function HomepageVideoPopup() {
       video.currentTime = 0;
     }
 
+    window.dispatchEvent(new CustomEvent("mobiz:popup-video-close"));
     setOpen(false);
   }
 

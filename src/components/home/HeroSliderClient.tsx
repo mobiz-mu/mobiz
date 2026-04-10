@@ -142,7 +142,7 @@ function VideoPanel() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [inView, setInView] = useState(true);
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
-  const [playStarted, setPlayStarted] = useState(false);
+  const [popupOpen, setPopupOpen] = useState(false);
 
   useEffect(() => {
     const markInteracted = () => setHasUserInteracted(true);
@@ -157,6 +157,36 @@ function VideoPanel() {
       window.removeEventListener("touchstart", markInteracted);
     };
   }, []);
+
+  useEffect(() => {
+    const handlePopupOpen = () => {
+      setPopupOpen(true);
+      const video = videoRef.current;
+      if (video) {
+        video.pause();
+      }
+    };
+
+    const handlePopupClose = () => {
+      setPopupOpen(false);
+      const video = videoRef.current;
+      if (!video) return;
+      if (!inView) return;
+
+      video.currentTime = 0;
+      video.play().catch(() => {
+        // Browser may still block audible autoplay.
+      });
+    };
+
+    window.addEventListener("mobiz:popup-video-open", handlePopupOpen as EventListener);
+    window.addEventListener("mobiz:popup-video-close", handlePopupClose as EventListener);
+
+    return () => {
+      window.removeEventListener("mobiz:popup-video-open", handlePopupOpen as EventListener);
+      window.removeEventListener("mobiz:popup-video-close", handlePopupClose as EventListener);
+    };
+  }, [inView]);
 
   useEffect(() => {
     const node = sectionRef.current;
@@ -179,44 +209,39 @@ function VideoPanel() {
     const video = videoRef.current;
     if (!video) return;
 
-    const tryPlayWithSound = async () => {
-      try {
-        video.muted = false;
-        video.volume = 1;
-        await video.play();
-        setPlayStarted(true);
-      } catch {
-        // Browser may block audible autoplay until user interaction.
-      }
-    };
-
-    if (inView) {
-      video.currentTime = 0;
-      void tryPlayWithSound();
-    } else {
+    if (popupOpen) {
       video.pause();
+      return;
     }
-  }, [inView]);
+
+    if (!inView) {
+      video.pause();
+      return;
+    }
+
+    video.currentTime = 0;
+    video.muted = false;
+    video.volume = 1;
+
+    video.play().catch(() => {
+      // Audible autoplay may be blocked by browser policy.
+    });
+  }, [inView, popupOpen]);
 
   useEffect(() => {
     if (!hasUserInteracted) return;
+    if (popupOpen) return;
+    if (!inView) return;
 
     const video = videoRef.current;
-    if (!video || !inView) return;
+    if (!video) return;
 
-    const playAfterInteraction = async () => {
-      try {
-        video.muted = false;
-        video.volume = 1;
-        await video.play();
-        setPlayStarted(true);
-      } catch {
-        // If blocked again, nothing else to do without another interaction.
-      }
-    };
-
-    void playAfterInteraction();
-  }, [hasUserInteracted, inView]);
+    video.muted = false;
+    video.volume = 1;
+    video.play().catch(() => {
+      // Keep best-effort behavior.
+    });
+  }, [hasUserInteracted, inView, popupOpen]);
 
   return (
     <div
@@ -232,10 +257,6 @@ function VideoPanel() {
         autoPlay
         loop
       />
-
-      {!playStarted && (
-        <div className="pointer-events-none absolute inset-0 bg-black/0" />
-      )}
     </div>
   );
 }
