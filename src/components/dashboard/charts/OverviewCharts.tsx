@@ -59,11 +59,9 @@ function ChartCard({
           {title}
         </h3>
 
-        <p className="mt-2 text-sm leading-7 text-slate-600">
-          {description}
-        </p>
+        <p className="mt-2 text-sm leading-7 text-slate-600">{description}</p>
 
-        <div className="mt-6 h-[320px] w-full min-w-0 sm:h-[340px]">
+        <div className="mt-6 w-full min-w-0 overflow-hidden rounded-[22px]">
           {children}
         </div>
       </div>
@@ -91,7 +89,7 @@ export default function OverviewCharts({ data }: OverviewChartsProps) {
         title="Business Activity"
         description="Track lead generation, quotation activity, and invoice creation across recent months."
       >
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height={320}>
           <BarChart
             data={safeData}
             margin={{ top: 8, right: 8, left: -12, bottom: 4 }}
@@ -120,27 +118,9 @@ export default function OverviewCharts({ data }: OverviewChartsProps) {
               }}
             />
             <Legend wrapperStyle={{ paddingTop: 12 }} />
-            <Bar
-              dataKey="leads"
-              name="Leads"
-              fill="#0f172a"
-              radius={[8, 8, 0, 0]}
-              maxBarSize={34}
-            />
-            <Bar
-              dataKey="quotations"
-              name="Quotations"
-              fill="#c89b2b"
-              radius={[8, 8, 0, 0]}
-              maxBarSize={34}
-            />
-            <Bar
-              dataKey="invoices"
-              name="Invoices"
-              fill="#475569"
-              radius={[8, 8, 0, 0]}
-              maxBarSize={34}
-            />
+            <Bar dataKey="leads" name="Leads" fill="#0f172a" radius={[8, 8, 0, 0]} maxBarSize={34} />
+            <Bar dataKey="quotations" name="Quotations" fill="#c89b2b" radius={[8, 8, 0, 0]} maxBarSize={34} />
+            <Bar dataKey="invoices" name="Invoices" fill="#475569" radius={[8, 8, 0, 0]} maxBarSize={34} />
           </BarChart>
         </ResponsiveContainer>
       </ChartCard>
@@ -149,7 +129,7 @@ export default function OverviewCharts({ data }: OverviewChartsProps) {
         title="Invoice Revenue"
         description="Monitor revenue trend over time and keep an eye on monthly business performance."
       >
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height={320}>
           <LineChart
             data={safeData}
             margin={{ top: 8, right: 8, left: -4, bottom: 4 }}

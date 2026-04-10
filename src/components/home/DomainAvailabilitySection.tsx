@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { FormEvent, useMemo, useState } from "react";
 import Container from "@/components/ui/Container";
-import { ArrowRight, Globe, Search, Sparkles } from "lucide-react";
+import { ArrowRight, Globe, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const extensions = [".com", ".mu", ".net", ".org", ".co", ".info"];
@@ -99,57 +99,46 @@ export default function DomainAvailabilitySection() {
     <section
       id="domain-availability"
       aria-labelledby="domain-availability-heading"
-      className="w-full bg-white py-6 sm:py-7 lg:py-8"
+      className="w-full bg-white py-3 sm:py-4 lg:py-5"
     >
       <Container className="max-w-[1400px]">
-        <div className="relative overflow-hidden rounded-[30px] border border-[#d8ece8] bg-[linear-gradient(135deg,#0a5c7a_0%,#0b7c91_28%,#1091a5_48%,#119b7e_72%,#14a44d_100%)] px-5 py-6 text-white shadow-[0_24px_54px_rgba(8,66,89,0.14)] sm:px-6 sm:py-7 lg:px-8 lg:py-8">
-          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.09)_0%,rgba(255,255,255,0.02)_100%)]" />
-          <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-white/45 to-transparent" />
-          <div className="pointer-events-none absolute -right-6 top-0 h-40 w-40 rounded-full bg-[#d8fff6]/14 blur-3xl" />
-          <div className="pointer-events-none absolute left-0 bottom-0 h-32 w-32 rounded-full bg-white/8 blur-3xl" />
-          <div className="pointer-events-none absolute right-1/4 bottom-0 h-28 w-36 rounded-full bg-[#b9ff5c]/10 blur-3xl" />
+        <div className="relative overflow-hidden rounded-[28px] border border-[#d8ece8] px-4 py-4 text-white shadow-[0_20px_48px_rgba(8,66,89,0.12)] sm:px-5 sm:py-5 lg:px-6 lg:py-6">
+          <div className="absolute inset-0 bg-[linear-gradient(135deg,#083b67_0%,#0c5f88_22%,#1187a1_44%,#13a37f_68%,#1ba957_100%)]" />
+          <div className="absolute inset-0 opacity-70 animate-[domainWave_10s_ease-in-out_infinite] bg-[radial-gradient(120%_70%_at_0%_50%,rgba(255,255,255,0.12),transparent_45%),radial-gradient(90%_60%_at_100%_50%,rgba(255,255,255,0.10),transparent_42%),radial-gradient(80%_50%_at_50%_100%,rgba(255,255,255,0.08),transparent_40%)]" />
+          <div className="absolute inset-0 opacity-50 animate-[domainWaveReverse_14s_ease-in-out_infinite] bg-[radial-gradient(110%_65%_at_20%_30%,rgba(255,255,255,0.10),transparent_42%),radial-gradient(100%_55%_at_80%_70%,rgba(255,255,255,0.08),transparent_40%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.10)_0%,rgba(255,255,255,0.03)_45%,rgba(255,255,255,0.02)_100%)]" />
 
           <div className="relative z-10 mx-auto max-w-5xl text-center">
-            <div
-              className="inline-flex items-center gap-2 rounded-full border border-white/18 bg-white/10 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#ffe27a] sm:text-[11px]"
-              style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
-            >
-              <Sparkles className="h-3.5 w-3.5" />
-              Domain Name Search
-            </div>
-
             <h2
               id="domain-availability-heading"
-              className="mt-4 text-balance text-[1.95rem] font-semibold tracking-tight text-white sm:text-[2.35rem] lg:text-[2.95rem] lg:leading-[1.04]"
+              className="text-balance text-[1.55rem] font-semibold tracking-tight text-white sm:text-[1.9rem] lg:text-[2.35rem] lg:leading-[1.05]"
               style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
             >
               Check domain name availability for your business in Mauritius.
             </h2>
 
             <p
-              className="mx-auto mt-3 max-w-3xl text-[14px] leading-7 text-white/88 sm:text-[15px] lg:text-[15.5px]"
+              className="mx-auto mt-2 max-w-3xl text-[13px] leading-6 text-white/90 sm:text-[14px] lg:text-[15px]"
               style={{ fontFamily: '"Poppins", sans-serif' }}
             >
-              Search your ideal business domain across .com, .mu, .net, .org and
-              more. Build a stronger online identity in Mauritius with a premium
-              domain name and contact MoBiz.mu on WhatsApp to secure it.
+              Search your business name and secure a stronger online identity with MoBiz.mu.
             </p>
           </div>
 
           <form
             onSubmit={onSubmit}
-            className="relative z-10 mx-auto mt-6 max-w-5xl"
+            className="relative z-10 mx-auto mt-4 max-w-5xl"
           >
-            <div className="grid gap-3 lg:grid-cols-[1fr_auto]">
-              <div className="flex items-center gap-3 rounded-[24px] border border-white/16 bg-white/92 px-4 py-3 shadow-[0_12px_24px_rgba(7,18,38,0.06)] backdrop-blur-xl sm:px-5 sm:py-4">
-                <div className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] bg-[linear-gradient(180deg,#0a5c7a_0%,#0f7a88_100%)] text-[#ffe27a] shadow-[0_10px_20px_rgba(8,66,89,0.16)]">
-                  <Globe className="h-5 w-5" />
+            <div className="grid gap-2.5 lg:grid-cols-[1fr_auto]">
+              <div className="flex items-center gap-3 rounded-[20px] border border-white/15 bg-white/94 px-4 py-3 shadow-[0_10px_24px_rgba(7,18,38,0.06)] backdrop-blur-xl sm:px-4 sm:py-3.5">
+                <div className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-[linear-gradient(180deg,#0a5c7a_0%,#0f7a88_100%)] text-[#ffe27a] shadow-[0_10px_20px_rgba(8,66,89,0.16)]">
+                  <Globe className="h-4.5 w-4.5" />
                 </div>
 
                 <div className="min-w-0 flex-1">
                   <label
                     htmlFor="domainName"
-                    className="mb-1 block text-left text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500"
+                    className="mb-1 block text-left text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500"
                     style={{ fontFamily: '"Poppins", sans-serif' }}
                   >
                     Search Domain Name
@@ -159,7 +148,7 @@ export default function DomainAvailabilitySection() {
                     type="text"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    placeholder="examplebusiness"
+                    placeholder="name.com"
                     className="w-full border-0 bg-transparent p-0 text-[15px] text-[#071226] outline-none placeholder:text-slate-400 sm:text-[16px]"
                     autoComplete="off"
                     spellCheck={false}
@@ -171,7 +160,7 @@ export default function DomainAvailabilitySection() {
                 type="submit"
                 disabled={!cleanName || loading}
                 className={cn(
-                  "inline-flex items-center justify-center gap-2 rounded-[24px] border px-5 py-4 text-sm font-semibold transition-all duration-300 sm:px-6",
+                  "inline-flex items-center justify-center gap-2 rounded-[20px] border px-5 py-3.5 text-sm font-semibold transition-all duration-300 sm:px-6",
                   !cleanName || loading
                     ? "cursor-not-allowed border-white/10 bg-white/20 text-white/50"
                     : "border-[#f5c54e] bg-[linear-gradient(180deg,#c91522_0%,#a90f18_60%,#8f0d17_100%)] text-[#ffe27a] shadow-[0_16px_30px_rgba(140,14,22,0.22),inset_0_1px_0_rgba(255,255,255,0.12)] hover:-translate-y-0.5 hover:shadow-[0_20px_36px_rgba(140,14,22,0.28),inset_0_1px_0_rgba(255,255,255,0.12)]"
@@ -183,28 +172,14 @@ export default function DomainAvailabilitySection() {
             </div>
           </form>
 
-          <div className="relative z-10 mx-auto mt-5 max-w-5xl">
-            <div className="flex flex-wrap items-center justify-center gap-2">
-              {extensions.map((ext) => (
-                <span
-                  key={ext}
-                  className="rounded-full border border-white/16 bg-white/10 px-3 py-1.5 text-[11px] font-medium text-white sm:text-xs"
-                  style={{ fontFamily: '"Poppins", sans-serif' }}
-                >
-                  {ext}
-                </span>
-              ))}
-            </div>
-          </div>
-
           {error ? (
-            <div className="relative z-10 mx-auto mt-5 max-w-3xl rounded-[18px] border border-red-200/50 bg-white/95 px-4 py-3 text-sm text-red-700">
+            <div className="relative z-10 mx-auto mt-4 max-w-3xl rounded-[16px] border border-red-200/50 bg-white/95 px-4 py-3 text-sm text-red-700">
               {error}
             </div>
           ) : null}
 
           {searched && results.length > 0 ? (
-            <div className="relative z-10 mx-auto mt-6 max-w-6xl">
+            <div className="relative z-10 mx-auto mt-4 max-w-6xl">
               <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                 {results.map((result) => {
                   const isAvailable = result.status === "available";
@@ -213,14 +188,14 @@ export default function DomainAvailabilitySection() {
                   return (
                     <div
                       key={fullDomain}
-                      className="rounded-[22px] border border-white/14 bg-white/95 p-4 shadow-[0_12px_24px_rgba(7,18,38,0.05)] backdrop-blur-xl"
+                      className="rounded-[20px] border border-white/14 bg-white/95 p-4 shadow-[0_12px_24px_rgba(7,18,38,0.05)] backdrop-blur-xl"
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
                           <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#0b7c91]">
                             Domain
                           </div>
-                          <div className="mt-1 break-all text-[1.05rem] font-semibold text-[#071226]">
+                          <div className="mt-1 break-all text-[1.02rem] font-semibold text-[#071226]">
                             {fullDomain}
                           </div>
                         </div>
@@ -238,10 +213,10 @@ export default function DomainAvailabilitySection() {
                           {isAvailable
                             ? "Available"
                             : result.status === "registered"
-                            ? "Taken"
-                            : result.status === "unsupported"
-                            ? "Unsupported"
-                            : "Unknown"}
+                              ? "Taken"
+                              : result.status === "unsupported"
+                                ? "Unsupported"
+                                : "Unknown"}
                         </div>
                       </div>
 
@@ -249,10 +224,10 @@ export default function DomainAvailabilitySection() {
                         {isAvailable
                           ? "This domain looks available. Contact MoBiz.mu on WhatsApp to register it."
                           : result.status === "registered"
-                          ? `This domain appears registered${
-                              result.registrar ? ` with ${result.registrar}` : ""
-                            }. Contact MoBiz.mu for alternatives or other extensions.`
-                          : result.error || "Unable to confirm this domain right now."}
+                            ? `This domain appears registered${
+                                result.registrar ? ` with ${result.registrar}` : ""
+                              }. Contact MoBiz.mu for alternatives or other extensions.`
+                            : result.error || "Unable to confirm this domain right now."}
                       </p>
 
                       <Link
@@ -271,6 +246,32 @@ export default function DomainAvailabilitySection() {
             </div>
           ) : null}
         </div>
+
+        <style jsx>{`
+          @keyframes domainWave {
+            0% {
+              transform: translate3d(0, 0, 0) scale(1);
+            }
+            50% {
+              transform: translate3d(1.5%, -1.5%, 0) scale(1.03);
+            }
+            100% {
+              transform: translate3d(0, 0, 0) scale(1);
+            }
+          }
+
+          @keyframes domainWaveReverse {
+            0% {
+              transform: translate3d(0, 0, 0) scale(1);
+            }
+            50% {
+              transform: translate3d(-1.5%, 1.5%, 0) scale(1.04);
+            }
+            100% {
+              transform: translate3d(0, 0, 0) scale(1);
+            }
+          }
+        `}</style>
       </Container>
     </section>
   );

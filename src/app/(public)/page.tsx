@@ -10,6 +10,7 @@ import MauritiusBusinessNews from "@/components/home/MauritiusBusinessNews";
 import Testimonials from "@/components/home/Testimonials";
 import TrustBar from "@/components/home/TrustBar";
 import WhyUs from "@/components/home/WhyUs";
+import HomepageVideoPopup from "@/components/home/HomepageVideoPopup";
 
 export default function HomePage() {
   return (
@@ -17,6 +18,7 @@ export default function HomePage() {
       <Hero />
       <TrustBar />
       <ServicesPreview />
+      <HomepageVideoPopup />
       <DomainAvailabilitySection />
       <PortfolioPreview />
       <WhyUs />

@@ -134,12 +134,14 @@ function PremiumServiceButton({
     <Link
       href={href}
       className={cn(
-        "group relative inline-flex items-center justify-center overflow-hidden rounded-full border border-[#cfae52] bg-[linear-gradient(180deg,#071226_0%,#0a1733_55%,#0d2147_100%)] px-5 py-3 text-sm font-semibold text-[#f3d77a] shadow-[0_14px_28px_rgba(7,18,38,0.18),inset_0_1px_0_rgba(255,255,255,0.12)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_36px_rgba(7,18,38,0.22),0_0_0_1px_rgba(243,215,122,0.08)_inset] active:translate-y-0",
+        "group relative inline-flex items-center justify-center overflow-hidden rounded-full border border-[#f3d77a] bg-[linear-gradient(180deg,#06101f_0%,#0a1730_50%,#102349_100%)] px-5 py-3 text-sm font-semibold text-[#ffe08a] shadow-[0_18px_34px_rgba(7,18,38,0.18),inset_0_1px_0_rgba(255,255,255,0.12),0_0_0_1px_rgba(243,215,122,0.08)] transition-all duration-300 hover:-translate-y-0.5 hover:text-[#fff1b8] hover:shadow-[0_24px_40px_rgba(7,18,38,0.24),0_0_18px_rgba(243,215,122,0.16),inset_0_1px_0_rgba(255,255,255,0.16)] active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f3d77a] focus-visible:ring-offset-2",
         className
       )}
       aria-label={`Explore ${typeof children === "string" ? children : "service"}`}
     >
-      <span className="pointer-events-none absolute inset-[1px] rounded-full bg-[linear-gradient(180deg,rgba(255,255,255,0.10)_0%,rgba(255,255,255,0.02)_38%,rgba(255,255,255,0.00)_100%)]" />
+      <span className="pointer-events-none absolute inset-[1px] rounded-full bg-[linear-gradient(180deg,rgba(255,255,255,0.14)_0%,rgba(255,255,255,0.03)_38%,rgba(255,255,255,0.00)_100%)]" />
+      <span className="pointer-events-none absolute left-4 top-1.5 h-5 w-16 rounded-full bg-white/10 blur-lg" />
+      <span className="pointer-events-none absolute right-3 bottom-1.5 h-6 w-14 rounded-full bg-[#f3d77a]/12 blur-lg" />
       <span className="relative z-10 inline-flex items-center">
         {children}
       </span>
@@ -178,7 +180,7 @@ export default function ServicesPreview() {
       ref={sectionRef}
       id="core-services"
       aria-labelledby="core-services-heading"
-      className="w-full scroll-mt-24 bg-white py-7 sm:py-8 lg:py-10"
+      className="w-full scroll-mt-24 bg-white py-2 sm:py-3 lg:py-4"
     >
       <Container className="max-w-[1400px]">
         <div className="mx-auto max-w-5xl text-center">
@@ -204,7 +206,7 @@ export default function ServicesPreview() {
           </p>
         </div>
 
-        <div className="mt-9 space-y-8 sm:mt-10 sm:space-y-10 lg:mt-12 lg:space-y-12">
+        <div className="mt-3 space-y-3 sm:mt-4 sm:space-y-4 lg:mt-5 lg:space-y-4">
           {services.map((service, index) => {
             const isReversed = index % 2 === 1;
 
@@ -212,7 +214,7 @@ export default function ServicesPreview() {
               <article
                 key={service.title}
                 className={cn(
-                  "grid items-stretch gap-5 lg:grid-cols-2 lg:gap-8 xl:gap-10",
+                  "grid items-stretch gap-2.5 lg:grid-cols-2 lg:gap-3 xl:gap-4",
                   visible ? "opacity-100" : "opacity-0"
                 )}
                 style={{ transitionDelay: `${index * 120}ms` }}
@@ -224,26 +226,25 @@ export default function ServicesPreview() {
                     isReversed ? "lg:order-2" : "lg:order-1"
                   )}
                 >
-                  <div className="relative overflow-hidden rounded-[24px] border border-slate-200/80 bg-white shadow-[0_14px_30px_rgba(7,18,38,0.05)]">
-                    <div className="relative aspect-[4/3] w-full bg-white p-2 sm:p-3">
-                      <Image
-                        src={service.imageSrc}
-                        alt={service.imageAlt}
-                        width={1600}
-                        height={1200}
-                        priority={index < 2}
-                        sizes="(max-width: 1024px) 100vw, 50vw"
-                        className="h-full w-full object-contain object-center"
-                      />
-                    </div>
-                    <div className="pointer-events-none absolute inset-0 rounded-[24px] ring-1 ring-inset ring-black/5" />
-                    <div className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-black/[0.03] to-transparent" />
+                  <div className="relative aspect-[1.28/1] w-full overflow-hidden sm:aspect-[1.32/1] lg:aspect-[1.36/1]">
+                    <Image
+                      src={service.imageSrc}
+                      alt={service.imageAlt}
+                      width={1400}
+                      height={1400}
+                      priority={index === 0}
+                      loading={index === 0 ? "eager" : "lazy"}
+                      fetchPriority={index === 0 ? "high" : "auto"}
+                      quality={75}
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                      className="h-full w-full object-contain object-center"
+                    />
                   </div>
                 </div>
 
                 <div
                   className={cn(
-                    "flex h-full min-h-[250px] flex-col justify-center transition-all duration-700 sm:min-h-[320px] lg:min-h-[390px]",
+                    "flex h-full min-h-[220px] flex-col justify-center transition-all duration-700 sm:min-h-[260px] lg:min-h-[300px]",
                     visible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0",
                     isReversed ? "lg:order-1" : "lg:order-2"
                   )}
@@ -257,20 +258,20 @@ export default function ServicesPreview() {
                   </div>
 
                   <h3
-                    className="mt-3 text-balance text-[1.9rem] font-semibold tracking-tight text-[#071226] sm:text-[2.2rem] lg:text-[2.45rem] lg:leading-[1.06]"
+                    className="mt-2 text-balance text-[1.85rem] font-semibold tracking-tight text-[#071226] sm:text-[2.1rem] lg:text-[2.35rem] lg:leading-[1.05]"
                     style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
                   >
                     {service.title}
                   </h3>
 
                   <p
-                    className="mt-4 text-[14px] leading-7 text-slate-600 sm:text-[15px] lg:text-[15.5px]"
+                    className="mt-2.5 text-[14px] leading-[1.65] text-slate-600 sm:text-[15px] lg:text-[15.5px]"
                     style={{ fontFamily: '"Poppins", sans-serif' }}
                   >
                     {service.description}
                   </p>
 
-                  <div className="mt-5 grid gap-2.5">
+                  <div className="mt-3 grid gap-2">
                     {service.bullets.map((bullet) => (
                       <div key={bullet} className="flex items-start gap-3">
                         <div className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#071226] text-[#f3d77a] shadow-[0_10px_20px_rgba(7,18,38,0.12)]">
@@ -286,7 +287,7 @@ export default function ServicesPreview() {
                     ))}
                   </div>
 
-                  <div className="mt-5 flex flex-wrap gap-2">
+                  <div className="mt-3 flex flex-wrap gap-1.5">
                     {service.keywords.map((keyword) => (
                       <span
                         key={keyword}
@@ -298,10 +299,10 @@ export default function ServicesPreview() {
                     ))}
                   </div>
 
-                  <div className="mt-6">
+                  <div className="mt-4">
                     <PremiumServiceButton href={service.href} className="min-w-[185px]">
                       Explore Service
-                      <ArrowRight className="ml-2 h-4 w-4 text-[#f3d77a] transition-transform duration-300 group-hover:translate-x-0.5" />
+                      <ArrowRight className="ml-2 h-4 w-4 text-[#ffe08a] transition-transform duration-300 group-hover:translate-x-0.5" />
                     </PremiumServiceButton>
                   </div>
                 </div>
