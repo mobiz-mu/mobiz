@@ -1,3 +1,5 @@
+import { supabaseServer } from "@/lib/supabase-server";
+
 export type ContactLeadInput = {
   type: "contact";
   fullName: string;
@@ -57,9 +59,46 @@ export function validateLeadPayload(input: PartialLeadInput) {
 }
 
 export async function persistLead(input: LeadInput) {
+  if (input.type === "newsletter") {
+    const { data, error } = await supabaseServer
+      .from("newsletter_subscribers")
+      .insert({
+        email: input.email.trim().toLowerCase(),
+      })
+      .select("*")
+      .single();
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return {
+      type: "newsletter" as const,
+      record: data,
+    };
+  }
+
+  const { data, error } = await supabaseServer
+    .from("leads")
+    .insert({
+      full_name: input.fullName.trim(),
+      company_name: input.companyName?.trim() || null,
+      email: input.email.trim().toLowerCase(),
+      phone: input.phone?.trim() || null,
+      service: input.service.trim(),
+      message: input.message.trim(),
+      source: "contact_form",
+      status: "new",
+    })
+    .select("*")
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
   return {
-    id: crypto.randomUUID(),
-    ...input,
-    createdAt: new Date().toISOString(),
+    type: "contact" as const,
+    record: data,
   };
 }

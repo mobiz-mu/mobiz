@@ -2,8 +2,6 @@
 
 import { FormEvent, useState } from "react";
 import { createSupabaseBrowserClient } from "@/lib/supabase-browser-auth";
-import Container from "@/components/ui/Container";
-import PremiumButton from "@/components/ui/PremiumButton";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
@@ -36,25 +34,22 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[linear-gradient(180deg,#f8fafc_0%,#f8f6f1_100%)] py-16 sm:py-24">
-      <Container className="max-w-xl">
-        <div className="rounded-[32px] border border-slate-200 bg-white p-8 shadow-[0_24px_80px_rgba(15,23,42,0.08)] sm:p-10">
-          <div className="inline-flex rounded-full border border-[rgba(212,175,55,0.24)] bg-[#fffdf7] px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.22em] text-[#8b6a18]">
-            Dashboard Login
+    <main className="min-h-screen bg-[linear-gradient(180deg,#071226_0%,#0d1b3d_55%,#102654_100%)] px-4 py-8 sm:px-6">
+      <div className="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center">
+        <div className="mb-6 text-center">
+          <div className="text-base font-semibold tracking-[0.12em] text-[#f3d77a] sm:text-lg">
+            Bienvenue Chez Mobiz.mu
           </div>
+        </div>
 
-          <h1 className="mt-5 text-3xl font-semibold tracking-tight text-[#071226] sm:text-4xl">
-            Sign in to MoBiz Admin
-          </h1>
-
-          <p className="mt-4 text-base leading-8 text-slate-600">
-            Access your analytics, leads, banners, blog content, quotations, invoices, and proposals.
-          </p>
-
-          <form onSubmit={onSubmit} className="mt-8 grid gap-5">
+        <div className="w-full max-w-[390px] rounded-[28px] border border-white/10 bg-white/8 p-5 shadow-[0_24px_70px_rgba(2,8,20,0.34)] backdrop-blur-xl sm:p-6">
+          <form onSubmit={onSubmit} className="grid gap-4">
             <div>
-              <label htmlFor="email" className="mb-2 block text-sm font-medium text-slate-700">
-                Email
+              <label
+                htmlFor="email"
+                className="mb-2 block text-sm font-medium text-white/88"
+              >
+                Login
               </label>
               <input
                 id="email"
@@ -62,13 +57,15 @@ export default function LoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm outline-none transition focus:border-[#d4af37]"
-                placeholder="admin@mobiz.mu"
+                className="h-11 w-full rounded-2xl border border-white/12 bg-white/95 px-4 text-sm text-[#071226] outline-none transition focus:border-[#f3d77a] focus:ring-4 focus:ring-[#f3d77a]/10"
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="mb-2 block text-sm font-medium text-slate-700">
+              <label
+                htmlFor="password"
+                className="mb-2 block text-sm font-medium text-white/88"
+              >
                 Password
               </label>
               <input
@@ -77,19 +74,24 @@ export default function LoginPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm outline-none transition focus:border-[#d4af37]"
-                placeholder="••••••••"
+                className="h-11 w-full rounded-2xl border border-white/12 bg-white/95 px-4 text-sm text-[#071226] outline-none transition focus:border-[#f3d77a] focus:ring-4 focus:ring-[#f3d77a]/10"
               />
             </div>
 
-            <PremiumButton>
+            <button
+              type="submit"
+              disabled={status === "loading"}
+              className="mt-1 inline-flex h-11 w-full items-center justify-center rounded-full bg-[linear-gradient(180deg,#163469_0%,#0d1b3d_100%)] px-5 text-sm font-semibold text-white shadow-[0_14px_30px_rgba(7,18,38,0.28)] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70"
+            >
               {status === "loading" ? "Signing in..." : "Sign In"}
-            </PremiumButton>
+            </button>
 
-            {message ? <p className="text-sm text-red-600">{message}</p> : null}
+            {message ? (
+              <p className="text-center text-sm text-red-300">{message}</p>
+            ) : null}
           </form>
         </div>
-      </Container>
+      </div>
     </main>
   );
 }

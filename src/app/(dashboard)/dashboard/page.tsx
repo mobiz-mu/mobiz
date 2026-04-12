@@ -20,18 +20,31 @@ export default async function DashboardOverviewPage() {
 
   return (
     <main className="space-y-6">
-      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         <StatCard title="Leads" value={String(kpis.leadsCount)} />
         <StatCard title="Subscribers" value={String(kpis.subscribersCount)} />
+        <StatCard title="Customers" value={String(kpis.customersCount)} />
         <StatCard title="Quotations" value={String(kpis.quotationsCount)} />
         <StatCard title="Invoices" value={String(kpis.invoicesCount)} />
       </section>
 
-      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard title="Proposals" value={String(kpis.proposalsCount)} />
-        <StatCard title="Published Posts" value={String(kpis.publishedPostsCount)} />
-        <StatCard title="Active Banners" value={String(kpis.activeBannersCount)} />
-        <StatCard title="Unpaid Total" value={formatMoney(kpis.unpaidInvoicesTotal)} />
+      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <StatCard
+          title="Outstanding"
+          value={formatMoney(kpis.unpaidInvoicesTotal)}
+          tone="gold"
+        />
+        <StatCard
+          title="Collections"
+          value={formatMoney(kpis.collectionsTotal)}
+          tone="default"
+        />
+        <StatCard
+          title="Business Status"
+          value="Live"
+          change="Connected to real records"
+          tone="navy"
+        />
       </section>
 
       <OverviewChartsClient data={chartData} />
@@ -41,11 +54,13 @@ export default async function DashboardOverviewPage() {
           <div className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">
             Business Snapshot
           </div>
+
           <h2 className="mt-3 text-2xl font-semibold tracking-tight text-[#071226]">
-            Real platform overview
+            Live platform overview
           </h2>
+
           <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600">
-            This dashboard is now connected to real Supabase records for leads, subscribers, quotations, invoices, proposals, banners, and published blog content.
+            This dashboard is connected to live Supabase records for leads, subscribers, quotations, invoices, and business activity so you can monitor performance clearly from one premium workspace.
           </p>
 
           <div className="mt-6 grid gap-4 md:grid-cols-2">
@@ -53,7 +68,9 @@ export default async function DashboardOverviewPage() {
               `Total leads captured: ${kpis.leadsCount}`,
               `Total subscribers: ${kpis.subscribersCount}`,
               `Total quotations created: ${kpis.quotationsCount}`,
+              `Total invoices created: ${kpis.invoicesCount}`,
               `Outstanding invoice amount: ${formatMoney(kpis.unpaidInvoicesTotal)}`,
+              `Collections received: ${formatMoney(kpis.collectionsTotal)}`,
             ].map((item) => (
               <div
                 key={item}

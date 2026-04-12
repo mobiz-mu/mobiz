@@ -4,7 +4,6 @@ import Link from "next/link";
 import Container from "@/components/ui/Container";
 import {
   ArrowRight,
-  BadgeCheck,
   BookOpen,
   BriefcaseBusiness,
   CheckCircle2,
@@ -118,8 +117,7 @@ const posts: BlogPost[] = [
 ];
 
 export const metadata: Metadata = {
-  title:
-    "Blog | Premium Business Insights for Mauritius | MoBiz.mu",
+  title: "Blog | Premium Business Insights for Mauritius | MoBiz.mu",
   description:
     "Explore the MoBiz.mu blog for premium business insights in Mauritius across website design, SEO, digital marketing, accounting, logistics, branding, WhatsApp conversion, and business growth systems.",
   keywords: [
@@ -135,6 +133,10 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: `${siteUrl}/blog`,
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
   openGraph: {
     title: "MoBiz.mu Blog | Premium Business Insights for Mauritius",
@@ -177,30 +179,39 @@ function BlogJsonLd() {
   );
 }
 
-function BlogCard({ post }: { post: BlogPost }) {
+function BlogCard({
+  post,
+  priority = false,
+}: {
+  post: BlogPost;
+  priority?: boolean;
+}) {
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-[28px] border border-[#e5eaf2] bg-[linear-gradient(180deg,#ffffff_0%,#fbfcff_100%)] shadow-[0_12px_30px_rgba(7,18,38,0.04)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_42px_rgba(7,18,38,0.08)]">
-      <div className="relative h-[230px] w-full overflow-hidden bg-slate-50 sm:h-[240px]">
-        <Image
-          src={post.imageSrc}
-          alt={post.imageAlt}
-          fill
-          sizes="(max-width: 767px) 100vw, (max-width: 1279px) 50vw, 33vw"
-          className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
-        />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent" />
-      </div>
+    <article className="group flex h-full flex-col overflow-hidden rounded-[24px] border border-[#e5eaf2] bg-white shadow-[0_12px_28px_rgba(7,18,38,0.04)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_38px_rgba(7,18,38,0.08)]">
+      <Link href={post.href} className="block">
+        <div className="relative h-[210px] w-full overflow-hidden bg-slate-50 sm:h-[220px]">
+          <Image
+            src={post.imageSrc}
+            alt={post.imageAlt}
+            fill
+            priority={priority}
+            sizes="(max-width: 767px) 100vw, (max-width: 1279px) 50vw, 33vw"
+            className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
+          />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent" />
+        </div>
+      </Link>
 
-      <div className="flex flex-1 flex-col p-5 sm:p-6">
+      <div className="flex flex-1 flex-col p-5">
         <div
-          className="inline-flex w-fit rounded-full border border-[#ead9a8] bg-[#fffdf7] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8b6a18] sm:text-[11px]"
+          className="inline-flex w-fit rounded-full border border-[#ead9a8] bg-[#fffdf7] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8b6a18]"
           style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
         >
           {post.category}
         </div>
 
         <h2
-          className="mt-4 text-balance text-[1.25rem] font-semibold tracking-tight text-[#071226] sm:text-[1.42rem]"
+          className="mt-4 text-balance text-[1.16rem] font-semibold tracking-tight text-[#071226] sm:text-[1.28rem]"
           style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
         >
           {post.title}
@@ -216,7 +227,6 @@ function BlogCard({ post }: { post: BlogPost }) {
         <Link
           href={post.href}
           className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#071226] transition hover:text-[#8b6a18]"
-          style={{ fontFamily: '"Poppins", "Quicksand", sans-serif' }}
           aria-label={`Read article: ${post.title}`}
         >
           Read Article
@@ -235,35 +245,32 @@ export default function BlogPage() {
     <>
       <BlogJsonLd />
 
-      <main className="relative overflow-hidden bg-[linear-gradient(180deg,#f7f9fc_0%,#ffffff_18%,#ffffff_100%)] text-[#071226]">
-        <section className="relative isolate overflow-hidden border-b border-[#e8edf5]">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(207,174,82,0.13),transparent_30%),radial-gradient(circle_at_left,rgba(7,18,38,0.05),transparent_26%),linear-gradient(180deg,#f8fbff_0%,#ffffff_100%)]" />
-
-          <Container className="relative z-10 max-w-[1320px] px-4 py-14 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
-            <div className="mx-auto max-w-5xl text-center">
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#d7dee9] bg-white/85 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#8b6a18] shadow-[0_10px_30px_rgba(7,18,38,0.05)]">
+      <main className="bg-[linear-gradient(180deg,#f8fbff_0%,#ffffff_18%,#ffffff_100%)] text-[#071226]">
+        <section className="border-b border-[#e8edf5] bg-[radial-gradient(circle_at_top,rgba(207,174,82,0.10),transparent_28%),linear-gradient(180deg,#fafcff_0%,#ffffff_100%)]">
+          <Container className="max-w-[1240px] px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12">
+            <div className="mx-auto max-w-4xl text-center">
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#d7dee9] bg-white px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8b6a18] shadow-[0_10px_24px_rgba(7,18,38,0.04)]">
                 <BookOpen className="h-3.5 w-3.5" />
                 MoBiz.mu Blog
               </div>
 
               <h1
-                className="mt-5 text-balance text-4xl font-semibold tracking-tight text-[#071226] sm:text-5xl lg:text-[4rem] lg:leading-[1.02]"
+                className="mt-4 text-balance text-[2rem] font-semibold tracking-tight text-[#071226] sm:text-[2.6rem] lg:text-[3.2rem] lg:leading-[1.05]"
                 style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
               >
                 Premium Business Insights for Mauritius
               </h1>
 
               <p
-                className="mx-auto mt-5 max-w-4xl text-[15px] leading-8 text-[#44556f] sm:text-[16px] lg:text-[17px]"
+                className="mx-auto mt-4 max-w-3xl text-[14px] leading-7 text-[#44556f] sm:text-[15px]"
                 style={{ fontFamily: '"Poppins", sans-serif' }}
               >
                 Explore premium business insights for Mauritius across website design,
-                digital marketing, SEO, accounting, logistics, branding, WhatsApp
-                conversion, and scalable growth systems built for stronger authority,
-                better visibility, and long-term business performance.
+                SEO, digital marketing, accounting, logistics, branding, WhatsApp
+                conversion, and scalable business growth systems.
               </p>
 
-              <div className="mt-7 flex flex-wrap items-center justify-center gap-2.5">
+              <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5">
                 {[
                   "Website Design Mauritius",
                   "SEO Mauritius",
@@ -274,7 +281,7 @@ export default function BlogPage() {
                 ].map((tag) => (
                   <span
                     key={tag}
-                    className="rounded-full border border-[#e2e8f0] bg-white px-3 py-1.5 text-[11px] font-medium text-[#1d2d49] shadow-[0_8px_20px_rgba(7,18,38,0.04)] sm:text-xs"
+                    className="rounded-full border border-[#e2e8f0] bg-white px-3 py-1.5 text-[11px] font-medium text-[#1d2d49] shadow-[0_8px_20px_rgba(7,18,38,0.04)]"
                   >
                     {tag}
                   </span>
@@ -284,9 +291,9 @@ export default function BlogPage() {
           </Container>
         </section>
 
-        <section className="py-10 sm:py-12 lg:py-14">
-          <Container className="max-w-[1320px] px-4 sm:px-6 lg:px-8">
-            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+        <section className="py-6 sm:py-8 lg:py-10">
+          <Container className="max-w-[1240px] px-4 sm:px-6 lg:px-8">
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
               {[
                 {
                   title: "Premium Insights",
@@ -311,15 +318,15 @@ export default function BlogPage() {
               ].map((item) => {
                 const Icon = item.icon;
                 return (
-                  <div
+                  <article
                     key={item.title}
-                    className="rounded-[26px] border border-[#e6ebf2] bg-white p-5 shadow-[0_16px_38px_rgba(7,18,38,0.05)]"
+                    className="rounded-[24px] border border-[#e6ebf2] bg-white p-5 shadow-[0_14px_30px_rgba(7,18,38,0.05)]"
                   >
                     <div className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[linear-gradient(180deg,#071226_0%,#10224a_100%)] text-[#f3d77a] shadow-[0_12px_24px_rgba(7,18,38,0.14)]">
                       <Icon className="h-5 w-5" />
                     </div>
                     <h2
-                      className="mt-4 text-lg font-semibold tracking-tight text-[#071226]"
+                      className="mt-4 text-[1.1rem] font-semibold tracking-tight text-[#071226]"
                       style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
                     >
                       {item.title}
@@ -327,36 +334,36 @@ export default function BlogPage() {
                     <p className="mt-2 text-[14px] leading-7 text-[#4a5b76]">
                       {item.text}
                     </p>
-                  </div>
+                  </article>
                 );
               })}
             </div>
           </Container>
         </section>
 
-        <section className="py-8 sm:py-10 lg:py-12">
-          <Container className="max-w-[1320px] px-4 sm:px-6 lg:px-8">
-            <div className="grid items-center gap-8 overflow-hidden rounded-[34px] border border-[#e5eaf2] bg-white p-6 shadow-[0_20px_48px_rgba(7,18,38,0.06)] sm:p-8 lg:grid-cols-[1.05fr_0.95fr] lg:p-10">
+        <section className="py-4 sm:py-6 lg:py-8">
+          <Container className="max-w-[1240px] px-4 sm:px-6 lg:px-8">
+            <div className="grid items-center gap-5 overflow-hidden rounded-[30px] border border-[#e5eaf2] bg-white p-5 shadow-[0_18px_40px_rgba(7,18,38,0.06)] sm:p-6 lg:grid-cols-[1.02fr_0.98fr] lg:p-8">
               <div>
-                <div className="inline-flex rounded-full border border-[#dfc985] bg-[#fff9ea] px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#8b6a18]">
+                <div className="inline-flex rounded-full border border-[#dfc985] bg-[#fff9ea] px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8b6a18] sm:text-[11px]">
                   Featured Article
                 </div>
 
                 <h2
-                  className="mt-5 text-balance text-3xl font-semibold tracking-tight text-[#071226] sm:text-4xl lg:text-[3rem]"
+                  className="mt-4 text-balance text-[1.9rem] font-semibold tracking-tight text-[#071226] sm:text-[2.3rem] lg:text-[2.7rem]"
                   style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
                 >
                   {featured.title}
                 </h2>
 
                 <p
-                  className="mt-4 text-[15px] leading-8 text-[#44556f] sm:text-[16px]"
+                  className="mt-4 text-[14px] leading-7 text-[#44556f] sm:text-[15px]"
                   style={{ fontFamily: '"Poppins", sans-serif' }}
                 >
                   {featured.excerpt}
                 </p>
 
-                <div className="mt-6 flex items-center gap-3">
+                <div className="mt-5 flex flex-wrap gap-3">
                   <div
                     className="inline-flex rounded-full border border-[#ead9a8] bg-[#fffdf7] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8b6a18] sm:text-[11px]"
                     style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
@@ -365,10 +372,10 @@ export default function BlogPage() {
                   </div>
                 </div>
 
-                <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                <div className="mt-5 flex flex-col gap-3 sm:flex-row">
                   <Link
                     href={featured.href}
-                    className="group inline-flex min-w-[210px] items-center justify-center rounded-full border border-[#cfae52] bg-[linear-gradient(180deg,#071226_0%,#0a1733_55%,#0d2147_100%)] px-6 py-3.5 text-sm font-semibold text-[#f3d77a] shadow-[0_16px_34px_rgba(7,18,38,0.18)] transition-all duration-300 hover:-translate-y-0.5"
+                    className="group inline-flex min-w-[210px] items-center justify-center rounded-full border border-[#cfae52] bg-[linear-gradient(180deg,#071226_0%,#0a1733_55%,#0d2147_100%)] px-5 py-2.5 text-sm font-semibold text-[#f3d77a] shadow-[0_14px_28px_rgba(7,18,38,0.14)] transition-all duration-300 hover:-translate-y-0.5"
                   >
                     Read Featured Article
                     <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
@@ -376,7 +383,7 @@ export default function BlogPage() {
 
                   <Link
                     href="/contact"
-                    className="inline-flex min-w-[210px] items-center justify-center rounded-full border border-[#d7dee9] bg-white px-6 py-3.5 text-sm font-semibold text-[#071226] shadow-[0_12px_28px_rgba(7,18,38,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#cfae52] hover:text-[#8b6a18]"
+                    className="inline-flex min-w-[210px] items-center justify-center rounded-full border border-[#d7dee9] bg-white px-5 py-2.5 text-sm font-semibold text-[#071226] shadow-[0_10px_22px_rgba(7,18,38,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#cfae52] hover:text-[#8b6a18]"
                   >
                     Work With MoBiz.mu
                   </Link>
@@ -385,13 +392,14 @@ export default function BlogPage() {
 
               <Link
                 href={featured.href}
-                className="group relative block overflow-hidden rounded-[28px] border border-[#e5eaf2] bg-slate-50"
+                className="group relative block overflow-hidden rounded-[24px] border border-[#e5eaf2] bg-slate-50"
               >
                 <div className="relative aspect-[16/11] w-full">
                   <Image
                     src={featured.imageSrc}
                     alt={featured.imageAlt}
                     fill
+                    priority
                     sizes="(max-width: 1024px) 100vw, 50vw"
                     className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
                   />
@@ -402,115 +410,116 @@ export default function BlogPage() {
           </Container>
         </section>
 
-        <section className="py-10 sm:py-12 lg:py-14">
-          <Container className="max-w-[1320px] px-4 sm:px-6 lg:px-8">
-            <div className="mb-8">
-              <div className="inline-flex rounded-full border border-[#dce4ef] bg-white px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#8b6a18]">
+        <section className="py-6 sm:py-8 lg:py-10">
+          <Container className="max-w-[1240px] px-4 sm:px-6 lg:px-8">
+            <div className="mb-6">
+              <div className="inline-flex rounded-full border border-[#dce4ef] bg-white px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8b6a18] sm:text-[11px]">
                 Latest Articles
               </div>
 
               <h2
-                className="mt-5 text-balance text-3xl font-semibold tracking-tight text-[#071226] sm:text-4xl"
+                className="mt-4 text-balance text-[1.9rem] font-semibold tracking-tight text-[#071226] sm:text-[2.3rem]"
                 style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
               >
                 Explore More Premium Articles
               </h2>
             </div>
 
-            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-              {restPosts.map((post) => (
-                <BlogCard key={post.slug} post={post} />
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {restPosts.map((post, index) => (
+                <BlogCard key={post.slug} post={post} priority={index < 2} />
               ))}
             </div>
           </Container>
         </section>
 
-        <section className="py-10 sm:py-12 lg:py-14">
-          <Container className="max-w-[1320px] px-4 sm:px-6 lg:px-8">
-            <div className="grid gap-8 overflow-hidden rounded-[34px] border border-[#e5eaf2] bg-[linear-gradient(180deg,#071226_0%,#0c1a3a_100%)] p-6 text-white shadow-[0_26px_60px_rgba(7,18,38,0.18)] sm:p-8 lg:grid-cols-[1.02fr_0.98fr] lg:p-10">
-              <div>
-                <div className="inline-flex rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#f3d77a]">
-                  Why This Blog Matters
+        <section className="py-6 sm:py-8 lg:py-10">
+          <Container className="max-w-[1240px] px-4 sm:px-6 lg:px-8">
+            <div className="overflow-hidden rounded-[30px] border border-[#e5eaf2] bg-[linear-gradient(180deg,#071226_0%,#0c1a3a_100%)] p-5 text-white shadow-[0_22px_52px_rgba(7,18,38,0.16)] sm:p-7 lg:p-8">
+              <div className="grid gap-6 lg:grid-cols-[1.02fr_0.98fr]">
+                <div>
+                  <div className="inline-flex rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#f3d77a] sm:text-[11px]">
+                    Why This Blog Matters
+                  </div>
+
+                  <h2
+                    className="mt-4 text-balance text-[1.8rem] font-semibold tracking-tight sm:text-[2.2rem] lg:text-[2.7rem]"
+                    style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
+                  >
+                    Better Content Helps Build Better Trust and Better Search Visibility
+                  </h2>
+
+                  <p className="mt-4 text-[14px] leading-7 text-white/78 sm:text-[15px]">
+                    A premium blog does more than publish articles. It helps a
+                    business build authority, improve SEO depth, educate clients,
+                    strengthen internal linking, and show that the company
+                    understands the market it serves.
+                  </p>
+
+                  <div className="mt-5 grid gap-3">
+                    {[
+                      "Supports search visibility and authority",
+                      "Helps potential clients understand service value",
+                      "Creates stronger internal linking across pages",
+                      "Builds trust through premium, relevant content",
+                    ].map((item) => (
+                      <div key={item} className="flex items-start gap-3">
+                        <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-[#f3d77a]" />
+                        <p className="text-sm leading-7 text-white/82">{item}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
-                <h2
-                  className="mt-5 text-balance text-3xl font-semibold tracking-tight sm:text-4xl lg:text-[2.8rem]"
-                  style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
-                >
-                  Better Content Helps Build Better Trust and Better Search Visibility
-                </h2>
-
-                <p className="mt-5 text-[15px] leading-8 text-white/78 sm:text-[16px]">
-                  A premium blog does more than publish articles. It helps a
-                  business build authority, improve SEO depth, educate clients,
-                  strengthen internal linking, and show that the company
-                  understands the market it serves. This blog is designed with
-                  exactly that role in mind.
-                </p>
-
-                <div className="mt-6 grid gap-3">
+                <div className="grid gap-3 sm:grid-cols-2">
                   {[
-                    "Supports search visibility and authority",
-                    "Helps potential clients understand service value",
-                    "Creates stronger internal linking across pages",
-                    "Builds trust through premium, relevant content",
+                    "Website Design Insights",
+                    "SEO & Visibility",
+                    "Digital Marketing",
+                    "Branding & Authority",
+                    "Accounting & Operations",
+                    "Business Growth Systems",
                   ].map((item) => (
-                    <div key={item} className="flex items-start gap-3">
-                      <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-[#f3d77a]" />
-                      <p className="text-sm leading-7 text-white/82">{item}</p>
+                    <div
+                      key={item}
+                      className="rounded-2xl border border-white/10 bg-white/8 px-4 py-3 text-sm text-white/84"
+                    >
+                      {item}
                     </div>
                   ))}
                 </div>
-              </div>
-
-              <div className="grid gap-3 sm:grid-cols-2">
-                {[
-                  "Website Design Insights",
-                  "SEO & Visibility",
-                  "Digital Marketing",
-                  "Branding & Authority",
-                  "Accounting & Operations",
-                  "Business Growth Systems",
-                ].map((item) => (
-                  <div
-                    key={item}
-                    className="rounded-2xl border border-white/10 bg-white/8 px-4 py-3 text-sm text-white/84"
-                  >
-                    {item}
-                  </div>
-                ))}
               </div>
             </div>
           </Container>
         </section>
 
-        <section className="py-14 sm:py-16 lg:py-18">
+        <section className="py-8 sm:py-10 lg:py-12">
           <Container className="max-w-[1100px] px-4 sm:px-6 lg:px-8">
-            <div className="overflow-hidden rounded-[34px] border border-[#eadcb0] bg-[linear-gradient(180deg,#fffaf0_0%,#ffffff_100%)] p-7 text-center shadow-[0_20px_46px_rgba(7,18,38,0.05)] sm:p-9 lg:p-12">
+            <div className="overflow-hidden rounded-[30px] border border-[#eadcb0] bg-[linear-gradient(180deg,#fffaf0_0%,#ffffff_100%)] p-6 text-center shadow-[0_18px_40px_rgba(7,18,38,0.05)] sm:p-8 lg:p-10">
               <div className="mx-auto max-w-3xl">
-                <div className="inline-flex items-center gap-2 rounded-full border border-[#ead8a1] bg-white px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#8b6a18]">
+                <div className="inline-flex items-center gap-2 rounded-full border border-[#ead8a1] bg-white px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8b6a18] sm:text-[11px]">
                   <BriefcaseBusiness className="h-3.5 w-3.5" />
                   Need Help With Your Business?
                 </div>
 
                 <h2
-                  className="mt-5 text-balance text-3xl font-semibold tracking-tight text-[#071226] sm:text-4xl lg:text-[3rem]"
+                  className="mt-4 text-balance text-[1.95rem] font-semibold tracking-tight text-[#071226] sm:text-[2.4rem] lg:text-[3rem]"
                   style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
                 >
                   Let’s Turn Insight into Action
                 </h2>
 
-                <p className="mt-5 text-[15px] leading-8 text-[#44556f] sm:text-[16px]">
+                <p className="mt-4 text-[14px] leading-7 text-[#44556f] sm:text-[15px]">
                   If you want your business to look more premium, rank more
                   strongly, convert better, or operate with more structure,
                   MoBiz.mu can help you turn the right ideas into stronger
                   execution.
                 </p>
 
-                <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
                   <Link
                     href="/contact"
-                    className="group inline-flex min-w-[220px] items-center justify-center rounded-full border border-[#cfae52] bg-[linear-gradient(180deg,#071226_0%,#0a1733_55%,#0d2147_100%)] px-6 py-3.5 text-sm font-semibold text-[#f3d77a] shadow-[0_16px_32px_rgba(7,18,38,0.18)] transition-all duration-300 hover:-translate-y-0.5"
+                    className="group inline-flex min-w-[220px] items-center justify-center rounded-full border border-[#cfae52] bg-[linear-gradient(180deg,#071226_0%,#0a1733_55%,#0d2147_100%)] px-6 py-3 text-sm font-semibold text-[#f3d77a] shadow-[0_14px_28px_rgba(7,18,38,0.14)] transition-all duration-300 hover:-translate-y-0.5"
                   >
                     Contact MoBiz.mu
                     <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
@@ -518,7 +527,7 @@ export default function BlogPage() {
 
                   <Link
                     href="/services"
-                    className="inline-flex min-w-[220px] items-center justify-center rounded-full border border-[#d7dee9] bg-white px-6 py-3.5 text-sm font-semibold text-[#071226] shadow-[0_12px_28px_rgba(7,18,38,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#cfae52] hover:text-[#8b6a18]"
+                    className="inline-flex min-w-[220px] items-center justify-center rounded-full border border-[#d7dee9] bg-white px-6 py-3 text-sm font-semibold text-[#071226] shadow-[0_10px_22px_rgba(7,18,38,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#cfae52] hover:text-[#8b6a18]"
                   >
                     Explore Services
                   </Link>

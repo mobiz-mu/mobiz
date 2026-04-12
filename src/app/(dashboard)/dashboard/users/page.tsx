@@ -1,6 +1,6 @@
 const users = [
   {
-    name: "Moganaden Cluthan",
+    name: "Mobiz.mu",
     role: "Super Admin",
     status: "Active",
   },

@@ -17,25 +17,28 @@ export default function DashboardSidebar({
   return (
     <aside
       className={cn(
-        "shrink-0 bg-[linear-gradient(180deg,#071226_0%,#0d1b3d_100%)] text-white",
-        mobile ? "w-full" : "hidden h-screen w-[280px] border-r border-white/10 lg:block"
+        "bg-[linear-gradient(180deg,#071226_0%,#0d1b3d_100%)] text-white",
+        mobile
+          ? "w-full border-b border-white/10"
+          : "hidden h-screen w-[290px] shrink-0 border-r border-white/10 lg:fixed lg:left-0 lg:top-0 lg:block"
       )}
     >
       <div className="flex h-full flex-col">
         <div className="border-b border-white/10 px-6 py-6">
-          <div className="text-xs font-semibold uppercase tracking-[0.24em] text-[#f3d77a]">
+          <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#f3d77a]">
             MoBiz.mu
           </div>
-          <div className="mt-2 text-2xl font-semibold tracking-tight">Dashboard</div>
-          <p className="mt-2 text-sm leading-6 text-white/70">
-            Manage your website, documents, content, analytics, and users.
-          </p>
+
+          <div className="mt-2 text-[1.9rem] font-semibold tracking-tight text-white">
+            Dashboard
+          </div>
         </div>
 
-        <nav className="flex-1 space-y-1 px-4 py-5">
+        <nav className="flex-1 space-y-1.5 px-4 py-5">
           {dashboardNav.map((item) => {
             const Icon = item.icon;
-            const active = pathname === item.href;
+            const active =
+              pathname === item.href || pathname.startsWith(`${item.href}/`);
 
             return (
               <Link
@@ -43,27 +46,18 @@ export default function DashboardSidebar({
                 href={item.href}
                 onClick={onNavigate}
                 className={cn(
-                  "flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition",
+                  "flex items-center gap-3 rounded-[20px] px-4 py-3.5 text-[15px] font-medium transition-all duration-200",
                   active
                     ? "bg-white text-[#071226] shadow-[0_12px_30px_rgba(255,255,255,0.14)]"
-                    : "text-white/75 hover:bg-white/10 hover:text-white"
+                    : "text-white/78 hover:bg-white/10 hover:text-white"
                 )}
               >
-                <Icon className="h-4.5 w-4.5" />
-                {item.title}
+                <Icon className="h-[18px] w-[18px] shrink-0" />
+                <span>{item.title}</span>
               </Link>
             );
           })}
         </nav>
-
-        <div className="px-4 pb-5">
-          <div className="rounded-[24px] border border-white/10 bg-white/10 p-4">
-            <div className="text-sm font-semibold">MoBiz Executive Suite</div>
-            <p className="mt-2 text-sm leading-6 text-white/70">
-              Analytics, content, quotations, invoices, and proposals in one place.
-            </p>
-          </div>
-        </div>
       </div>
     </aside>
   );

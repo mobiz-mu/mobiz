@@ -1,14 +1,18 @@
 "use client";
 
+import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase-client";
 import StatusSelect from "@/components/dashboard/StatusSelect";
-import {
-  EditableLineItem,
-  calculateGrandTotal,
-  calculateLineTotal,
-  calculateSubtotal,
-} from "@/lib/document-utils";
+
+type EditableLineItem = {
+  id?: string;
+  description: string;
+  unit_price: number;
+  qty: number;
+  amount: number;
+  sort_order: number;
+};
 
 type Customer = {
   id: string;
@@ -20,38 +24,73 @@ type Quotation = {
   id: string;
   quotation_number: string;
   customer_id: string | null;
-  issue_date: string;
+  issue_date: string | null;
   expiry_date: string | null;
   status: string;
-  discount_amount: number;
-  tax_amount: number;
+  bank_account_key: string | null;
   notes: string | null;
   terms: string | null;
-  subtotal?: number;
-  total_amount?: number;
+  sub_total: number;
+  discount_percent: number;
+  discount_amount: number;
+  total_amount: number;
 };
 
 const emptyItem = (): EditableLineItem => ({
-  title: "",
   description: "",
-  quantity: 1,
   unit_price: 0,
-  line_total: 0,
+  qty: 1,
+  amount: 0,
   sort_order: 0,
 });
 
 const initialForm = {
   id: "",
-  quotation_number: "",
   customer_id: "",
   issue_date: new Date().toISOString().slice(0, 10),
   expiry_date: "",
   status: "draft",
-  discount_amount: 0,
-  tax_amount: 0,
+  bank_account_key: "personal_mcb",
   notes: "",
-  terms: "",
+  terms: "In case of cancellation, no refund will be applicable.\nFull payment required.",
+  discount_percent: 0,
 };
+
+function calculateLineTotal(qty: number, unitPrice: number) {
+  return Number(qty || 0) * Number(unitPrice || 0);
+}
+
+function calculateSubTotal(items: EditableLineItem[]) {
+  return items.reduce((sum, item) => sum + calculateLineTotal(item.qty, item.unit_price), 0);
+}
+
+function calculateDiscountAmount(subTotal: number, discountPercent: number) {
+  return (subTotal * Number(discountPercent || 0)) / 100;
+}
+
+function calculateGrandTotal(subTotal: number, discountAmount: number) {
+  return Math.max(0, subTotal - discountAmount);
+}
+
+function money(value: number) {
+  return `Rs ${Number(value || 0).toLocaleString("en-MU", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
+}
+
+function getCustomerLabel(customer: Customer) {
+  return customer.company_name || customer.contact_name || "Unnamed Customer";
+}
+
+function formatDate(value?: string | null) {
+  if (!value) return "—";
+  return new Date(value).toLocaleDateString("en-MU", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+}
 
 export default function QuotationsPage() {
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -60,78 +99,40 @@ export default function QuotationsPage() {
   const [items, setItems] = useState<EditableLineItem[]>([emptyItem()]);
   const [loading, setLoading] = useState(false);
 
-  const subtotal = useMemo(() => calculateSubtotal(items), [items]);
+  const subTotal = useMemo(() => calculateSubTotal(items), [items]);
+  const discountAmount = useMemo(
+    () => calculateDiscountAmount(subTotal, form.discount_percent),
+    [subTotal, form.discount_percent]
+  );
   const totalAmount = useMemo(
-    () => calculateGrandTotal(subtotal, form.discount_amount, form.tax_amount),
-    [subtotal, form.discount_amount, form.tax_amount]
+    () => calculateGrandTotal(subTotal, discountAmount),
+    [subTotal, discountAmount]
   );
 
   async function loadCustomers() {
-    const { data } = await supabaseBrowser
+    const { data, error } = await supabaseBrowser
       .from("customers")
       .select("id, company_name, contact_name")
       .order("created_at", { ascending: false });
 
+    if (error) {
+      alert(`Unable to load customers: ${error.message}`);
+      return;
+    }
+
     setCustomers((data as Customer[]) || []);
   }
 
-  async function previewQuotationPdf(item: Quotation) {
-    const { data: customer } = item.customer_id
-      ? await supabaseBrowser
-          .from("customers")
-          .select("*")
-          .eq("id", item.customer_id)
-          .single()
-      : { data: null };
-
-    const { data: quotationItems } = await supabaseBrowser
-      .from("quotation_items")
-      .select("*")
-      .eq("quotation_id", item.id)
-      .order("sort_order", { ascending: true });
-
-    const res = await fetch("/api/documents/quotation/pdf", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        quotationNumber: item.quotation_number,
-        issueDate: item.issue_date,
-        expiryDate: item.expiry_date || undefined,
-        customer: {
-          companyName: customer?.company_name || "",
-          contactName: customer?.contact_name || "",
-          email: customer?.email || "",
-          phone: customer?.phone || "",
-          billingAddress: customer?.billing_address || "",
-        },
-        items: (quotationItems || []).map((line) => ({
-          title: line.title,
-          description: line.description || "",
-          quantity: Number(line.quantity),
-          unitPrice: Number(line.unit_price),
-          lineTotal: Number(line.line_total),
-        })),
-        subtotal: Number(item.subtotal || 0),
-        discountAmount: Number(item.discount_amount || 0),
-        taxAmount: Number(item.tax_amount || 0),
-        totalAmount: Number(item.total_amount || 0),
-        notes: item.notes || "",
-        terms: item.terms || "",
-      }),
-    });
-
-    const blob = await res.blob();
-    const url = window.URL.createObjectURL(blob);
-    window.open(url, "_blank");
-  }
-
   async function loadQuotations() {
-    const { data } = await supabaseBrowser
+    const { data, error } = await supabaseBrowser
       .from("quotations")
       .select("*")
       .order("created_at", { ascending: false });
+
+    if (error) {
+      alert(`Unable to load quotations: ${error.message}`);
+      return;
+    }
 
     setQuotations((data as Quotation[]) || []);
   }
@@ -146,7 +147,7 @@ export default function QuotationsPage() {
       prev.map((item, i) => {
         if (i !== index) return item;
         const next = { ...item, ...patch };
-        next.line_total = calculateLineTotal(next.quantity, next.unit_price);
+        next.amount = calculateLineTotal(next.qty, next.unit_price);
         return next;
       })
     );
@@ -162,57 +163,89 @@ export default function QuotationsPage() {
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
+
+    if (!form.customer_id) {
+      alert("Please select a customer.");
+      return;
+    }
+
+    if (!items.length || items.every((item) => !item.description.trim())) {
+      alert("Please add at least one line item.");
+      return;
+    }
+
     setLoading(true);
 
     try {
       const payload = {
-        quotation_number: form.quotation_number,
         customer_id: form.customer_id || null,
-        issue_date: form.issue_date,
+        issue_date: form.issue_date || null,
         expiry_date: form.expiry_date || null,
         status: form.status,
-        discount_amount: Number(form.discount_amount || 0),
-        tax_amount: Number(form.tax_amount || 0),
-        subtotal,
-        total_amount: totalAmount,
+        bank_account_key: form.bank_account_key,
         notes: form.notes || null,
         terms: form.terms || null,
+        sub_total: subTotal,
+        discount_percent: Number(form.discount_percent || 0),
+        discount_amount: discountAmount,
+        total_amount: totalAmount,
       };
 
       let quotationId = form.id;
 
       if (form.id) {
-        await supabaseBrowser
+        const { error: updateError } = await supabaseBrowser
           .from("quotations")
           .update(payload)
           .eq("id", form.id);
 
-        await supabaseBrowser
+        if (updateError) {
+          alert(`Unable to update quotation: ${updateError.message}`);
+          return;
+        }
+
+        const { error: deleteItemsError } = await supabaseBrowser
           .from("quotation_items")
           .delete()
           .eq("quotation_id", form.id);
+
+        if (deleteItemsError) {
+          alert(`Unable to refresh quotation items: ${deleteItemsError.message}`);
+          return;
+        }
       } else {
-        const { data } = await supabaseBrowser
+        const { data, error: insertError } = await supabaseBrowser
           .from("quotations")
           .insert(payload)
-          .select()
+          .select("*")
           .single();
+
+        if (insertError) {
+          alert(`Unable to create quotation: ${insertError.message}`);
+          return;
+        }
 
         quotationId = data?.id as string;
       }
 
       if (quotationId && items.length) {
-        await supabaseBrowser.from("quotation_items").insert(
-          items.map((item, index) => ({
-            quotation_id: quotationId,
-            title: item.title,
-            description: item.description || null,
-            quantity: item.quantity,
-            unit_price: item.unit_price,
-            line_total: calculateLineTotal(item.quantity, item.unit_price),
-            sort_order: index,
-          }))
+        const { error: itemsError } = await supabaseBrowser.from("quotation_items").insert(
+          items
+            .filter((item) => item.description.trim())
+            .map((item, index) => ({
+              quotation_id: quotationId,
+              description: item.description,
+              unit_price: Number(item.unit_price || 0),
+              qty: Number(item.qty || 0),
+              amount: calculateLineTotal(item.qty, item.unit_price),
+              sort_order: index,
+            }))
         );
+
+        if (itemsError) {
+          alert(`Unable to save quotation items: ${itemsError.message}`);
+          return;
+        }
       }
 
       setForm(initialForm);
@@ -226,177 +259,126 @@ export default function QuotationsPage() {
   async function editQuotation(item: Quotation) {
     setForm({
       id: item.id,
-      quotation_number: item.quotation_number,
       customer_id: item.customer_id || "",
-      issue_date: item.issue_date,
+      issue_date: item.issue_date || new Date().toISOString().slice(0, 10),
       expiry_date: item.expiry_date || "",
       status: item.status,
-      discount_amount: Number(item.discount_amount || 0),
-      tax_amount: Number(item.tax_amount || 0),
+      bank_account_key: item.bank_account_key || "personal_mcb",
       notes: item.notes || "",
       terms: item.terms || "",
+      discount_percent: Number(item.discount_percent || 0),
     });
 
-    const { data } = await supabaseBrowser
+    const { data, error } = await supabaseBrowser
       .from("quotation_items")
       .select("*")
       .eq("quotation_id", item.id)
       .order("sort_order", { ascending: true });
 
-    setItems(
-      (data as EditableLineItem[])?.map((row, index) => ({
-        ...row,
-        sort_order: index,
-        quantity: Number(row.quantity),
-        unit_price: Number(row.unit_price),
-        line_total: Number(row.line_total),
-      })) || [emptyItem()]
-    );
-  }
-
-  async function convertToInvoice(quotationId: string) {
-    const { data: quotation } = await supabaseBrowser
-      .from("quotations")
-      .select("*")
-      .eq("id", quotationId)
-      .single();
-
-    const { data: quoteItems } = await supabaseBrowser
-      .from("quotation_items")
-      .select("*")
-      .eq("quotation_id", quotationId)
-      .order("sort_order", { ascending: true });
-
-    if (!quotation) return;
-
-    const invoiceNumber = `INV-${Date.now()}`;
-
-    const { data: invoice } = await supabaseBrowser
-      .from("invoices")
-      .insert({
-        invoice_number: invoiceNumber,
-        customer_id: quotation.customer_id,
-        quotation_id: quotation.id,
-        issue_date: new Date().toISOString().slice(0, 10),
-        due_date: quotation.expiry_date,
-        status: "draft",
-        currency: "MUR",
-        subtotal: quotation.subtotal,
-        discount_amount: quotation.discount_amount,
-        tax_amount: quotation.tax_amount,
-        total_amount: quotation.total_amount,
-        amount_paid: 0,
-        balance_due: quotation.total_amount,
-        notes: quotation.notes,
-        payment_instructions: null,
-      })
-      .select()
-      .single();
-
-    if (invoice?.id && quoteItems?.length) {
-      await supabaseBrowser.from("invoice_items").insert(
-        quoteItems.map((item) => ({
-          invoice_id: invoice.id,
-          title: item.title,
-          description: item.description,
-          quantity: item.quantity,
-          unit_price: item.unit_price,
-          line_total: item.line_total,
-          sort_order: item.sort_order,
-        }))
-      );
+    if (error) {
+      alert(`Unable to load quotation items: ${error.message}`);
+      return;
     }
 
-    await supabaseBrowser
-      .from("quotations")
-      .update({ status: "converted" })
-      .eq("id", quotationId);
+    setItems(
+      ((data as EditableLineItem[]) || []).map((row, index) => ({
+        ...row,
+        sort_order: index,
+        unit_price: Number(row.unit_price || 0),
+        qty: Number(row.qty || 0),
+        amount: Number(row.amount || 0),
+      }))
+    );
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  async function approveQuotation(id: string) {
+    const res = await fetch(`/api/quotations/${id}/approve`, { method: "POST" });
+    const json = await res.json();
+
+    if (!json.ok) {
+      alert(json.message || "Unable to approve quotation.");
+      return;
+    }
 
     await loadQuotations();
-    alert("Quotation converted to invoice.");
+  }
+
+  async function convertToInvoice(id: string) {
+    const res = await fetch(`/api/quotations/${id}/convert`, { method: "POST" });
+    const json = await res.json();
+
+    if (!json.ok) {
+      alert(json.message || "Unable to convert quotation.");
+      return;
+    }
+
+    if (json.invoice?.id) {
+      window.location.href = `/dashboard/invoices/${json.invoice.id}`;
+      return;
+    }
+
+    await loadQuotations();
   }
 
   return (
-    <main className="space-y-6">
-      <section className="grid gap-6 xl:grid-cols-[1fr_1fr]">
-        <div className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-[0_16px_40px_rgba(15,23,42,0.05)]">
-          <div className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">
-            Quotations
+    <main className="space-y-5">
+      <section className="grid gap-5 xl:grid-cols-[1.02fr_0.98fr]">
+        <div className="rounded-[28px] border border-slate-200 bg-white p-4 shadow-[0_18px_44px_rgba(15,23,42,0.05)] sm:p-5">
+          <div className="flex flex-col gap-1">
+            <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+              Quotations
+            </div>
+            <h2 className="text-[1.6rem] font-semibold tracking-tight text-[#071226]">
+              {form.id ? "Edit quotation" : "Create quotation"}
+            </h2>
           </div>
-          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-[#071226]">
-            Create and edit quotations
-          </h2>
 
-          <form onSubmit={onSubmit} className="mt-6 grid gap-4">
-            <div className="grid gap-4 md:grid-cols-2">
-              <input
-                value={form.quotation_number}
-                onChange={(e) =>
-                  setForm((p) => ({
-                    ...p,
-                    quotation_number: e.target.value,
-                  }))
-                }
-                placeholder="Quotation number"
-                className="h-12 rounded-2xl border border-slate-200 px-4 text-sm"
-                required
-              />
-
+          <form onSubmit={onSubmit} className="mt-4 grid gap-3">
+            <div className="grid gap-3 md:grid-cols-2">
               <select
                 value={form.customer_id}
-                onChange={(e) =>
-                  setForm((p) => ({
-                    ...p,
-                    customer_id: e.target.value,
-                  }))
-                }
-                className="h-12 rounded-2xl border border-slate-200 px-4 text-sm"
+                onChange={(e) => setForm((p) => ({ ...p, customer_id: e.target.value }))}
+                className="h-11 rounded-2xl border border-slate-200 bg-white px-4 text-sm outline-none focus:border-[#0d1b3d]"
               >
                 <option value="">Select customer</option>
                 {customers.map((customer) => (
                   <option key={customer.id} value={customer.id}>
-                    {customer.company_name ||
-                      customer.contact_name ||
-                      "Unnamed Customer"}
+                    {getCustomerLabel(customer)}
                   </option>
                 ))}
               </select>
+
+              <select
+                value={form.bank_account_key}
+                onChange={(e) => setForm((p) => ({ ...p, bank_account_key: e.target.value }))}
+                className="h-11 rounded-2xl border border-slate-200 bg-white px-4 text-sm outline-none focus:border-[#0d1b3d]"
+              >
+                <option value="personal_mcb">MCB - Mr Thasaraden Cluthan</option>
+                <option value="mobiz_mcb">MCB - Mobiz</option>
+              </select>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-3">
+            <div className="grid gap-3 md:grid-cols-3">
               <input
                 type="date"
                 value={form.issue_date}
-                onChange={(e) =>
-                  setForm((p) => ({
-                    ...p,
-                    issue_date: e.target.value,
-                  }))
-                }
-                className="h-12 rounded-2xl border border-slate-200 px-4 text-sm"
+                onChange={(e) => setForm((p) => ({ ...p, issue_date: e.target.value }))}
+                className="h-11 rounded-2xl border border-slate-200 px-4 text-sm outline-none focus:border-[#0d1b3d]"
               />
 
               <input
                 type="date"
                 value={form.expiry_date}
-                onChange={(e) =>
-                  setForm((p) => ({
-                    ...p,
-                    expiry_date: e.target.value,
-                  }))
-                }
-                className="h-12 rounded-2xl border border-slate-200 px-4 text-sm"
+                onChange={(e) => setForm((p) => ({ ...p, expiry_date: e.target.value }))}
+                className="h-11 rounded-2xl border border-slate-200 px-4 text-sm outline-none focus:border-[#0d1b3d]"
               />
 
               <select
                 value={form.status}
-                onChange={(e) =>
-                  setForm((p) => ({
-                    ...p,
-                    status: e.target.value,
-                  }))
-                }
-                className="h-12 rounded-2xl border border-slate-200 px-4 text-sm"
+                onChange={(e) => setForm((p) => ({ ...p, status: e.target.value }))}
+                className="h-11 rounded-2xl border border-slate-200 px-4 text-sm outline-none focus:border-[#0d1b3d]"
               >
                 <option value="draft">Draft</option>
                 <option value="sent">Sent</option>
@@ -405,72 +387,53 @@ export default function QuotationsPage() {
               </select>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-2">
               {items.map((item, index) => (
                 <div
                   key={index}
-                  className="rounded-2xl border border-slate-200 p-4"
+                  className="rounded-[20px] border border-slate-200 bg-slate-50/80 p-3"
                 >
-                  <div className="grid gap-3 md:grid-cols-2">
-                    <input
-                      value={item.title}
-                      onChange={(e) =>
-                        updateItem(index, { title: e.target.value })
-                      }
-                      placeholder="Item title"
-                      className="h-11 rounded-xl border border-slate-200 px-4 text-sm"
-                      required
-                    />
-                    <input
-                      value={item.description || ""}
-                      onChange={(e) =>
-                        updateItem(index, { description: e.target.value })
-                      }
-                      placeholder="Description"
-                      className="h-11 rounded-xl border border-slate-200 px-4 text-sm"
-                    />
-                  </div>
+                  <textarea
+                    value={item.description}
+                    onChange={(e) => updateItem(index, { description: e.target.value })}
+                    placeholder="Line item description"
+                    rows={2}
+                    className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-[#0d1b3d]"
+                    required
+                  />
 
-                  <div className="mt-3 grid gap-3 md:grid-cols-3">
-                    <input
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      value={item.quantity}
-                      onChange={(e) =>
-                        updateItem(index, {
-                          quantity: Number(e.target.value),
-                        })
-                      }
-                      placeholder="Qty"
-                      className="h-11 rounded-xl border border-slate-200 px-4 text-sm"
-                    />
-
+                  <div className="mt-2 grid gap-2 sm:grid-cols-3">
                     <input
                       type="number"
                       min="0"
                       step="0.01"
                       value={item.unit_price}
-                      onChange={(e) =>
-                        updateItem(index, {
-                          unit_price: Number(e.target.value),
-                        })
-                      }
+                      onChange={(e) => updateItem(index, { unit_price: Number(e.target.value) })}
                       placeholder="Unit price"
-                      className="h-11 rounded-xl border border-slate-200 px-4 text-sm"
+                      className="h-10 rounded-xl border border-slate-200 bg-white px-4 text-sm outline-none focus:border-[#0d1b3d]"
                     />
 
-                    <div className="flex h-11 items-center rounded-xl border border-slate-200 px-4 text-sm font-medium text-slate-700">
-                      Line Total: Rs {item.line_total.toFixed(2)}
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={item.qty}
+                      onChange={(e) => updateItem(index, { qty: Number(e.target.value) })}
+                      placeholder="Qty"
+                      className="h-10 rounded-xl border border-slate-200 bg-white px-4 text-sm outline-none focus:border-[#0d1b3d]"
+                    />
+
+                    <div className="flex h-10 items-center rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-[#071226]">
+                      {money(item.amount)}
                     </div>
                   </div>
 
                   <button
                     type="button"
                     onClick={() => removeItem(index)}
-                    className="mt-3 text-sm font-medium text-red-600"
+                    className="mt-2 text-sm font-medium text-red-600"
                   >
-                    Remove item
+                    Remove
                   </button>
                 </div>
               ))}
@@ -478,153 +441,164 @@ export default function QuotationsPage() {
               <button
                 type="button"
                 onClick={addItem}
-                className="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700"
+                className="rounded-full bg-[#0d1b3d] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#071226]"
               >
                 Add Line Item
               </button>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-3 md:grid-cols-2">
               <input
                 type="number"
+                min="0"
                 step="0.01"
-                value={form.discount_amount}
+                value={form.discount_percent}
                 onChange={(e) =>
-                  setForm((p) => ({
-                    ...p,
-                    discount_amount: Number(e.target.value),
-                  }))
+                  setForm((p) => ({ ...p, discount_percent: Number(e.target.value) }))
                 }
-                placeholder="Discount amount"
-                className="h-12 rounded-2xl border border-slate-200 px-4 text-sm"
+                placeholder="Discount %"
+                className="h-11 rounded-2xl border border-slate-200 px-4 text-sm outline-none focus:border-[#0d1b3d]"
               />
 
-              <input
-                type="number"
-                step="0.01"
-                value={form.tax_amount}
-                onChange={(e) =>
-                  setForm((p) => ({
-                    ...p,
-                    tax_amount: Number(e.target.value),
-                  }))
-                }
-                placeholder="Tax amount"
-                className="h-12 rounded-2xl border border-slate-200 px-4 text-sm"
-              />
+              <div className="flex h-11 items-center rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm font-medium text-slate-700">
+                Discount: {money(discountAmount)}
+              </div>
             </div>
 
             <textarea
               value={form.notes}
-              onChange={(e) =>
-                setForm((p) => ({
-                  ...p,
-                  notes: e.target.value,
-                }))
-              }
+              onChange={(e) => setForm((p) => ({ ...p, notes: e.target.value }))}
               placeholder="Notes"
-              rows={3}
-              className="rounded-2xl border border-slate-200 px-4 py-3 text-sm"
+              rows={2}
+              className="rounded-2xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-[#0d1b3d]"
             />
 
             <textarea
               value={form.terms}
-              onChange={(e) =>
-                setForm((p) => ({
-                  ...p,
-                  terms: e.target.value,
-                }))
-              }
+              onChange={(e) => setForm((p) => ({ ...p, terms: e.target.value }))}
               placeholder="Terms"
               rows={3}
-              className="rounded-2xl border border-slate-200 px-4 py-3 text-sm"
+              className="rounded-2xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-[#0d1b3d]"
             />
 
-            <div className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-700">
-              <div>Subtotal: Rs {subtotal.toFixed(2)}</div>
+            <div className="grid gap-2 rounded-[20px] bg-[linear-gradient(180deg,#071226_0%,#0d1b3d_100%)] p-4 text-white sm:grid-cols-3">
               <div>
-                Discount: Rs {Number(form.discount_amount).toFixed(2)}
+                <div className="text-xs uppercase tracking-[0.16em] text-white/65">Sub Total</div>
+                <div className="mt-1 text-lg font-semibold">{money(subTotal)}</div>
               </div>
-              <div>Tax: Rs {Number(form.tax_amount).toFixed(2)}</div>
-              <div className="mt-2 text-base font-semibold text-[#071226]">
-                Total: Rs {totalAmount.toFixed(2)}
+              <div>
+                <div className="text-xs uppercase tracking-[0.16em] text-white/65">Discount</div>
+                <div className="mt-1 text-lg font-semibold">{money(discountAmount)}</div>
+              </div>
+              <div>
+                <div className="text-xs uppercase tracking-[0.16em] text-white/65">Total</div>
+                <div className="mt-1 text-lg font-semibold">{money(totalAmount)}</div>
               </div>
             </div>
 
-            <button className="rounded-full bg-[#071226] px-5 py-3 text-sm font-semibold text-white">
-              {loading
-                ? "Saving..."
-                : form.id
-                ? "Update Quotation"
-                : "Create Quotation"}
-            </button>
+            <div className="flex flex-wrap gap-2">
+              <button className="rounded-full bg-[#0d1b3d] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#071226]">
+                {loading ? "Saving..." : form.id ? "Update Quotation" : "Create Quotation"}
+              </button>
+
+              {form.id ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setForm(initialForm);
+                    setItems([emptyItem()]);
+                  }}
+                  className="rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                >
+                  Cancel Edit
+                </button>
+              ) : null}
+            </div>
           </form>
         </div>
 
-        <div className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-[0_16px_40px_rgba(15,23,42,0.05)]">
-          <h3 className="text-xl font-semibold text-[#071226]">
-            Existing Quotations
-          </h3>
+        <div className="rounded-[28px] border border-slate-200 bg-white p-4 shadow-[0_18px_44px_rgba(15,23,42,0.05)] sm:p-5">
+          <div className="flex items-center justify-between gap-3">
+            <h3 className="text-[1.35rem] font-semibold tracking-tight text-[#071226]">
+              Existing Quotations
+            </h3>
+            <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600">
+              {quotations.length} records
+            </span>
+          </div>
 
-          <div className="mt-5 space-y-4">
+          <div className="mt-4 space-y-3">
             {quotations.map((item) => (
               <div
                 key={item.id}
-                className="rounded-[24px] border border-slate-200 bg-slate-50 p-5"
+                className="rounded-[22px] border border-slate-200 bg-[linear-gradient(180deg,#ffffff_0%,#f8fafc_100%)] p-4 shadow-[0_8px_20px_rgba(15,23,42,0.04)]"
               >
-                <div className="text-lg font-semibold text-[#071226]">
-                  {item.quotation_number}
-                </div>
+                <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
+                  <div className="min-w-0">
+                    <div className="text-lg font-semibold text-[#071226]">
+                      {item.quotation_number}
+                    </div>
+                    <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-sm text-slate-500">
+                      <span>Issue: {formatDate(item.issue_date)}</span>
+                      <span>Expiry: {formatDate(item.expiry_date)}</span>
+                      <span>Total: {money(item.total_amount)}</span>
+                    </div>
+                  </div>
 
-                <div className="mt-1 text-sm text-slate-500">
-                  Issue Date: {item.issue_date}
-                </div>
+                  <div className="flex flex-wrap gap-2">
+                    <StatusSelect
+                      table="quotations"
+                      id={item.id}
+                      value={item.status}
+                      options={["draft", "sent", "approved", "converted"]}
+                      onDone={loadQuotations}
+                    />
 
-                <div className="mt-4 flex flex-wrap gap-2">
-                  <StatusSelect
-                    table="quotations"
-                    id={item.id}
-                    value={item.status}
-                    options={["draft", "sent", "approved", "converted"]}
-                    onDone={loadQuotations}
-                  />
+                    <Link
+                      href={`/dashboard/quotations/${item.id}`}
+                      className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+                    >
+                      Open
+                    </Link>
 
-                  <button
-                    type="button"
-                    onClick={() => previewQuotationPdf(item)}
-                    className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700"
-                  >
-                    PDF Preview
-                  </button>
+                    <button
+                      type="button"
+                      onClick={() => editQuotation(item)}
+                      className="rounded-full bg-[#0d1b3d] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#071226]"
+                    >
+                      Edit
+                    </button>
 
-                  <a
-                    href={`/dashboard/quotations/${item.id}`}
-                    className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700"
-                  >
-                    Open
-                  </a>
+                    <button
+                      type="button"
+                      onClick={() => approveQuotation(item.id)}
+                      className="rounded-full bg-[#0d1b3d] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#071226]"
+                    >
+                      Approve
+                    </button>
 
-                  <button
-                    type="button"
-                    onClick={() => editQuotation(item)}
-                    className="rounded-full bg-[#071226] px-4 py-2 text-sm font-medium text-white"
-                  >
-                    Edit
-                  </button>
+                    <button
+                      type="button"
+                      onClick={() => convertToInvoice(item.id)}
+                      className="rounded-full bg-[#0d1b3d] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#071226]"
+                    >
+                      Convert
+                    </button>
 
-                  <button
-                    type="button"
-                    onClick={() => convertToInvoice(item.id)}
-                    className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700"
-                  >
-                    Convert to Invoice
-                  </button>
+                    <Link
+                      href={`/dashboard/quotations/${item.id}/print`}
+                      target="_blank"
+                      className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+                    >
+                      Print
+                    </Link>
+                  </div>
                 </div>
               </div>
             ))}
 
             {!quotations.length ? (
-              <div className="rounded-2xl border border-dashed border-slate-300 px-4 py-8 text-center text-sm text-slate-500">
+              <div className="rounded-2xl border border-dashed border-slate-300 px-4 py-10 text-center text-sm text-slate-500">
                 No quotations yet.
               </div>
             ) : null}

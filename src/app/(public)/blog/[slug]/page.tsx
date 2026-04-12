@@ -468,6 +468,10 @@ export async function generateMetadata({
     alternates: {
       canonical: `${siteUrl}${post.href}`,
     },
+    robots: {
+      index: true,
+      follow: true,
+    },
     openGraph: {
       title: `${post.title} | MoBiz.mu Blog`,
       description: post.excerpt,
@@ -497,12 +501,10 @@ export default async function BlogSlugPage({ params }: PageProps) {
     <>
       <ArticleJsonLd post={post} />
 
-      <main className="relative overflow-hidden bg-[linear-gradient(180deg,#f7f9fc_0%,#ffffff_20%,#ffffff_100%)] text-[#071226]">
-        <section className="relative isolate overflow-hidden border-b border-[#e8edf5]">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(207,174,82,0.13),transparent_30%),radial-gradient(circle_at_left,rgba(7,18,38,0.05),transparent_26%),linear-gradient(180deg,#f8fbff_0%,#ffffff_100%)]" />
-
-          <Container className="relative z-10 max-w-[1320px] px-4 py-12 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
-            <div className="mb-6">
+      <main className="bg-[linear-gradient(180deg,#f8fbff_0%,#ffffff_18%,#ffffff_100%)] text-[#071226]">
+        <section className="border-b border-[#e8edf5] bg-[radial-gradient(circle_at_top,rgba(207,174,82,0.10),transparent_28%),linear-gradient(180deg,#fafcff_0%,#ffffff_100%)]">
+          <Container className="max-w-[1240px] px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12">
+            <div className="mb-4">
               <Link
                 href="/blog"
                 className="inline-flex items-center gap-2 text-sm font-semibold text-[#071226] transition-colors duration-300 hover:text-[#8b6a18]"
@@ -512,7 +514,7 @@ export default async function BlogSlugPage({ params }: PageProps) {
               </Link>
             </div>
 
-            <div className="mx-auto max-w-5xl text-center">
+            <div className="mx-auto max-w-4xl text-center">
               <div
                 className="inline-flex rounded-full border border-[#ead9a8] bg-[#fffdf7] px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8b6a18] sm:text-[11px]"
                 style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
@@ -521,20 +523,20 @@ export default async function BlogSlugPage({ params }: PageProps) {
               </div>
 
               <h1
-                className="mt-5 text-balance text-4xl font-semibold tracking-tight text-[#071226] sm:text-5xl lg:text-[3.8rem] lg:leading-[1.03]"
+                className="mt-4 text-balance text-[2rem] font-semibold tracking-tight text-[#071226] sm:text-[2.6rem] lg:text-[3.15rem] lg:leading-[1.05]"
                 style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
               >
                 {post.title}
               </h1>
 
               <p
-                className="mx-auto mt-5 max-w-4xl text-[15px] leading-8 text-[#44556f] sm:text-[16px] lg:text-[17px]"
+                className="mx-auto mt-4 max-w-3xl text-[14px] leading-7 text-[#44556f] sm:text-[15px]"
                 style={{ fontFamily: '"Poppins", sans-serif' }}
               >
                 {post.excerpt}
               </p>
 
-              <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm text-slate-500">
+              <div className="mt-5 flex flex-wrap items-center justify-center gap-3 text-sm text-slate-500">
                 <span className="inline-flex items-center gap-2 rounded-full border border-[#e5eaf2] bg-white px-3 py-1.5">
                   <Clock3 className="h-4 w-4 text-[#c9a648]" />
                   {article.readTime}
@@ -548,14 +550,15 @@ export default async function BlogSlugPage({ params }: PageProps) {
           </Container>
         </section>
 
-        <section className="py-8 sm:py-10 lg:py-12">
+        <section className="py-4 sm:py-6 lg:py-8">
           <Container className="max-w-[1100px] px-4 sm:px-6 lg:px-8">
-            <div className="relative overflow-hidden rounded-[30px] border border-[#e5eaf2] bg-white shadow-[0_20px_48px_rgba(7,18,38,0.06)]">
+            <div className="relative overflow-hidden rounded-[28px] border border-[#e5eaf2] bg-white shadow-[0_18px_40px_rgba(7,18,38,0.06)]">
               <div className="relative aspect-[16/9] bg-slate-50">
                 <Image
                   src={post.imageSrc}
                   alt={post.imageAlt}
                   fill
+                  priority
                   sizes="100vw"
                   className="object-cover object-center"
                 />
@@ -566,10 +569,10 @@ export default async function BlogSlugPage({ params }: PageProps) {
 
         <section className="py-4 sm:py-6 lg:py-8">
           <Container className="max-w-[980px] px-4 sm:px-6 lg:px-8">
-            <article className="rounded-[30px] border border-[#e5eaf2] bg-white p-6 shadow-[0_18px_42px_rgba(7,18,38,0.05)] sm:p-8 lg:p-10">
-              <div className="prose prose-slate max-w-none prose-p:leading-8 prose-p:text-[15px] prose-p:text-[#44556f] sm:prose-p:text-[16px]">
+            <article className="rounded-[28px] border border-[#e5eaf2] bg-white p-5 shadow-[0_16px_34px_rgba(7,18,38,0.05)] sm:p-7 lg:p-8">
+              <div className="max-w-none">
                 <p
-                  className="text-[16px] leading-8 text-[#20314d] sm:text-[17px]"
+                  className="text-[15px] leading-8 text-[#20314d] sm:text-[16px]"
                   style={{ fontFamily: '"Poppins", sans-serif' }}
                 >
                   {article.intro}
@@ -578,7 +581,7 @@ export default async function BlogSlugPage({ params }: PageProps) {
                 {article.sections.map((section) => (
                   <section key={section.title} className="mt-8">
                     <h2
-                      className="text-2xl font-semibold tracking-tight text-[#071226] sm:text-[2rem]"
+                      className="text-[1.55rem] font-semibold tracking-tight text-[#071226] sm:text-[1.8rem]"
                       style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
                     >
                       {section.title}
@@ -587,7 +590,7 @@ export default async function BlogSlugPage({ params }: PageProps) {
                     {section.paragraphs.map((paragraph, index) => (
                       <p
                         key={index}
-                        className="mt-4 text-[15px] leading-8 text-[#44556f] sm:text-[16px]"
+                        className="mt-4 text-[14px] leading-8 text-[#44556f] sm:text-[15px]"
                         style={{ fontFamily: '"Poppins", sans-serif' }}
                       >
                         {paragraph}
@@ -600,7 +603,7 @@ export default async function BlogSlugPage({ params }: PageProps) {
                           <div key={bullet} className="flex items-start gap-3">
                             <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-[#8b6a18]" />
                             <p
-                              className="text-[15px] leading-7 text-[#20314d]"
+                              className="text-[14px] leading-7 text-[#20314d] sm:text-[15px]"
                               style={{ fontFamily: '"Poppins", sans-serif' }}
                             >
                               {bullet}
@@ -616,9 +619,9 @@ export default async function BlogSlugPage({ params }: PageProps) {
           </Container>
         </section>
 
-        <section className="py-8 sm:py-10 lg:py-12">
+        <section className="py-4 sm:py-6 lg:py-8">
           <Container className="max-w-[980px] px-4 sm:px-6 lg:px-8">
-            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
               {[
                 {
                   title: "Mauritius Relevance",
@@ -643,15 +646,15 @@ export default async function BlogSlugPage({ params }: PageProps) {
               ].map((item) => {
                 const Icon = item.icon;
                 return (
-                  <div
+                  <article
                     key={item.title}
-                    className="rounded-[24px] border border-[#e6ebf2] bg-white p-5 shadow-[0_14px_30px_rgba(7,18,38,0.04)]"
+                    className="rounded-[22px] border border-[#e6ebf2] bg-white p-5 shadow-[0_12px_26px_rgba(7,18,38,0.04)]"
                   >
                     <div className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-[linear-gradient(180deg,#071226_0%,#10224a_100%)] text-[#f3d77a]">
                       <Icon className="h-4.5 w-4.5" />
                     </div>
                     <h3
-                      className="mt-4 text-lg font-semibold tracking-tight text-[#071226]"
+                      className="mt-4 text-[1.02rem] font-semibold tracking-tight text-[#071226]"
                       style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
                     >
                       {item.title}
@@ -659,7 +662,7 @@ export default async function BlogSlugPage({ params }: PageProps) {
                     <p className="mt-2 text-[14px] leading-7 text-[#4a5b76]">
                       {item.text}
                     </p>
-                  </div>
+                  </article>
                 );
               })}
             </div>
@@ -667,38 +670,39 @@ export default async function BlogSlugPage({ params }: PageProps) {
         </section>
 
         {relatedPosts.length > 0 ? (
-          <section className="py-10 sm:py-12 lg:py-14">
-            <Container className="max-w-[1320px] px-4 sm:px-6 lg:px-8">
-              <div className="mb-8 text-center">
-                <div className="inline-flex rounded-full border border-[#dce4ef] bg-white px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#8b6a18]">
+          <section className="py-6 sm:py-8 lg:py-10">
+            <Container className="max-w-[1240px] px-4 sm:px-6 lg:px-8">
+              <div className="mb-6 text-center">
+                <div className="inline-flex rounded-full border border-[#dce4ef] bg-white px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8b6a18] sm:text-[11px]">
                   Related Articles
                 </div>
 
                 <h2
-                  className="mt-5 text-balance text-3xl font-semibold tracking-tight text-[#071226] sm:text-4xl"
+                  className="mt-4 text-balance text-[1.9rem] font-semibold tracking-tight text-[#071226] sm:text-[2.3rem]"
                   style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
                 >
                   Continue Reading
                 </h2>
               </div>
 
-              <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-                {relatedPosts.map((item) => (
+              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                {relatedPosts.map((item, index) => (
                   <article
                     key={item.slug}
-                    className="group flex h-full flex-col overflow-hidden rounded-[28px] border border-[#e5eaf2] bg-white shadow-[0_12px_30px_rgba(7,18,38,0.04)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_42px_rgba(7,18,38,0.08)]"
+                    className="group flex h-full flex-col overflow-hidden rounded-[24px] border border-[#e5eaf2] bg-white shadow-[0_12px_28px_rgba(7,18,38,0.04)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_38px_rgba(7,18,38,0.08)]"
                   >
-                    <div className="relative h-[220px] w-full overflow-hidden bg-slate-50">
+                    <div className="relative h-[210px] w-full overflow-hidden bg-slate-50">
                       <Image
                         src={item.imageSrc}
                         alt={item.imageAlt}
                         fill
+                        priority={index === 0}
                         sizes="(max-width: 767px) 100vw, (max-width: 1279px) 50vw, 33vw"
                         className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
                       />
                     </div>
 
-                    <div className="flex flex-1 flex-col p-5 sm:p-6">
+                    <div className="flex flex-1 flex-col p-5">
                       <div
                         className="inline-flex w-fit rounded-full border border-[#ead9a8] bg-[#fffdf7] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8b6a18] sm:text-[11px]"
                         style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
@@ -707,7 +711,7 @@ export default async function BlogSlugPage({ params }: PageProps) {
                       </div>
 
                       <h3
-                        className="mt-4 text-balance text-[1.18rem] font-semibold tracking-tight text-[#071226] sm:text-[1.3rem]"
+                        className="mt-4 text-balance text-[1.14rem] font-semibold tracking-tight text-[#071226] sm:text-[1.22rem]"
                         style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
                       >
                         {item.title}
@@ -732,32 +736,32 @@ export default async function BlogSlugPage({ params }: PageProps) {
           </section>
         ) : null}
 
-        <section className="py-14 sm:py-16 lg:py-18">
+        <section className="py-8 sm:py-10 lg:py-12">
           <Container className="max-w-[1100px] px-4 sm:px-6 lg:px-8">
-            <div className="overflow-hidden rounded-[34px] border border-[#eadcb0] bg-[linear-gradient(180deg,#fffaf0_0%,#ffffff_100%)] p-7 text-center shadow-[0_20px_46px_rgba(7,18,38,0.05)] sm:p-9 lg:p-12">
+            <div className="overflow-hidden rounded-[30px] border border-[#eadcb0] bg-[linear-gradient(180deg,#fffaf0_0%,#ffffff_100%)] p-6 text-center shadow-[0_18px_40px_rgba(7,18,38,0.05)] sm:p-8 lg:p-10">
               <div className="mx-auto max-w-3xl">
-                <div className="inline-flex items-center gap-2 rounded-full border border-[#ead8a1] bg-white px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#8b6a18]">
+                <div className="inline-flex items-center gap-2 rounded-full border border-[#ead8a1] bg-white px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8b6a18] sm:text-[11px]">
                   <BriefcaseBusiness className="h-3.5 w-3.5" />
                   Want Help Applying This?
                 </div>
 
                 <h2
-                  className="mt-5 text-balance text-3xl font-semibold tracking-tight text-[#071226] sm:text-4xl lg:text-[3rem]"
+                  className="mt-4 text-balance text-[1.95rem] font-semibold tracking-tight text-[#071226] sm:text-[2.4rem] lg:text-[3rem]"
                   style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
                 >
                   Let’s Build the Right Solution for Your Business
                 </h2>
 
-                <p className="mt-5 text-[15px] leading-8 text-[#44556f] sm:text-[16px]">
+                <p className="mt-4 text-[14px] leading-7 text-[#44556f] sm:text-[15px]">
                   If you want help improving your website, visibility, branding,
                   conversion flow, or business structure, MoBiz.mu can help you
                   turn the right strategy into premium execution.
                 </p>
 
-                <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
                   <Link
                     href="/contact"
-                    className="group inline-flex min-w-[220px] items-center justify-center rounded-full border border-[#cfae52] bg-[linear-gradient(180deg,#071226_0%,#0a1733_55%,#0d2147_100%)] px-6 py-3.5 text-sm font-semibold text-[#f3d77a] shadow-[0_16px_32px_rgba(7,18,38,0.18)] transition-all duration-300 hover:-translate-y-0.5"
+                    className="group inline-flex min-w-[220px] items-center justify-center rounded-full border border-[#cfae52] bg-[linear-gradient(180deg,#071226_0%,#0a1733_55%,#0d2147_100%)] px-6 py-3 text-sm font-semibold text-[#f3d77a] shadow-[0_14px_28px_rgba(7,18,38,0.14)] transition-all duration-300 hover:-translate-y-0.5"
                   >
                     Contact MoBiz.mu
                     <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
@@ -765,7 +769,7 @@ export default async function BlogSlugPage({ params }: PageProps) {
 
                   <Link
                     href="/blog"
-                    className="inline-flex min-w-[220px] items-center justify-center rounded-full border border-[#d7dee9] bg-white px-6 py-3.5 text-sm font-semibold text-[#071226] shadow-[0_12px_28px_rgba(7,18,38,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#cfae52] hover:text-[#8b6a18]"
+                    className="inline-flex min-w-[220px] items-center justify-center rounded-full border border-[#d7dee9] bg-white px-6 py-3 text-sm font-semibold text-[#071226] shadow-[0_10px_22px_rgba(7,18,38,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#cfae52] hover:text-[#8b6a18]"
                   >
                     Back to Blog
                   </Link>

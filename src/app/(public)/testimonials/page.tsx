@@ -4,7 +4,6 @@ import Link from "next/link";
 import Container from "@/components/ui/Container";
 import {
   ArrowRight,
-  BadgeCheck,
   CheckCircle2,
   Quote,
   ShieldCheck,
@@ -20,7 +19,7 @@ export const metadata: Metadata = {
   title:
     "Client Testimonials Mauritius | MoBiz.mu Reviews, Feedback & Success Stories",
   description:
-    "Read premium client testimonials for MoBiz.mu across website design, digital marketing, accounting support, logistics solutions, and branding services in Mauritius. Discover why businesses trust MoBiz.mu for executive-level presentation and growth support.",
+    "Read premium client testimonials for MoBiz.mu across website design, digital marketing, accounting support, logistics solutions, and branding services in Mauritius.",
   keywords: [
     "MoBiz.mu testimonials",
     "MoBiz.mu reviews",
@@ -29,10 +28,13 @@ export const metadata: Metadata = {
     "Digital Marketing Mauritius reviews",
     "Business Services Mauritius testimonials",
     "MoBiz.mu Google reviews",
-    "Premium agency Mauritius testimonials",
   ],
   alternates: {
     canonical: `${siteUrl}/testimonials`,
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
   openGraph: {
     title: "MoBiz.mu Testimonials | Premium Client Feedback in Mauritius",
@@ -341,7 +343,7 @@ function FaqJsonLd() {
 
 function ReviewCard({ review }: { review: Review }) {
   return (
-    <article className="group h-full rounded-[28px] border border-[#e6ebf2] bg-white p-5 shadow-[0_18px_38px_rgba(7,18,38,0.05)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_46px_rgba(7,18,38,0.08)] sm:p-6">
+    <article className="group h-full rounded-[24px] border border-[#e6ebf2] bg-white p-5 shadow-[0_14px_30px_rgba(7,18,38,0.05)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_38px_rgba(7,18,38,0.08)] sm:p-5">
       <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-start gap-3">
           <div
@@ -390,40 +392,34 @@ export default function TestimonialsPage() {
       <AggregateJsonLd />
       <FaqJsonLd />
 
-      <main className="relative overflow-hidden bg-[linear-gradient(180deg,#f7f9fc_0%,#ffffff_18%,#ffffff_100%)] text-[#071226]">
-        <section className="relative isolate overflow-hidden border-b border-[#e8edf5]">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(207,174,82,0.13),transparent_30%),radial-gradient(circle_at_left,rgba(7,18,38,0.05),transparent_26%),linear-gradient(180deg,#f8fbff_0%,#ffffff_100%)]" />
-
-          <Container className="relative z-10 max-w-[1320px] px-4 py-14 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
-            <div className="mx-auto max-w-5xl text-center">
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#d7dee9] bg-white/85 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#8b6a18] shadow-[0_10px_30px_rgba(7,18,38,0.05)]">
+      <main className="bg-[linear-gradient(180deg,#f8fbff_0%,#ffffff_18%,#ffffff_100%)] text-[#071226]">
+        <section className="border-b border-[#e8edf5] bg-[radial-gradient(circle_at_top,rgba(207,174,82,0.10),transparent_28%),linear-gradient(180deg,#fafcff_0%,#ffffff_100%)]">
+          <Container className="max-w-[1240px] px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12">
+            <div className="mx-auto max-w-4xl text-center">
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#d7dee9] bg-white px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8b6a18] shadow-[0_10px_24px_rgba(7,18,38,0.04)]">
                 <Sparkles className="h-3.5 w-3.5" />
                 Client Testimonials
               </div>
 
               <h1
-                className="mt-5 text-balance text-4xl font-semibold tracking-tight text-[#071226] sm:text-5xl lg:text-[4rem] lg:leading-[1.02]"
+                className="mt-4 text-balance text-[2rem] font-semibold tracking-tight text-[#071226] sm:text-[2.6rem] lg:text-[3.2rem] lg:leading-[1.05]"
                 style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
               >
                 Real Feedback from Businesses That Chose MoBiz.mu
               </h1>
 
-              <p className="mx-auto mt-5 max-w-4xl text-[15px] leading-8 text-[#44556f] sm:text-[16px] lg:text-[17px]">
-                These testimonials reflect the kind of premium experience MoBiz.mu
-                aims to deliver across website design, digital marketing,
-                accounting support, logistics solutions, branding, and executive
-                business presentation. For many clients, the difference is not
-                only in the final result, but in how much more professional,
-                polished, and growth-ready their business feels after the work is
-                done.
+              <p className="mx-auto mt-4 max-w-3xl text-[14px] leading-7 text-[#44556f] sm:text-[15px]">
+                Explore client feedback across premium website design, digital
+                marketing, branding, accounting support, logistics solutions, and
+                executive business presentation in Mauritius.
               </p>
 
-              <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <div className="mt-5 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <Link
                   href={googleReviewsHref}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group inline-flex min-w-[220px] items-center justify-center rounded-full border border-[#cfae52] bg-[linear-gradient(180deg,#071226_0%,#0a1733_55%,#0d2147_100%)] px-6 py-3.5 text-sm font-semibold text-[#f3d77a] shadow-[0_16px_34px_rgba(7,18,38,0.18)] transition-all duration-300 hover:-translate-y-0.5"
+                  className="group inline-flex min-w-[210px] items-center justify-center rounded-full border border-[#cfae52] bg-[linear-gradient(180deg,#071226_0%,#0a1733_55%,#0d2147_100%)] px-5 py-2.5 text-sm font-semibold text-[#f3d77a] shadow-[0_14px_28px_rgba(7,18,38,0.14)] transition-all duration-300 hover:-translate-y-0.5"
                 >
                   View Google Reviews
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
@@ -431,7 +427,7 @@ export default function TestimonialsPage() {
 
                 <Link
                   href="/contact"
-                  className="inline-flex min-w-[220px] items-center justify-center rounded-full border border-[#d7dee9] bg-white px-6 py-3.5 text-sm font-semibold text-[#071226] shadow-[0_12px_28px_rgba(7,18,38,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#cfae52] hover:text-[#8b6a18]"
+                  className="inline-flex min-w-[210px] items-center justify-center rounded-full border border-[#d7dee9] bg-white px-5 py-2.5 text-sm font-semibold text-[#071226] shadow-[0_10px_22px_rgba(7,18,38,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#cfae52] hover:text-[#8b6a18]"
                 >
                   Start Your Project
                 </Link>
@@ -440,13 +436,13 @@ export default function TestimonialsPage() {
           </Container>
         </section>
 
-        <section className="py-10 sm:py-12 lg:py-14">
-          <Container className="max-w-[1320px] px-4 sm:px-6 lg:px-8">
-            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+        <section className="py-6 sm:py-8 lg:py-10">
+          <Container className="max-w-[1240px] px-4 sm:px-6 lg:px-8">
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
               {[
                 {
                   title: "4.9/5 Client Rating",
-                  text: "A strong satisfaction signal that reflects quality, presentation, and follow-through.",
+                  text: "A strong satisfaction signal reflecting quality, presentation, and follow-through.",
                   icon: Star,
                 },
                 {
@@ -456,7 +452,7 @@ export default function TestimonialsPage() {
                 },
                 {
                   title: "Stronger Trust",
-                  text: "Businesses often mention that their company now feels more credible and more serious.",
+                  text: "Businesses often say their brand feels more credible and more serious after launch.",
                   icon: ShieldCheck,
                 },
                 {
@@ -467,57 +463,58 @@ export default function TestimonialsPage() {
               ].map((item) => {
                 const Icon = item.icon;
                 return (
-                  <div
+                  <article
                     key={item.title}
-                    className="rounded-[26px] border border-[#e6ebf2] bg-white p-5 shadow-[0_16px_38px_rgba(7,18,38,0.05)]"
+                    className="rounded-[24px] border border-[#e6ebf2] bg-white p-5 shadow-[0_14px_30px_rgba(7,18,38,0.05)]"
                   >
                     <div className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[linear-gradient(180deg,#071226_0%,#10224a_100%)] text-[#f3d77a] shadow-[0_12px_24px_rgba(7,18,38,0.14)]">
                       <Icon className="h-5 w-5" />
                     </div>
+
                     <h2
-                      className="mt-4 text-lg font-semibold tracking-tight text-[#071226]"
+                      className="mt-4 text-[1.1rem] font-semibold tracking-tight text-[#071226]"
                       style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
                     >
                       {item.title}
                     </h2>
+
                     <p className="mt-2 text-[14px] leading-7 text-[#4a5b76]">
                       {item.text}
                     </p>
-                  </div>
+                  </article>
                 );
               })}
             </div>
           </Container>
         </section>
 
-        <section className="py-8 sm:py-10 lg:py-12">
-          <Container className="max-w-[1320px] px-4 sm:px-6 lg:px-8">
-            <div className="grid gap-8 lg:grid-cols-[0.88fr_1.12fr] lg:gap-10">
+        <section className="py-4 sm:py-6 lg:py-8">
+          <Container className="max-w-[1240px] px-4 sm:px-6 lg:px-8">
+            <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
               <div>
-                <div className="inline-flex rounded-full border border-[#dfc985] bg-[#fff9ea] px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#8b6a18]">
+                <div className="inline-flex rounded-full border border-[#dfc985] bg-[#fff9ea] px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8b6a18] sm:text-[11px]">
                   Why Testimonials Matter
                 </div>
 
                 <h2
-                  className="mt-5 text-balance text-3xl font-semibold tracking-tight text-[#071226] sm:text-4xl lg:text-[3rem]"
+                  className="mt-4 text-balance text-[1.9rem] font-semibold tracking-tight text-[#071226] sm:text-[2.3rem] lg:text-[2.7rem]"
                   style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
                 >
                   Trust Is Built Faster When Real Clients Speak for the Work
                 </h2>
 
-                <p className="mt-5 text-[15px] leading-8 text-[#44556f] sm:text-[16px]">
-                  A premium website or business service should not only look good.
-                  It should also leave clients feeling more confident, more
-                  supported, and more satisfied with the result. That is why this
-                  page matters. These reviews give new visitors a clearer idea of
-                  what it feels like to work with MoBiz.mu.
+                <p className="mt-4 text-[14px] leading-7 text-[#44556f] sm:text-[15px]">
+                  A premium service should not only look good. It should leave
+                  clients feeling more confident, better supported, and more
+                  satisfied with the result. These reviews help new visitors
+                  understand what it feels like to work with MoBiz.mu.
                 </p>
 
-                <p className="mt-4 text-[15px] leading-8 text-[#44556f] sm:text-[16px]">
+                <p className="mt-3 text-[14px] leading-7 text-[#44556f] sm:text-[15px]">
                   Across websites, branding, SEO, digital marketing, accounting,
-                  logistics, and business support, the common pattern in these
-                  testimonials is clarity, polish, speed, premium presentation,
-                  and stronger business trust after project delivery.
+                  logistics, and business support, the common pattern is clarity,
+                  polish, speed, premium presentation, and stronger business
+                  trust after delivery.
                 </p>
               </div>
 
@@ -530,7 +527,7 @@ export default function TestimonialsPage() {
                 ].map((point) => (
                   <div
                     key={point}
-                    className="flex items-start gap-3 rounded-[22px] border border-[#e7edf5] bg-white px-4 py-4 shadow-[0_10px_24px_rgba(7,18,38,0.04)]"
+                    className="flex items-start gap-3 rounded-[20px] border border-[#e7edf5] bg-white px-4 py-4 shadow-[0_10px_24px_rgba(7,18,38,0.04)]"
                   >
                     <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-[#8b6a18]" />
                     <p className="text-[14px] leading-7 text-[#20314d]">{point}</p>
@@ -541,25 +538,25 @@ export default function TestimonialsPage() {
           </Container>
         </section>
 
-        <section className="py-10 sm:py-12 lg:py-14">
-          <Container className="max-w-[1320px] px-4 sm:px-6 lg:px-8">
-            <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <section className="py-6 sm:py-8 lg:py-10">
+          <Container className="max-w-[1240px] px-4 sm:px-6 lg:px-8">
+            <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
               <div>
-                <div className="inline-flex rounded-full border border-[#dce4ef] bg-white px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#8b6a18]">
+                <div className="inline-flex rounded-full border border-[#dce4ef] bg-white px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8b6a18] sm:text-[11px]">
                   Client Reviews
                 </div>
 
                 <h2
-                  className="mt-5 text-balance text-3xl font-semibold tracking-tight text-[#071226] sm:text-4xl lg:text-[3rem]"
+                  className="mt-4 text-balance text-[1.9rem] font-semibold tracking-tight text-[#071226] sm:text-[2.3rem] lg:text-[2.8rem]"
                   style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
                 >
                   Testimonials from Real Clients
                 </h2>
 
-                <p className="mt-4 max-w-3xl text-[15px] leading-8 text-[#44556f] sm:text-[16px]">
+                <p className="mt-3 max-w-3xl text-[14px] leading-7 text-[#44556f] sm:text-[15px]">
                   Feedback from clients who chose MoBiz.mu for premium website
-                  design, digital marketing, accounting support, logistics
-                  solutions, branding, and luxury business presentation in
+                  design, digital marketing, branding, accounting support,
+                  logistics solutions, and executive business presentation in
                   Mauritius.
                 </p>
               </div>
@@ -568,14 +565,14 @@ export default function TestimonialsPage() {
                 href={googleReviewsHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group inline-flex items-center gap-3 rounded-[22px] border border-[#e8edf5] bg-white px-4 py-3 shadow-[0_12px_24px_rgba(7,18,38,0.05)] transition-all duration-300 hover:-translate-y-0.5"
+                className="group inline-flex items-center gap-3 rounded-[20px] border border-[#e8edf5] bg-white px-4 py-3 shadow-[0_10px_22px_rgba(7,18,38,0.05)] transition-all duration-300 hover:-translate-y-0.5"
               >
-                <div className="flex h-[58px] w-[70px] items-center justify-center overflow-hidden rounded-[10px] bg-transparent">
+                <div className="flex h-[54px] w-[66px] items-center justify-center overflow-hidden rounded-[10px] bg-transparent">
                   <Image
                     src="/images/google-reviews-cover.jpg"
                     alt="MoBiz.mu Google reviews cover"
-                    width={70}
-                    height={58}
+                    width={66}
+                    height={54}
                     className="h-full w-full object-contain mix-blend-multiply"
                   />
                 </div>
@@ -599,7 +596,7 @@ export default function TestimonialsPage() {
               </Link>
             </div>
 
-            <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {reviews.map((review) => (
                 <ReviewCard key={review.id} review={review} />
               ))}
@@ -607,128 +604,114 @@ export default function TestimonialsPage() {
           </Container>
         </section>
 
-        <section className="py-10 sm:py-12 lg:py-14">
-          <Container className="max-w-[1320px] px-4 sm:px-6 lg:px-8">
-            <div className="grid gap-8 overflow-hidden rounded-[34px] border border-[#e5eaf2] bg-[linear-gradient(180deg,#071226_0%,#0c1a3a_100%)] p-6 text-white shadow-[0_26px_60px_rgba(7,18,38,0.18)] sm:p-8 lg:grid-cols-[1.05fr_0.95fr] lg:p-10">
-              <div>
-                <div className="inline-flex rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#f3d77a]">
-                  Why Businesses Recommend MoBiz.mu
+        <section className="py-6 sm:py-8 lg:py-10">
+          <Container className="max-w-[1240px] px-4 sm:px-6 lg:px-8">
+            <div className="overflow-hidden rounded-[30px] border border-[#e5eaf2] bg-[linear-gradient(180deg,#071226_0%,#0c1a3a_100%)] p-5 text-white shadow-[0_22px_52px_rgba(7,18,38,0.16)] sm:p-7 lg:p-8">
+              <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+                <div>
+                  <div className="inline-flex rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#f3d77a] sm:text-[11px]">
+                    Why Businesses Recommend MoBiz.mu
+                  </div>
+
+                  <h2
+                    className="mt-4 text-balance text-[1.8rem] font-semibold tracking-tight sm:text-[2.2rem] lg:text-[2.7rem]"
+                    style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
+                  >
+                    Premium Execution Makes a Visible Difference
+                  </h2>
+
+                  <p className="mt-4 text-[14px] leading-7 text-white/78 sm:text-[15px]">
+                    Businesses recommend MoBiz.mu because the results do not feel
+                    generic. They feel cleaner, more premium, more structured,
+                    and more aligned with real business goals.
+                  </p>
                 </div>
 
-                <h2
-                  className="mt-5 text-balance text-3xl font-semibold tracking-tight sm:text-4xl lg:text-[2.8rem]"
-                  style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
-                >
-                  Premium Execution Makes a Visible Difference
-                </h2>
-
-                <p className="mt-5 text-[15px] leading-8 text-white/78 sm:text-[16px]">
-                  Businesses tend to recommend MoBiz.mu because the results do not
-                  feel generic. They feel cleaner, more premium, more structured,
-                  and more aligned with real business goals. From first impression
-                  to follow-up, the goal is to give clients a stronger sense of
-                  confidence in how their brand and business are presented.
-                </p>
-
-                <div className="mt-6 grid gap-3">
+                <div className="grid gap-3 sm:grid-cols-2">
                   {[
-                    "More premium digital presentation",
-                    "Stronger trust and credibility",
-                    "Cleaner communication and structure",
-                    "Business support that feels more serious and complete",
+                    "Website Design",
+                    "Digital Marketing",
+                    "Branding Support",
+                    "Accounting Services",
+                    "Logistics Solutions",
+                    "Executive Business Presentation",
                   ].map((item) => (
-                    <div key={item} className="flex items-start gap-3">
-                      <BadgeCheck className="mt-1 h-5 w-5 shrink-0 text-[#f3d77a]" />
-                      <p className="text-sm leading-7 text-white/82">{item}</p>
+                    <div
+                      key={item}
+                      className="rounded-2xl border border-white/10 bg-white/8 px-4 py-3 text-sm text-white/84"
+                    >
+                      {item}
                     </div>
                   ))}
                 </div>
-              </div>
-
-              <div className="grid gap-3 sm:grid-cols-2">
-                {[
-                  "Website Design",
-                  "Digital Marketing",
-                  "Branding Support",
-                  "Accounting Services",
-                  "Logistics Solutions",
-                  "Executive Business Presentation",
-                ].map((item) => (
-                  <div
-                    key={item}
-                    className="rounded-2xl border border-white/10 bg-white/8 px-4 py-3 text-sm text-white/84"
-                  >
-                    {item}
-                  </div>
-                ))}
               </div>
             </div>
           </Container>
         </section>
 
-        <section className="border-y border-[#e8edf5] bg-[#fbfcfe] py-10 sm:py-12 lg:py-14">
+        <section className="border-y border-[#e8edf5] bg-[#fbfcfe] py-6 sm:py-8 lg:py-10">
           <Container className="max-w-[1100px] px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-3xl text-center">
-              <div className="inline-flex rounded-full border border-[#dce4ef] bg-white px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#8b6a18]">
+              <div className="inline-flex rounded-full border border-[#dce4ef] bg-white px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8b6a18] sm:text-[11px]">
                 FAQ
               </div>
 
               <h2
-                className="mt-5 text-balance text-3xl font-semibold tracking-tight text-[#071226] sm:text-4xl"
+                className="mt-4 text-balance text-[1.9rem] font-semibold tracking-tight text-[#071226] sm:text-[2.3rem]"
                 style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
               >
                 Testimonials FAQ
               </h2>
             </div>
 
-            <div className="mt-10 space-y-4">
+            <div className="mt-6 space-y-3">
               {faqs.map((item) => (
-                <div
+                <article
                   key={item.q}
-                  className="rounded-[24px] border border-[#e4eaf2] bg-white p-5 shadow-[0_14px_30px_rgba(7,18,38,0.04)] sm:p-6"
+                  className="rounded-[22px] border border-[#e4eaf2] bg-white p-5 shadow-[0_12px_26px_rgba(7,18,38,0.04)] sm:p-6"
                 >
                   <h3
-                    className="text-lg font-semibold tracking-tight text-[#071226]"
+                    className="text-[1.05rem] font-semibold tracking-tight text-[#071226]"
                     style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
                   >
                     {item.q}
                   </h3>
-                  <p className="mt-3 text-[14.5px] leading-8 text-[#44556f] sm:text-[15.5px]">
+                  <p className="mt-3 text-[14px] leading-7 text-[#44556f] sm:text-[15px]">
                     {item.a}
                   </p>
-                </div>
+                </article>
               ))}
             </div>
           </Container>
         </section>
 
-        <section className="py-14 sm:py-16 lg:py-18">
+        <section className="py-8 sm:py-10 lg:py-12">
           <Container className="max-w-[1100px] px-4 sm:px-6 lg:px-8">
-            <div className="overflow-hidden rounded-[34px] border border-[#eadcb0] bg-[linear-gradient(180deg,#fffaf0_0%,#ffffff_100%)] p-7 text-center shadow-[0_20px_46px_rgba(7,18,38,0.05)] sm:p-9 lg:p-12">
+            <div className="overflow-hidden rounded-[30px] border border-[#eadcb0] bg-[linear-gradient(180deg,#fffaf0_0%,#ffffff_100%)] p-6 text-center shadow-[0_18px_40px_rgba(7,18,38,0.05)] sm:p-8 lg:p-10">
               <div className="mx-auto max-w-3xl">
-                <div className="inline-flex items-center gap-2 rounded-full border border-[#ead8a1] bg-white px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#8b6a18]">
+                <div className="inline-flex items-center gap-2 rounded-full border border-[#ead8a1] bg-white px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8b6a18] sm:text-[11px]">
                   <Users className="h-3.5 w-3.5" />
                   Ready to Become Our Next Success Story?
                 </div>
 
                 <h2
-                  className="mt-5 text-balance text-3xl font-semibold tracking-tight text-[#071226] sm:text-4xl lg:text-[3rem]"
+                  className="mt-4 text-balance text-[1.95rem] font-semibold tracking-tight text-[#071226] sm:text-[2.4rem] lg:text-[3rem]"
                   style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
                 >
                   Let’s Create a Premium Result for Your Business
                 </h2>
 
-                <p className="mt-5 text-[15px] leading-8 text-[#44556f] sm:text-[16px]">
+                <p className="mt-4 text-[14px] leading-7 text-[#44556f] sm:text-[15px]">
                   Whether you need a premium website, stronger branding, better
                   digital visibility, accounting support, or a more complete
                   business presentation, MoBiz.mu is here to help you move
                   forward with higher standards and better results.
                 </p>
 
-                <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
                   <Link
                     href="/contact"
-                    className="group inline-flex min-w-[220px] items-center justify-center rounded-full border border-[#cfae52] bg-[linear-gradient(180deg,#071226_0%,#0a1733_55%,#0d2147_100%)] px-6 py-3.5 text-sm font-semibold text-[#f3d77a] shadow-[0_16px_32px_rgba(7,18,38,0.18)] transition-all duration-300 hover:-translate-y-0.5"
+                    className="group inline-flex min-w-[220px] items-center justify-center rounded-full border border-[#cfae52] bg-[linear-gradient(180deg,#071226_0%,#0a1733_55%,#0d2147_100%)] px-6 py-3 text-sm font-semibold text-[#f3d77a] shadow-[0_14px_28px_rgba(7,18,38,0.14)] transition-all duration-300 hover:-translate-y-0.5"
                   >
                     Contact MoBiz.mu
                     <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
@@ -738,7 +721,7 @@ export default function TestimonialsPage() {
                     href={googleReviewsHref}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex min-w-[220px] items-center justify-center rounded-full border border-[#d7dee9] bg-white px-6 py-3.5 text-sm font-semibold text-[#071226] shadow-[0_12px_28px_rgba(7,18,38,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#cfae52] hover:text-[#8b6a18]"
+                    className="inline-flex min-w-[220px] items-center justify-center rounded-full border border-[#d7dee9] bg-white px-6 py-3 text-sm font-semibold text-[#071226] shadow-[0_10px_22px_rgba(7,18,38,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#cfae52] hover:text-[#8b6a18]"
                   >
                     Read More Reviews
                   </Link>

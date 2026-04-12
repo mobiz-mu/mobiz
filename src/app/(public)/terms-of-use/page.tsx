@@ -7,6 +7,7 @@ import {
   ShieldCheck,
   FileText,
   Sparkles,
+  CheckCircle2,
 } from "lucide-react";
 
 const siteUrl = "https://mobiz.mu";
@@ -16,8 +17,19 @@ export const metadata: Metadata = {
   title: "Terms of Use | MoBiz.mu",
   description:
     "Read the Terms of Use for MoBiz.mu, including the conditions governing access to the website, content, and general visitor use.",
+  keywords: [
+    "Terms of Use MoBiz.mu",
+    "MoBiz.mu terms",
+    "Website terms Mauritius",
+    "Business website legal page Mauritius",
+    "Terms and conditions MoBiz.mu",
+  ],
   alternates: {
     canonical: `${siteUrl}/terms-of-use`,
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
   openGraph: {
     title: "Terms of Use | MoBiz.mu",
@@ -54,22 +66,33 @@ function TermsOfUseJsonLd() {
 }
 
 function PolicySection({
+  number,
   title,
   children,
 }: {
+  number: string;
   title: string;
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-[28px] border border-[#e5eaf2] bg-white p-6 shadow-[0_18px_38px_rgba(7,18,38,0.05)] sm:p-8">
-      <h2
-        className="text-2xl font-semibold tracking-tight text-[#071226] sm:text-[2rem]"
-        style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
-      >
-        {title}
-      </h2>
-      <div className="mt-4 space-y-4 text-[15px] leading-8 text-[#44556f] sm:text-[16px]">
-        {children}
+    <section className="rounded-[24px] border border-[#e5eaf2] bg-white p-5 shadow-[0_14px_30px_rgba(7,18,38,0.05)] sm:p-6">
+      <div className="flex items-start gap-3">
+        <div className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#ead8a1] bg-[#fff9ea] text-sm font-semibold text-[#8b6a18]">
+          {number}
+        </div>
+
+        <div className="min-w-0">
+          <h2
+            className="text-[1.35rem] font-semibold tracking-tight text-[#071226] sm:text-[1.55rem]"
+            style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
+          >
+            {title}
+          </h2>
+
+          <div className="mt-3 space-y-3 text-[14px] leading-7 text-[#44556f] sm:text-[15px]">
+            {children}
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -80,41 +103,39 @@ export default function TermsOfUsePage() {
     <>
       <TermsOfUseJsonLd />
 
-      <main className="relative overflow-hidden bg-[linear-gradient(180deg,#f7f9fc_0%,#ffffff_18%,#ffffff_100%)] text-[#071226]">
-        <section className="relative isolate overflow-hidden border-b border-[#e8edf5]">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(207,174,82,0.12),transparent_30%),radial-gradient(circle_at_left,rgba(7,18,38,0.05),transparent_26%),linear-gradient(180deg,#f8fbff_0%,#ffffff_100%)]" />
-
-          <Container className="relative z-10 max-w-[1200px] px-4 py-14 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+      <main className="bg-[linear-gradient(180deg,#f8fbff_0%,#ffffff_18%,#ffffff_100%)] text-[#071226]">
+        <section className="border-b border-[#e8edf5] bg-[radial-gradient(circle_at_top,rgba(207,174,82,0.10),transparent_28%),linear-gradient(180deg,#fafcff_0%,#ffffff_100%)]">
+          <Container className="max-w-[1240px] px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12">
             <div className="mx-auto max-w-4xl text-center">
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#d7dee9] bg-white/85 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#8b6a18] shadow-[0_10px_30px_rgba(7,18,38,0.05)]">
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#d7dee9] bg-white px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8b6a18] shadow-[0_10px_24px_rgba(7,18,38,0.04)]">
                 <Scale className="h-3.5 w-3.5" />
                 Terms of Use
               </div>
 
               <h1
-                className="mt-5 text-balance text-4xl font-semibold tracking-tight text-[#071226] sm:text-5xl lg:text-[3.8rem] lg:leading-[1.03]"
+                className="mt-4 text-balance text-[2rem] font-semibold tracking-tight text-[#071226] sm:text-[2.6rem] lg:text-[3.2rem] lg:leading-[1.05]"
                 style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
               >
                 Terms of Use
               </h1>
 
-              <p className="mx-auto mt-5 max-w-3xl text-[15px] leading-8 text-[#44556f] sm:text-[16px]">
+              <p className="mx-auto mt-4 max-w-3xl text-[14px] leading-7 text-[#44556f] sm:text-[15px]">
                 These Terms of Use govern your access to and general use of the
-                MoBiz.mu website. By visiting or using this website, you agree
-                to these terms. If you do not agree, you should discontinue use
-                of the website.
+                MoBiz.mu website. By visiting or using this website, you agree to
+                these terms. If you do not agree, you should discontinue use of
+                the website.
               </p>
 
-              <p className="mt-4 text-sm font-medium text-slate-500">
+              <div className="mt-4 inline-flex rounded-full border border-[#e2e8f0] bg-white px-3 py-1.5 text-[12px] font-medium text-slate-500 shadow-[0_8px_20px_rgba(7,18,38,0.04)]">
                 Effective date: {effectiveDate}
-              </p>
+              </div>
             </div>
           </Container>
         </section>
 
-        <section className="py-10 sm:py-12 lg:py-14">
-          <Container className="max-w-[980px] px-4 sm:px-6 lg:px-8">
-            <div className="grid gap-5 md:grid-cols-3">
+        <section className="py-6 sm:py-8 lg:py-10">
+          <Container className="max-w-[1240px] px-4 sm:px-6 lg:px-8">
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {[
                 {
                   title: "Website Access",
@@ -123,44 +144,46 @@ export default function TermsOfUsePage() {
                 },
                 {
                   title: "Responsible Use",
-                  text: "Users are expected to interact with the website lawfully and respectfully.",
+                  text: "Users are expected to interact with the website lawfully, respectfully, and without misuse.",
                   icon: ShieldCheck,
                 },
                 {
-                  title: "Content Standards",
-                  text: "Website materials remain protected and cannot be misused, copied, or exploited improperly.",
+                  title: "Content Protection",
+                  text: "Website materials remain protected and cannot be copied, republished, or commercially exploited without permission.",
                   icon: Sparkles,
                 },
               ].map((item) => {
                 const Icon = item.icon;
                 return (
-                  <div
+                  <article
                     key={item.title}
                     className="rounded-[24px] border border-[#e6ebf2] bg-white p-5 shadow-[0_14px_30px_rgba(7,18,38,0.05)]"
                   >
                     <div className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-[linear-gradient(180deg,#071226_0%,#10224a_100%)] text-[#f3d77a]">
                       <Icon className="h-4.5 w-4.5" />
                     </div>
+
                     <h2
-                      className="mt-4 text-lg font-semibold tracking-tight text-[#071226]"
+                      className="mt-4 text-[1.05rem] font-semibold tracking-tight text-[#071226]"
                       style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
                     >
                       {item.title}
                     </h2>
+
                     <p className="mt-2 text-[14px] leading-7 text-[#4a5b76]">
                       {item.text}
                     </p>
-                  </div>
+                  </article>
                 );
               })}
             </div>
           </Container>
         </section>
 
-        <section className="pb-14 sm:pb-16 lg:pb-20">
+        <section className="py-4 sm:py-6 lg:py-8">
           <Container className="max-w-[980px] px-4 sm:px-6 lg:px-8">
-            <div className="grid gap-6">
-              <PolicySection title="1. Acceptance of Terms">
+            <div className="grid gap-4">
+              <PolicySection number="1" title="Acceptance of Terms">
                 <p>
                   By accessing or using the MoBiz.mu website, you confirm that
                   you have read, understood, and accepted these Terms of Use.
@@ -169,7 +192,7 @@ export default function TermsOfUsePage() {
                 </p>
               </PolicySection>
 
-              <PolicySection title="2. Website Purpose">
+              <PolicySection number="2" title="Website Purpose">
                 <p>
                   The MoBiz.mu website is provided for general informational,
                   promotional, and business communication purposes. Content on
@@ -184,7 +207,7 @@ export default function TermsOfUsePage() {
                 </p>
               </PolicySection>
 
-              <PolicySection title="3. Permitted Use">
+              <PolicySection number="3" title="Permitted Use">
                 <p>
                   You may use this website for lawful purposes only. You agree
                   not to use the website in any way that could damage, disable,
@@ -198,7 +221,7 @@ export default function TermsOfUsePage() {
                 </p>
               </PolicySection>
 
-              <PolicySection title="4. Intellectual Property">
+              <PolicySection number="4" title="Intellectual Property">
                 <p>
                   Unless otherwise stated, all website content, including text,
                   design, layout, graphics, branding, logos, visual assets,
@@ -213,7 +236,7 @@ export default function TermsOfUsePage() {
                 </p>
               </PolicySection>
 
-              <PolicySection title="5. Accuracy of Information">
+              <PolicySection number="5" title="Accuracy of Information">
                 <p>
                   MoBiz.mu aims to keep website content accurate, professional,
                   and up to date. However, we do not guarantee that all content
@@ -225,7 +248,7 @@ export default function TermsOfUsePage() {
                 </p>
               </PolicySection>
 
-              <PolicySection title="6. Third-Party Links">
+              <PolicySection number="6" title="Third-Party Links">
                 <p>
                   This website may contain links to third-party websites,
                   platforms, or services for convenience or reference. MoBiz.mu
@@ -239,7 +262,7 @@ export default function TermsOfUsePage() {
                 </p>
               </PolicySection>
 
-              <PolicySection title="7. No Warranties">
+              <PolicySection number="7" title="No Warranties">
                 <p>
                   The website is provided on an “as is” and “as available”
                   basis. To the fullest extent permitted by law, MoBiz.mu makes
@@ -250,7 +273,7 @@ export default function TermsOfUsePage() {
                 </p>
               </PolicySection>
 
-              <PolicySection title="8. Limitation of Liability">
+              <PolicySection number="8" title="Limitation of Liability">
                 <p>
                   To the fullest extent permitted by applicable law, MoBiz.mu
                   shall not be liable for any direct, indirect, incidental,
@@ -264,7 +287,7 @@ export default function TermsOfUsePage() {
                 </p>
               </PolicySection>
 
-              <PolicySection title="9. Changes to These Terms">
+              <PolicySection number="9" title="Changes to These Terms">
                 <p>
                   MoBiz.mu may revise these Terms of Use at any time to reflect
                   legal, business, technical, or operational updates. Any
@@ -277,7 +300,7 @@ export default function TermsOfUsePage() {
                 </p>
               </PolicySection>
 
-              <PolicySection title="10. Governing Principles">
+              <PolicySection number="10" title="Governing Principles">
                 <p>
                   These Terms of Use are intended to support fair, lawful, and
                   professional use of the MoBiz.mu website. Any interpretation
@@ -286,22 +309,58 @@ export default function TermsOfUsePage() {
                 </p>
               </PolicySection>
 
-              <PolicySection title="11. Contact">
+              <PolicySection number="11" title="Contact">
                 <p>
                   If you have any questions about these Terms of Use, you may
                   contact MoBiz.mu through the website contact page.
                 </p>
 
-                <div className="pt-2">
+                <div className="pt-1">
                   <Link
                     href="/contact"
-                    className="group inline-flex items-center rounded-full border border-[#cfae52] bg-[linear-gradient(180deg,#071226_0%,#0a1733_55%,#0d2147_100%)] px-5 py-3 text-sm font-semibold text-[#f3d77a] shadow-[0_16px_30px_rgba(7,18,38,0.16)] transition-all duration-300 hover:-translate-y-0.5"
+                    className="group inline-flex items-center rounded-full border border-[#cfae52] bg-[linear-gradient(180deg,#071226_0%,#0a1733_55%,#0d2147_100%)] px-5 py-3 text-sm font-semibold text-[#f3d77a] shadow-[0_14px_28px_rgba(7,18,38,0.14)] transition-all duration-300 hover:-translate-y-0.5"
                   >
                     Contact MoBiz.mu
                     <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
                   </Link>
                 </div>
               </PolicySection>
+            </div>
+          </Container>
+        </section>
+
+        <section className="py-8 sm:py-10 lg:py-12">
+          <Container className="max-w-[1100px] px-4 sm:px-6 lg:px-8">
+            <div className="overflow-hidden rounded-[30px] border border-[#eadcb0] bg-[linear-gradient(180deg,#fffaf0_0%,#ffffff_100%)] p-6 text-center shadow-[0_18px_40px_rgba(7,18,38,0.05)] sm:p-8 lg:p-10">
+              <div className="mx-auto max-w-3xl">
+                <div className="inline-flex items-center gap-2 rounded-full border border-[#ead8a1] bg-white px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8b6a18] sm:text-[11px]">
+                  <CheckCircle2 className="h-3.5 w-3.5" />
+                  Need Clarification?
+                </div>
+
+                <h2
+                  className="mt-4 text-balance text-[1.95rem] font-semibold tracking-tight text-[#071226] sm:text-[2.4rem] lg:text-[3rem]"
+                  style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
+                >
+                  Contact MoBiz.mu for Questions About Website Use
+                </h2>
+
+                <p className="mt-4 text-[14px] leading-7 text-[#44556f] sm:text-[15px]">
+                  If you need clarification about how these Terms of Use apply
+                  to your interaction with the website, you can contact MoBiz.mu
+                  directly through the contact page.
+                </p>
+
+                <div className="mt-6 flex justify-center">
+                  <Link
+                    href="/contact"
+                    className="group inline-flex min-w-[220px] items-center justify-center rounded-full border border-[#cfae52] bg-[linear-gradient(180deg,#071226_0%,#0a1733_55%,#0d2147_100%)] px-6 py-3 text-sm font-semibold text-[#f3d77a] shadow-[0_14px_28px_rgba(7,18,38,0.14)] transition-all duration-300 hover:-translate-y-0.5"
+                  >
+                    Contact MoBiz.mu
+                    <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+                  </Link>
+                </div>
+              </div>
             </div>
           </Container>
         </section>

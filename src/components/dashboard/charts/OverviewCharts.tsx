@@ -59,7 +59,9 @@ function ChartCard({
           {title}
         </h3>
 
-        <p className="mt-2 text-sm leading-7 text-slate-600">{description}</p>
+        <p className="mt-2 text-sm leading-7 text-slate-600">
+          {description}
+        </p>
 
         <div className="mt-6 w-full min-w-0 overflow-hidden rounded-[22px]">
           {children}
@@ -95,7 +97,11 @@ export default function OverviewCharts({ data }: OverviewChartsProps) {
             margin={{ top: 8, right: 8, left: -12, bottom: 4 }}
             barGap={8}
           >
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
+            <CartesianGrid
+              strokeDasharray="3 3"
+              vertical={false}
+              stroke="#e5e7eb"
+            />
             <XAxis
               dataKey="month"
               tickLine={false}
@@ -118,9 +124,27 @@ export default function OverviewCharts({ data }: OverviewChartsProps) {
               }}
             />
             <Legend wrapperStyle={{ paddingTop: 12 }} />
-            <Bar dataKey="leads" name="Leads" fill="#0f172a" radius={[8, 8, 0, 0]} maxBarSize={34} />
-            <Bar dataKey="quotations" name="Quotations" fill="#c89b2b" radius={[8, 8, 0, 0]} maxBarSize={34} />
-            <Bar dataKey="invoices" name="Invoices" fill="#475569" radius={[8, 8, 0, 0]} maxBarSize={34} />
+            <Bar
+              dataKey="leads"
+              name="Leads"
+              fill="#0f172a"
+              radius={[8, 8, 0, 0]}
+              maxBarSize={34}
+            />
+            <Bar
+              dataKey="quotations"
+              name="Quotations"
+              fill="#c89b2b"
+              radius={[8, 8, 0, 0]}
+              maxBarSize={34}
+            />
+            <Bar
+              dataKey="invoices"
+              name="Invoices"
+              fill="#475569"
+              radius={[8, 8, 0, 0]}
+              maxBarSize={34}
+            />
           </BarChart>
         </ResponsiveContainer>
       </ChartCard>
@@ -134,7 +158,11 @@ export default function OverviewCharts({ data }: OverviewChartsProps) {
             data={safeData}
             margin={{ top: 8, right: 8, left: -4, bottom: 4 }}
           >
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
+            <CartesianGrid
+              strokeDasharray="3 3"
+              vertical={false}
+              stroke="#e5e7eb"
+            />
             <XAxis
               dataKey="month"
               tickLine={false}

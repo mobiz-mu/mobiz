@@ -6,33 +6,34 @@ export async function getDashboardKpis() {
     subscribersRes,
     quotationsRes,
     invoicesRes,
-    proposalsRes,
-    blogRes,
-    bannersRes,
   ] = await Promise.all([
     supabaseServer.from("leads").select("*", { count: "exact", head: true }),
     supabaseServer.from("newsletter_subscribers").select("*", { count: "exact", head: true }),
     supabaseServer.from("quotations").select("*", { count: "exact", head: true }),
     supabaseServer.from("invoices").select("*", { count: "exact", head: true }),
-    supabaseServer.from("proposals").select("*", { count: "exact", head: true }),
-    supabaseServer
-      .from("blog_posts")
-      .select("*", { count: "exact", head: true })
-      .eq("is_published", true),
-    supabaseServer
-      .from("hero_banners")
-      .select("*", { count: "exact", head: true })
-      .eq("is_active", true),
   ]);
 
-  const unpaidInvoices = await supabaseServer
-    .from("invoices")
-    .select("balance_due")
-    .gt("balance_due", 0);
+  const [unpaidInvoices, paidInvoices] = await Promise.all([
+    supabaseServer
+      .from("invoices")
+      .select("balance_due")
+      .gt("balance_due", 0),
+
+    supabaseServer
+      .from("invoices")
+      .select("total_amount")
+      .lte("balance_due", 0),
+  ]);
 
   const unpaidTotal =
     unpaidInvoices.data?.reduce(
       (sum, row) => sum + Number(row.balance_due || 0),
+      0
+    ) || 0;
+
+  const collectionsTotal =
+    paidInvoices.data?.reduce(
+      (sum, row) => sum + Number(row.total_amount || 0),
       0
     ) || 0;
 
@@ -41,35 +42,31 @@ export async function getDashboardKpis() {
     subscribersCount: subscribersRes.count || 0,
     quotationsCount: quotationsRes.count || 0,
     invoicesCount: invoicesRes.count || 0,
-    proposalsCount: proposalsRes.count || 0,
-    publishedPostsCount: blogRes.count || 0,
-    activeBannersCount: bannersRes.count || 0,
+    customersCount: leadsRes.count || 0,
     unpaidInvoicesTotal: unpaidTotal,
+    collectionsTotal,
   };
 }
 
 export async function getRecentActivity() {
-  const [leads, quotations, invoices, proposals] = await Promise.all([
+  const [leads, quotations, invoices] = await Promise.all([
     supabaseServer
       .from("leads")
       .select("id, full_name, created_at")
       .order("created_at", { ascending: false })
-      .limit(3),
+      .limit(4),
+
     supabaseServer
       .from("quotations")
       .select("id, quotation_number, created_at")
       .order("created_at", { ascending: false })
-      .limit(3),
+      .limit(4),
+
     supabaseServer
       .from("invoices")
       .select("id, invoice_number, created_at")
       .order("created_at", { ascending: false })
-      .limit(3),
-    supabaseServer
-      .from("proposals")
-      .select("id, proposal_number, created_at")
-      .order("created_at", { ascending: false })
-      .limit(3),
+      .limit(4),
   ]);
 
   const merged = [
@@ -88,11 +85,6 @@ export async function getRecentActivity() {
       label: item.invoice_number,
       created_at: item.created_at,
     })),
-    ...(proposals.data || []).map((item) => ({
-      type: "Proposal",
-      label: item.proposal_number,
-      created_at: item.created_at,
-    })),
   ];
 
   return merged
@@ -105,7 +97,10 @@ export async function getRecentActivity() {
 
 function monthKey(dateString: string) {
   const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", { month: "short", year: "2-digit" });
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    year: "2-digit",
+  });
 }
 
 export async function getDashboardChartData() {
@@ -114,10 +109,12 @@ export async function getDashboardChartData() {
       .from("leads")
       .select("created_at")
       .order("created_at", { ascending: true }),
+
     supabaseServer
       .from("quotations")
       .select("created_at, total_amount")
       .order("created_at", { ascending: true }),
+
     supabaseServer
       .from("invoices")
       .select("created_at, total_amount")
@@ -126,13 +123,25 @@ export async function getDashboardChartData() {
 
   const map = new Map<
     string,
-    { month: string; leads: number; quotations: number; invoices: number; revenue: number }
+    {
+      month: string;
+      leads: number;
+      quotations: number;
+      invoices: number;
+      revenue: number;
+    }
   >();
 
   for (const row of leadsRes.data || []) {
     const key = monthKey(row.created_at);
     if (!map.has(key)) {
-      map.set(key, { month: key, leads: 0, quotations: 0, invoices: 0, revenue: 0 });
+      map.set(key, {
+        month: key,
+        leads: 0,
+        quotations: 0,
+        invoices: 0,
+        revenue: 0,
+      });
     }
     map.get(key)!.leads += 1;
   }
@@ -140,7 +149,13 @@ export async function getDashboardChartData() {
   for (const row of quotationsRes.data || []) {
     const key = monthKey(row.created_at);
     if (!map.has(key)) {
-      map.set(key, { month: key, leads: 0, quotations: 0, invoices: 0, revenue: 0 });
+      map.set(key, {
+        month: key,
+        leads: 0,
+        quotations: 0,
+        invoices: 0,
+        revenue: 0,
+      });
     }
     map.get(key)!.quotations += 1;
   }
@@ -148,7 +163,13 @@ export async function getDashboardChartData() {
   for (const row of invoicesRes.data || []) {
     const key = monthKey(row.created_at);
     if (!map.has(key)) {
-      map.set(key, { month: key, leads: 0, quotations: 0, invoices: 0, revenue: 0 });
+      map.set(key, {
+        month: key,
+        leads: 0,
+        quotations: 0,
+        invoices: 0,
+        revenue: 0,
+      });
     }
     map.get(key)!.invoices += 1;
     map.get(key)!.revenue += Number(row.total_amount || 0);
