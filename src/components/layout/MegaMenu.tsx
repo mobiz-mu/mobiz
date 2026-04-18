@@ -47,14 +47,17 @@ function getKeywordDescription(title: string) {
 }
 
 export default function MegaMenu({ open, onClose }: MegaMenuProps) {
-  const items = serviceMenuGroups
-    .flatMap((group) =>
-      group.items.map((item) => ({
-        ...item,
-        group: group.title,
-      }))
-    )
-    .slice(0, 6);
+  const items: Array<
+    (typeof serviceMenuGroups)[number]["items"][number] & { group: string }
+  > = [];
+
+  for (const group of serviceMenuGroups) {
+    for (const item of group.items) {
+      items.push({ ...item, group: group.title });
+      if (items.length === 6) break;
+    }
+    if (items.length === 6) break;
+  }
 
   return (
     <div
@@ -81,7 +84,7 @@ export default function MegaMenu({ open, onClose }: MegaMenuProps) {
                 href={item.href}
                 onClick={onClose}
                 aria-label={`Open ${item.title} service page`}
-                className="group relative min-w-0 overflow-hidden rounded-[22px] border border-[#243a68]/72 bg-[linear-gradient(180deg,rgba(8,18,44,0.95)_0%,rgba(10,24,58,0.98)_52%,rgba(7,16,38,1)_100%)] px-3.5 py-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),inset_0_-10px_16px_rgba(0,0,0,0.16),0_12px_24px_rgba(7,18,38,0.16)] transition-all duration-300 hover:-translate-y-1 hover:border-[#d9b85f]/58 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.08),inset_0_-10px_16px_rgba(0,0,0,0.16),0_18px_34px_rgba(7,18,38,0.22),0_0_24px_rgba(217,184,95,0.08)] xl:px-4 xl:py-4"
+                className="group relative min-w-0 overflow-hidden rounded-[22px] border border-[#243a68]/72 bg-[linear-gradient(180deg,rgba(8,18,44,0.95)_0%,rgba(10,24,58,0.98)_52%,rgba(7,16,38,1)_100%)] px-3.5 py-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),inset_0_-10px_16px_rgba(0,0,0,0.16),0_12px_24px_rgba(7,18,38,0.16)] transition-all duration-300 hover:-translate-y-1 hover:border-[#d9b85f]/58 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.08),inset_0_-10px_16px_rgba(0,0,0,0.16),0_18px_34px_rgba(7,18,38,0.22),0_0_24px_rgba(217,184,95,0.08)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#071226] focus-visible:ring-offset-2 xl:px-4 xl:py-4"
                 style={
                   {
                     transitionDelay: open ? `${index * 22}ms` : "0ms",
@@ -103,7 +106,7 @@ export default function MegaMenu({ open, onClose }: MegaMenuProps) {
                       <ArrowUpRight className="mt-0.5 h-4 w-4 shrink-0 text-[#d7b55b] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                     </div>
 
-                    <p className="mt-1.5 line-clamp-2 text-[11.5px] leading-[1.55] text-white/72 xl:text-[12px]">
+                    <p className="mt-1.5 line-clamp-2 text-[11.5px] leading-[1.55] text-white/80 xl:text-[12px]">
                       {getKeywordDescription(item.title)}
                     </p>
                   </div>

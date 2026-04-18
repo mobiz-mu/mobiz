@@ -5,20 +5,17 @@ import { X } from "lucide-react";
 
 const POPUP_DELAY_MS = 18000;
 const VIDEO_SRC = "/videos/popup-video.mp4";
-const VIDEO_POSTER = "/images/hero/popup-video-poster.jpg";
-const SESSION_KEY = "mobiz-homepage-video-popup-shown-v6";
+const VIDEO_POSTER = "/images/hero/popup-video-poster.webp";
+const SESSION_KEY = "mobiz-homepage-video-popup-shown-v8";
 
 export default function HomepageVideoPopup() {
   const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [entered, setEntered] = useState(false);
   const [pageLoaded, setPageLoaded] = useState(false);
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
-  const [entered, setEntered] = useState(false);
-  const videoRef = useRef<HTMLVideoElement | null>(null);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     const markInteracted = () => setHasUserInteracted(true);
@@ -53,9 +50,7 @@ export default function HomepageVideoPopup() {
 
   useEffect(() => {
     if (!pageLoaded) return;
-
-    const alreadyShown = sessionStorage.getItem(SESSION_KEY);
-    if (alreadyShown === "true") return;
+    if (sessionStorage.getItem(SESSION_KEY) === "true") return;
 
     const timer = window.setTimeout(() => {
       setOpen(true);
@@ -75,6 +70,7 @@ export default function HomepageVideoPopup() {
 
     const raf = window.requestAnimationFrame(() => {
       setEntered(true);
+      closeButtonRef.current?.focus();
     });
 
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -88,51 +84,22 @@ export default function HomepageVideoPopup() {
     const video = videoRef.current;
     if (video) {
       video.currentTime = 0;
-      video.playsInline = true;
-      video.preload = "metadata";
-      video.defaultMuted = false;
-      video.muted = false;
-      video.volume = 1;
+      video.muted = !hasUserInteracted;
+      video.volume = hasUserInteracted ? 1 : 0;
 
-      const playWithSound = async () => {
-        try {
-          await video.play();
-        } catch {
-          // Browser may block audible autoplay.
-          // Fallback to muted autoplay so playback still begins visually.
-          video.muted = true;
-          video.volume = 0;
-
-          try {
-            await video.play();
-          } catch {
-            // Final fallback: remain paused until the user interacts.
-          }
-        }
-      };
-
-      void playWithSound();
+      video.play().catch(() => {
+        video.muted = true;
+        video.volume = 0;
+        video.play().catch(() => {
+          // Some browsers may still block autoplay.
+        });
+      });
     }
 
     return () => {
       window.cancelAnimationFrame(raf);
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-    if (!hasUserInteracted) return;
-
-    const video = videoRef.current;
-    if (!video) return;
-
-    video.muted = false;
-    video.volume = 1;
-
-    video.play().catch(() => {
-      // Some browsers can still resist immediate unmuted playback.
-    });
   }, [open, hasUserInteracted]);
 
   function handleClose() {
@@ -148,15 +115,11 @@ export default function HomepageVideoPopup() {
     setOpen(false);
   }
 
-  function handleEnded() {
-    handleClose();
-  }
-
-  if (!mounted || !open) return null;
+  if (!open) return null;
 
   return (
     <div
-      className={`fixed inset-0 z-[130] flex items-center justify-center bg-black/52 p-2 transition-all duration-500 sm:p-3 ${
+      className={`fixed inset-0 z-[130] flex items-center justify-center bg-black/52 p-2 transition-opacity duration-500 sm:p-3 ${
         entered ? "opacity-100" : "opacity-0"
       }`}
       role="dialog"
@@ -165,58 +128,40 @@ export default function HomepageVideoPopup() {
       onClick={handleClose}
     >
       <div
-        className={`relative w-full max-w-[96vw] bg-transparent transition-all duration-[650ms] ease-[cubic-bezier(0.22,1,0.36,1)] sm:max-w-[760px] lg:max-w-[860px] ${
+        className={`relative w-full max-w-[96vw] transition-all duration-[650ms] ease-[cubic-bezier(0.22,1,0.36,1)] sm:max-w-[760px] lg:max-w-[860px] ${
           entered
             ? "translate-y-0 scale-100 opacity-100"
-            : "translate-y-8 scale-[0.94] opacity-0"
+            : "translate-y-8 scale-[0.95] opacity-0"
         }`}
         onClick={(event) => event.stopPropagation()}
       >
         <button
+          ref={closeButtonRef}
           type="button"
           onClick={handleClose}
           aria-label="Close popup video"
-          className="absolute right-2 top-2 z-30 inline-flex h-7 w-7 items-center justify-center rounded-full bg-black/46 text-white backdrop-blur-sm transition duration-300 hover:bg-black/72 sm:right-2.5 sm:top-2.5 sm:h-7.5 sm:w-7.5"
+          className="absolute right-2 top-2 z-30 inline-flex h-7 w-7 items-center justify-center rounded-full bg-black/62 text-white transition duration-300 hover:bg-black/78 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black sm:h-8 sm:w-8"
         >
           <X className="h-3.5 w-3.5" />
         </button>
 
-        <div className="pointer-events-none absolute inset-0 -z-10 rounded-[20px] opacity-90 blur-2xl transition duration-700">
-          <div className="absolute inset-x-[14%] top-[8%] h-[24%] rounded-full bg-white/10" />
-          <div className="absolute bottom-[10%] left-[18%] h-[16%] w-[30%] rounded-full bg-[#f4d77a]/10" />
-          <div className="absolute bottom-[14%] right-[14%] h-[18%] w-[34%] rounded-full bg-[#1d4ed8]/10" />
-        </div>
-
-        <div className="relative overflow-hidden rounded-[18px] bg-transparent sm:rounded-[20px]">
+        <div className="relative overflow-hidden rounded-[18px] sm:rounded-[20px]">
           <div className="relative aspect-[9/16] w-full sm:aspect-video">
             <video
               ref={videoRef}
               src={VIDEO_SRC}
               poster={VIDEO_POSTER}
-              className={`h-full w-full object-cover transition-transform duration-[1800ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                entered ? "scale-100" : "scale-[1.06]"
-              }`}
+              className="h-full w-full object-cover"
+              aria-label="MoBiz.mu promotional video"
               playsInline
-              preload="metadata"
+              preload="none"
               autoPlay
               controls
               controlsList="nodownload noplaybackrate"
               disablePictureInPicture
-              onEnded={handleEnded}
+              onEnded={handleClose}
             />
           </div>
-
-          <div
-            className={`pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_48%,rgba(0,0,0,0.18)_100%)] transition-opacity duration-700 ${
-              entered ? "opacity-100" : "opacity-0"
-            }`}
-          />
-
-          <div
-            className={`pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.10)_0%,rgba(255,255,255,0.03)_18%,rgba(255,255,255,0.00)_38%)] transition-opacity duration-700 ${
-              entered ? "opacity-100" : "opacity-0"
-            }`}
-          />
         </div>
       </div>
     </div>

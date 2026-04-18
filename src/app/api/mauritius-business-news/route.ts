@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 export const runtime = "nodejs";
 
 const SIX_DAYS = 60 * 60 * 24 * 6;
-const FETCH_TIMEOUT_MS = 5000;
+const FETCH_TIMEOUT_MS = 2200;
 
 type NewsItem = {
   title: string;
@@ -27,10 +27,6 @@ const SOURCES = [
   {
     source: "Defimedia",
     query: "site:defimedia.info Mauritius business economy OR finance OR budget",
-  },
-  {
-    source: "Défi Info",
-    query: "site:defimedia.info Maurice economie OR business OR finance",
   },
   {
     source: "L'Express",
@@ -74,13 +70,6 @@ const FALLBACK_ITEMS: NewsItem[] = [
     pubDate: new Date().toISOString(),
     source: "Le Mauricien",
     image: SOURCE_PLACEHOLDERS["Le Mauricien"],
-  },
-  {
-    title: "Economic news and business information for the Mauritian market",
-    link: "https://defimedia.info",
-    pubDate: new Date().toISOString(),
-    source: "Défi Info",
-    image: SOURCE_PLACEHOLDERS["Défi Info"],
   },
 ];
 
@@ -234,9 +223,12 @@ export async function GET() {
   try {
     const settled = await Promise.allSettled(SOURCES.map(fetchSource));
 
-    const allItems = settled.flatMap((result) =>
-      result.status === "fulfilled" ? result.value : []
-    );
+    const allItems: NewsItem[] = [];
+    for (const result of settled) {
+      if (result.status === "fulfilled") {
+        allItems.push(...result.value);
+      }
+    }
 
     const deduped = Array.from(
       new Map(
@@ -248,7 +240,7 @@ export async function GET() {
         const bTime = new Date(b.pubDate).getTime() || 0;
         return bTime - aTime;
       })
-      .slice(0, 16);
+      .slice(0, 12);
 
     const items = deduped.length > 0 ? deduped : FALLBACK_ITEMS;
 

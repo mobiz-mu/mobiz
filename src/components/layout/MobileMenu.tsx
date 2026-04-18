@@ -13,7 +13,7 @@ import {
   Music2,
   ArrowRight,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 type MobileMenuProps = {
@@ -113,11 +113,15 @@ function getKeywordDescription(title: string) {
 
 export default function MobileMenu({ open, onClose }: MobileMenuProps) {
   const [servicesOpen, setServicesOpen] = useState(true);
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     if (!open) {
       setServicesOpen(true);
+      return;
     }
+
+    closeButtonRef.current?.focus();
   }, [open]);
 
   useEffect(() => {
@@ -127,32 +131,58 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
     };
   }, [open]);
 
-  const serviceItems = serviceMenuGroups
-    .flatMap((group) =>
-      group.items.map((item) => ({ ...item, group: group.title }))
-    )
-    .slice(0, 6);
+  useEffect(() => {
+    if (!open) return;
 
-  const marqueeItems = [...mobileKeywords, ...mobileKeywords];
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open, onClose]);
+
+  const serviceItems = useMemo(() => {
+    const items: Array<
+      (typeof serviceMenuGroups)[number]["items"][number] & { group: string }
+    > = [];
+
+    for (const group of serviceMenuGroups) {
+      for (const item of group.items) {
+        items.push({ ...item, group: group.title });
+        if (items.length === 6) break;
+      }
+      if (items.length === 6) break;
+    }
+
+    return items;
+  }, []);
+
+  const marqueeItems = useMemo(
+    () => [...mobileKeywords, ...mobileKeywords],
+    []
+  );
+
+  if (!open) return null;
 
   return (
     <div
-      className={cn(
-        "fixed inset-0 z-[90] bg-[rgba(4,10,24,0.58)] backdrop-blur-[8px] transition-all duration-300 lg:hidden",
-        open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
-      )}
-      aria-hidden={!open}
+      className="fixed inset-0 z-[90] bg-[rgba(4,10,24,0.58)] backdrop-blur-[8px] lg:hidden"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Mobile navigation menu"
+      onClick={onClose}
     >
       <div
-        className={cn(
-          "absolute right-0 top-0 h-full w-full max-w-[420px] overflow-hidden bg-[linear-gradient(180deg,#071226_0%,#0a1733_42%,#0c1a38_100%)] shadow-[0_30px_80px_rgba(0,0,0,0.35)] transition-transform duration-300 sm:max-w-[440px]",
-          open ? "translate-x-0" : "translate-x-full"
-        )}
+        className="absolute right-0 top-0 h-full w-full max-w-[420px] overflow-hidden bg-[linear-gradient(180deg,#071226_0%,#0a1733_42%,#0c1a38_100%)] shadow-[0_30px_80px_rgba(0,0,0,0.35)] sm:max-w-[440px]"
+        onClick={(event) => event.stopPropagation()}
       >
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(244,215,122,0.08),transparent_20%),radial-gradient(circle_at_14%_18%,rgba(78,125,255,0.08),transparent_22%),radial-gradient(circle_at_86%_28%,rgba(69,120,255,0.06),transparent_22%)]" />
 
         <div className="relative z-10 flex items-center justify-between border-b border-white/10 px-4 py-3.5 sm:px-5">
-          <Link href="/" onClick={onClose} className="flex items-center">
+          <Link href="/" onClick={onClose} className="flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#071226] rounded-md">
             <div className="relative h-10 w-[68px] sm:h-11 sm:w-[72px]">
               <Image
                 src="/images/logos/mobiz-mu-logo.png"
@@ -166,10 +196,11 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
           </Link>
 
           <button
+            ref={closeButtonRef}
             type="button"
             aria-label="Close mobile menu"
             onClick={onClose}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/12 bg-white/8 text-white shadow-[0_10px_24px_rgba(0,0,0,0.16)] transition duration-300 hover:bg-white/12 active:scale-[0.98]"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/12 bg-white/8 text-white shadow-[0_10px_24px_rgba(0,0,0,0.16)] transition duration-300 hover:bg-white/12 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#071226]"
           >
             <X className="h-4.5 w-4.5" />
           </button>
@@ -189,7 +220,7 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={`Visit MoBiz.mu on ${item.name}`}
-                      className="group relative flex h-8.5 w-8.5 items-center justify-center rounded-full border border-[#d7b55b]/80 bg-white/[0.05] shadow-[inset_0_1px_0_rgba(255,255,255,0.10),0_8px_18px_rgba(0,0,0,0.14)] transition duration-300 hover:-translate-y-[1px] hover:border-[#f3d77a] hover:bg-white/[0.09]"
+                      className="group relative flex h-9 w-9 items-center justify-center rounded-full border border-[#d7b55b]/80 bg-white/[0.05] shadow-[inset_0_1px_0_rgba(255,255,255,0.10),0_8px_18px_rgba(0,0,0,0.14)] transition duration-300 hover:-translate-y-[1px] hover:border-[#f3d77a] hover:bg-white/[0.09] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#071226]"
                     >
                       <Icon className="h-[14px] w-[14px] text-[#f3d77a]" />
                     </Link>
@@ -216,7 +247,8 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
                 type="button"
                 onClick={() => setServicesOpen((prev) => !prev)}
                 aria-expanded={servicesOpen}
-                className="flex w-full items-center justify-between gap-3 rounded-[18px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.08)_0%,rgba(255,255,255,0.05)_100%)] px-4 py-3 text-left text-white shadow-[0_10px_22px_rgba(0,0,0,0.10)] transition duration-300 hover:bg-white/10 active:scale-[0.995]"
+                aria-controls="mobile-services-panel"
+                className="flex w-full items-center justify-between gap-3 rounded-[18px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.08)_0%,rgba(255,255,255,0.05)_100%)] px-4 py-3 text-left text-white shadow-[0_10px_22px_rgba(0,0,0,0.10)] transition duration-300 hover:bg-white/10 active:scale-[0.995] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#071226]"
               >
                 <div>
                   <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#f3d77a]">
@@ -236,6 +268,7 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
               </button>
 
               <div
+                id="mobile-services-panel"
                 className={cn(
                   "overflow-hidden transition-all duration-300",
                   servicesOpen ? "max-h-[1400px] opacity-100" : "max-h-0 opacity-0"
@@ -250,7 +283,7 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
                         key={item.title}
                         href={item.href}
                         onClick={onClose}
-                        className="group relative min-w-0 overflow-hidden rounded-[20px] border border-[#2f4679]/74 bg-[linear-gradient(180deg,rgba(8,18,44,0.96)_0%,rgba(10,24,58,0.98)_52%,rgba(7,16,38,1)_100%)] px-3.5 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),inset_0_-10px_16px_rgba(0,0,0,0.14),0_12px_24px_rgba(7,18,38,0.16)] transition-all duration-300 hover:border-[#d9b85f]/58 hover:shadow-[0_16px_28px_rgba(7,18,38,0.20),0_0_18px_rgba(217,184,95,0.08)] active:scale-[0.995]"
+                        className="group relative min-w-0 overflow-hidden rounded-[20px] border border-[#2f4679]/74 bg-[linear-gradient(180deg,rgba(8,18,44,0.96)_0%,rgba(10,24,58,0.98)_52%,rgba(7,16,38,1)_100%)] px-3.5 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),inset_0_-10px_16px_rgba(0,0,0,0.14),0_12px_24px_rgba(7,18,38,0.16)] transition-all duration-300 hover:border-[#d9b85f]/58 hover:shadow-[0_16px_28px_rgba(7,18,38,0.20),0_0_18px_rgba(217,184,95,0.08)] active:scale-[0.995] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#071226]"
                       >
                         <span className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.08),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(217,184,95,0.06),transparent_26%)]" />
 
@@ -265,7 +298,7 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
                               <ArrowUpRight className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#d7b55b]" />
                             </div>
 
-                            <div className="mt-1 text-[10.8px] leading-[1.55] text-white/70">
+                            <div className="mt-1 text-[10.8px] leading-[1.55] text-white/78">
                               {getKeywordDescription(item.title)}
                             </div>
                           </div>
@@ -284,7 +317,7 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
                 key={item.title}
                 href={item.href}
                 onClick={onClose}
-                className="block rounded-[16px] border border-white/10 bg-white/[0.05] px-4 py-3 text-[14px] font-semibold text-white shadow-[0_8px_20px_rgba(0,0,0,0.08)] transition duration-300 hover:bg-white/[0.08] active:scale-[0.995]"
+                className="block rounded-[16px] border border-white/10 bg-white/[0.05] px-4 py-3 text-[14px] font-semibold text-white shadow-[0_8px_20px_rgba(0,0,0,0.08)] transition duration-300 hover:bg-white/[0.08] active:scale-[0.995] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#071226]"
               >
                 {item.title}
               </Link>
@@ -295,7 +328,7 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
             href={quoteHref}
             target="_blank"
             rel="noopener noreferrer"
-            className="group mt-4 inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full border border-[#f1b17d] bg-[linear-gradient(180deg,#ef4444_0%,#d92121_52%,#ac1117_100%)] px-5 py-3.5 text-[13px] font-semibold text-white shadow-[0_16px_30px_rgba(185,28,28,0.22),inset_0_2px_0_rgba(255,255,255,0.20)] transition duration-300 hover:-translate-y-0.5 active:scale-[0.995]"
+            className="group mt-4 inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full border border-[#f1b17d] bg-[linear-gradient(180deg,#ef4444_0%,#d92121_52%,#ac1117_100%)] px-5 py-3.5 text-[13px] font-semibold text-white shadow-[0_16px_30px_rgba(185,28,28,0.22),inset_0_2px_0_rgba(255,255,255,0.20)] transition duration-300 hover:-translate-y-0.5 active:scale-[0.995] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#071226]"
           >
             <span>Get A Quote</span>
             <ArrowRight className="h-4 w-4 text-[#ffd56b] transition-transform duration-300 group-hover:translate-x-0.5" />
@@ -306,18 +339,18 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
               MoBiz.mu
             </div>
 
-            <div className="mt-2 text-[15px] font-semibold leading-snug">
+            <div className="mt-2 text-[15px] font-semibold leading-snug text-white">
               Premium websites, SEO, accounting, logistics and business support.
             </div>
 
-            <p className="mt-2 text-[12.5px] leading-5 text-white/74">
+            <p className="mt-2 text-[12.5px] leading-5 text-white/80">
               Built for stronger presentation, better conversions and executive credibility across Mauritius.
             </p>
 
             <Link
               href="/contact"
               onClick={onClose}
-              className="mt-3 inline-flex rounded-full bg-white px-4 py-2.5 text-[12.5px] font-semibold text-[#071226] transition duration-300 hover:bg-[#f8fafc]"
+              className="mt-3 inline-flex rounded-full bg-white px-4 py-2.5 text-[12.5px] font-semibold text-[#071226] transition duration-300 hover:bg-[#f8fafc] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#071226]"
             >
               Contact us
             </Link>

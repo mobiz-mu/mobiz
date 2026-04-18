@@ -81,7 +81,7 @@ function NewsThumb({
     <img
       src={safeSrc}
       alt={alt}
-      loading="eager"
+      loading="lazy"
       decoding="async"
       referrerPolicy="no-referrer"
       className="h-full w-full object-cover object-center"
@@ -97,8 +97,8 @@ function NewsThumb({
 
 function NewsCard({ item }: { item: NewsItem }) {
   return (
-    <article className="group flex h-[160px] w-[360px] shrink-0 overflow-hidden rounded-[22px] border border-slate-200 bg-[linear-gradient(180deg,#ffffff_0%,#fbfcff_100%)] shadow-[0_10px_24px_rgba(7,18,38,0.04)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_36px_rgba(7,18,38,0.08)] sm:h-[170px] sm:w-[390px] lg:h-[178px] lg:w-[420px]">
-      <div className="relative h-full w-[145px] shrink-0 overflow-hidden bg-slate-100 sm:w-[155px] lg:w-[170px]">
+    <article className="group flex h-[160px] w-[328px] shrink-0 snap-start overflow-hidden rounded-[22px] border border-slate-200 bg-[linear-gradient(180deg,#ffffff_0%,#fbfcff_100%)] shadow-[0_10px_24px_rgba(7,18,38,0.04)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_36px_rgba(7,18,38,0.08)] sm:h-[170px] sm:w-[360px] lg:h-[178px] lg:w-[400px]">
+      <div className="relative h-full w-[132px] shrink-0 overflow-hidden bg-slate-100 sm:w-[145px] lg:w-[160px]">
         <NewsThumb src={item.image} alt={item.title} />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/8 via-transparent to-transparent" />
       </div>
@@ -127,7 +127,7 @@ function NewsCard({ item }: { item: NewsItem }) {
           href={item.link}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-[12px] font-semibold text-[#071226] transition hover:text-[#8b6a18]"
+          className="inline-flex items-center gap-2 text-[12px] font-semibold text-[#071226] transition hover:text-[#8b6a18] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#071226] focus-visible:ring-offset-2"
         >
           View Article
           <ArrowRight className="h-3.5 w-3.5 text-[#caa43f] transition-transform duration-300 group-hover:translate-x-0.5" />
@@ -139,19 +139,36 @@ function NewsCard({ item }: { item: NewsItem }) {
 
 export default function MauritiusBusinessNews() {
   const [items, setItems] = useState<NewsItem[]>(FALLBACK_ITEMS);
-  const [loading, setLoading] = useState(true);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia("(min-width: 1024px)");
+
+    const update = () => setIsDesktop(media.matches);
+    update();
+
+    if (typeof media.addEventListener === "function") {
+      media.addEventListener("change", update);
+      return () => media.removeEventListener("change", update);
+    }
+
+    media.addListener(update);
+    return () => media.removeListener(update);
+  }, []);
 
   useEffect(() => {
     let alive = true;
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 6500);
+    const timeout = setTimeout(() => controller.abort(), 2500);
 
     async function loadNews() {
       try {
         const res = await fetch("/api/mauritius-business-news", {
-          cache: "no-store",
+          cache: "force-cache",
           signal: controller.signal,
         });
+
+        if (!res.ok) throw new Error("News request failed");
 
         const data = (await res.json()) as ApiResponse;
 
@@ -159,15 +176,12 @@ export default function MauritiusBusinessNews() {
 
         if (Array.isArray(data.items) && data.items.length > 0) {
           setItems(data.items);
-        } else {
-          setItems(FALLBACK_ITEMS);
         }
       } catch {
         if (!alive) return;
         setItems(FALLBACK_ITEMS);
       } finally {
         clearTimeout(timeout);
-        if (alive) setLoading(false);
       }
     }
 
@@ -181,7 +195,7 @@ export default function MauritiusBusinessNews() {
   }, []);
 
   const marqueeItems = useMemo(
-    () => (items.length ? [...items, ...items] : [...FALLBACK_ITEMS, ...FALLBACK_ITEMS]),
+    () => [...items, ...items],
     [items]
   );
 
@@ -211,24 +225,25 @@ export default function MauritiusBusinessNews() {
             </h2>
           </div>
 
-          <div className="relative z-10 overflow-hidden">
-            <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-white via-white/90 to-transparent sm:w-16" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-white via-white/90 to-transparent sm:w-16" />
+          <div className="relative z-10">
+            {isDesktop ? (
+              <div className="relative overflow-hidden">
+                <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-white via-white/90 to-transparent sm:w-16" />
+                <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-white via-white/90 to-transparent sm:w-16" />
 
-            {loading && items.length === 0 ? (
-              <div className="flex gap-3 sm:gap-4">
-                {[1, 2, 3, 4].map((i) => (
-                  <div
-                    key={i}
-                    className="h-[160px] w-[360px] shrink-0 rounded-[22px] border border-slate-200 bg-[linear-gradient(180deg,#ffffff_0%,#f8fbff_100%)] sm:h-[170px] sm:w-[390px] lg:h-[178px] lg:w-[420px]"
-                  />
-                ))}
+                <div className="news-marquee flex w-max items-stretch gap-3 sm:gap-4">
+                  {marqueeItems.map((item, index) => (
+                    <NewsCard key={`${item.link}-${index}`} item={item} />
+                  ))}
+                </div>
               </div>
             ) : (
-              <div className="news-marquee flex w-max items-stretch gap-3 sm:gap-4">
-                {marqueeItems.map((item, index) => (
-                  <NewsCard key={`${item.link}-${index}`} item={item} />
-                ))}
+              <div className="-mx-4 overflow-x-auto px-4 pb-1 sm:-mx-5 sm:px-5 lg:hidden">
+                <div className="flex snap-x snap-mandatory gap-3 sm:gap-4">
+                  {items.map((item, index) => (
+                    <NewsCard key={`${item.link}-${index}`} item={item} />
+                  ))}
+                </div>
               </div>
             )}
           </div>

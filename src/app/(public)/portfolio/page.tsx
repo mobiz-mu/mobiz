@@ -2,124 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Container from "@/components/ui/Container";
 import SmartImage from "@/components/ui/SmartImage";
+import { portfolioItems, type PortfolioProject } from "@/lib/portfolio";
 import { ArrowRight, Globe, Sparkles } from "lucide-react";
 
 const siteUrl = "https://mobiz.mu";
-
-type PortfolioProject = {
-  slug: string;
-  title: string;
-  category: string;
-  shortDescription: string;
-  fullDescription: string;
-  image: string;
-  liveUrl?: string;
-  previewLabel?: string;
-  showVisitWebsite?: boolean;
-};
-
-const portfolioProjects: PortfolioProject[] = [
-  {
-    slug: "dan-and-shi-pest-control-ltd",
-    title: "Dan & Shi Pest Control Ltd",
-    category: "Business Website",
-    shortDescription:
-      "A premium bilingual pest control website built for stronger trust, local visibility, and easier WhatsApp-led conversions in Mauritius.",
-    fullDescription:
-      "This project was designed for a Mauritian pest control company serving homes and businesses across the island. The website presents service clarity, bilingual accessibility, stronger local trust, and a more professional online presence for urgent inquiries and quote requests.",
-    image: "/images/portfolio/dan-and-shi-cover.jpg",
-    liveUrl: "https://www.danandshi.com/",
-    previewLabel: "Visit Website",
-    showVisitWebsite: true,
-  },
-  {
-    slug: "himalay-rental-tours",
-    title: "Himalay Rental Tours",
-    category: "Tourism Website",
-    shortDescription:
-      "A tourism and booking-focused website for rentals, excursions, lagoon trips, and WhatsApp-based holiday planning in Mauritius.",
-    fullDescription:
-      "Built for a local Mauritius tour operator, this project brings together rentals, excursions, boat trips, and booking convenience into one stronger digital experience. The direction emphasizes quick navigation, tourism trust, and WhatsApp-first conversion.",
-    image: "/images/portfolio/himalay-rental-tours-cover.jpg",
-    liveUrl: "https://www.himalayrentaltours.mu/",
-    previewLabel: "Visit Website",
-    showVisitWebsite: true,
-  },
-  {
-    slug: "atelier-de-mea",
-    title: "Atelier de Mea",
-    category: "E-Commerce Website",
-    shortDescription:
-      "A premium handmade fashion and accessories e-commerce experience built to elevate brand image, product discovery, and mobile shopping.",
-    fullDescription:
-      "This e-commerce project was developed for a Mauritian handmade fashion brand, with a stronger luxury presentation, cleaner shopping experience, better storytelling, and improved product visibility for accessories and handmade collections.",
-    image: "/images/portfolio/atelier-de-mea-cover.jpg",
-    liveUrl: "https://www.atelierdemea.com/",
-    previewLabel: "Visit Website",
-    showVisitWebsite: true,
-  },
-  {
-    slug: "multiimaint-ltd",
-    title: "Multiimaint Ltd",
-    category: "Corporate Website",
-    shortDescription:
-      "A corporate digital presentation designed to support facility, maintenance, and service-business credibility with a cleaner executive image.",
-    fullDescription:
-      "This project was positioned as a stronger corporate website for service-led operations, helping the company present a more polished, trustworthy, and structured business profile online.",
-    image: "/images/portfolio/multiimaint-cover.jpg",
-    liveUrl: "https://www.multiimaint.mu/",
-    previewLabel: "Visit Website",
-    showVisitWebsite: true,
-  },
-  {
-    slug: "travel-holiday-mauritius",
-    title: "Travel Holiday Mauritius",
-    category: "Tourism Website",
-    shortDescription:
-      "A conversion-focused travel website for airport transfers, island tours, local experiences, and direct WhatsApp booking in Mauritius.",
-    fullDescription:
-      "This website was built to present a local Mauritian travel and transfer service in a more premium and reliable way. The project supports trust-building, tourism SEO, and faster direct booking through mobile-friendly content and WhatsApp conversion paths.",
-    image: "/images/portfolio/travel-holiday-mauritius-cover.jpg",
-    liveUrl: "https://travelholidaymauritius.com/",
-    previewLabel: "Visit Website",
-    showVisitWebsite: true,
-  },
-  {
-    slug: "ks-contracting-accounting-saas",
-    title: "KS Contracting Ltd Accounting SaaS",
-    category: "Custom SaaS Platform",
-    shortDescription:
-      "A tailored accounting and operations software interface designed for document workflows, invoicing, quotations, and professional business control.",
-    fullDescription:
-      "This portfolio project highlights a custom SaaS accounting platform created for business operations, with a focus on quotations, invoices, document workflows, admin controls, and premium dashboard usability. Public SaaS access is intentionally not displayed.",
-    image: "/images/portfolio/ks-contracting-cover.jpg",
-    showVisitWebsite: false,
-  },
-  {
-    slug: "ram-pottery-hub-saas",
-    title: "Ram Pottery Hub SaaS",
-    category: "Custom SaaS Platform",
-    shortDescription:
-      "A tailored software environment developed to support accounting-style workflows and business operations in a structured digital interface.",
-    fullDescription:
-      "This case study presents a custom SaaS-style software solution built around operational workflows and cleaner admin control. Public SaaS links are intentionally excluded while still showcasing the digital execution quality.",
-    image: "/images/portfolio/ram-pottery-hub-cover.jpg",
-    showVisitWebsite: false,
-  },
-  {
-    slug: "ram-pottery-ecommerce",
-    title: "Ram Pottery Ltd",
-    category: "E-Commerce Website",
-    shortDescription:
-      "A mobile-friendly pottery e-commerce website designed to present handcrafted products more professionally and support online product discovery.",
-    fullDescription:
-      "This public e-commerce project was built to showcase handcrafted pottery in a more premium way, combining product visibility, branding consistency, and a smoother customer-facing shopping experience.",
-    image: "/images/portfolio/ram-pottery-cover.jpg",
-    liveUrl: "https://www.rampottery.mu/",
-    previewLabel: "Visit Website",
-    showVisitWebsite: true,
-  },
-];
 
 export const metadata: Metadata = {
   title:
@@ -169,7 +55,7 @@ function PortfolioJsonLd() {
       "Selected MoBiz.mu projects across premium websites, e-commerce, tourism platforms, and custom digital solutions in Mauritius.",
     mainEntity: {
       "@type": "ItemList",
-      itemListElement: portfolioProjects.map((project, index) => ({
+      itemListElement: portfolioItems.map((project, index) => ({
         "@type": "CreativeWork",
         position: index + 1,
         name: project.title,
@@ -221,7 +107,7 @@ export default function PortfolioPage() {
         <section className="py-6 sm:py-8 lg:py-10">
           <Container className="max-w-[1240px] px-4 sm:px-6 lg:px-8">
             <div className="space-y-4 sm:space-y-5">
-              {portfolioProjects.map((project, index) => (
+              {portfolioItems.map((project, index) => (
                 <article
                   key={project.slug}
                   className="overflow-hidden rounded-[28px] border border-[#e5eaf2] bg-white shadow-[0_16px_40px_rgba(7,18,38,0.05)]"

@@ -1,4 +1,7 @@
 import { ImageResponse } from "next/og";
+import { renderMoBizOgTemplate } from "@/lib/og-template";
+
+export const runtime = "nodejs";
 
 export const alt = "MoBiz.mu — Luxury Business Solutions for Mauritius";
 export const size = {
@@ -7,114 +10,23 @@ export const size = {
 };
 export const contentType = "image/png";
 
-export default function TwitterImage() {
+export default async function TwitterImage() {
   return new ImageResponse(
-    (
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          position: "relative",
-          background:
-            "linear-gradient(135deg, #071226 0%, #0b5c7a 42%, #119b7e 100%)",
-          color: "white",
-          fontFamily: "Arial, sans-serif",
-          overflow: "hidden",
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            top: -60,
-            right: -40,
-            width: 280,
-            height: 280,
-            borderRadius: 9999,
-            background: "rgba(255,255,255,0.08)",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            bottom: -80,
-            left: -50,
-            width: 260,
-            height: 260,
-            borderRadius: 9999,
-            background: "rgba(255,255,255,0.06)",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 80,
-            right: 80,
-            height: 2,
-            background:
-              "linear-gradient(90deg, transparent, rgba(243,215,122,0.9), transparent)",
-          }}
-        />
-
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            padding: "60px 80px",
-            width: "100%",
-            height: "100%",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              padding: "12px 22px",
-              borderRadius: 9999,
-              border: "1px solid rgba(243,215,122,0.45)",
-              background: "rgba(255,255,255,0.10)",
-              color: "#f3d77a",
-              fontSize: 24,
-              fontWeight: 700,
-              letterSpacing: 4,
-              textTransform: "uppercase",
-              marginBottom: 28,
-            }}
-          >
-            MoBiz.mu
-          </div>
-
-          <div
-            style={{
-              fontSize: 76,
-              lineHeight: 1.05,
-              fontWeight: 800,
-              maxWidth: 920,
-              marginBottom: 24,
-            }}
-          >
-            Luxury Business Solutions for Mauritius
-          </div>
-
-          <div
-            style={{
-              fontSize: 32,
-              lineHeight: 1.4,
-              color: "rgba(255,255,255,0.88)",
-              maxWidth: 960,
-            }}
-          >
-            Premium websites, marketing, accounting, logistics, branding, and
-            business support.
-          </div>
-        </div>
-      </div>
-    ),
+    await renderMoBizOgTemplate({
+      title: "Luxury Business Solutions for Mauritius",
+      subtitle:
+        "Premium websites, marketing, accounting, logistics, branding, and business support.",
+      badge: "MoBiz.mu",
+      pills: [
+        "Executive Websites",
+        "SEO Mauritius",
+        "Digital Marketing",
+        "Accounting Support",
+        "Branding Solutions",
+      ],
+    }),
     {
       ...size,
     }
   );
 }
-
