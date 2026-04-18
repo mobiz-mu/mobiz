@@ -32,7 +32,7 @@ export const mainNavLinks: NavLink[] = [
   { title: "Mauritius Solutions", href: "/mauritius-services" },
   { title: "Careers", href: "/careers" },
   { title: "Blog", href: "/blog" },
-  { title: "Contact us", href: "/contact" },
+  { title: "Contact Us", href: "/contact" },
 ];
 
 export const serviceMenuGroups: ServiceMenuGroup[] = [
@@ -42,14 +42,14 @@ export const serviceMenuGroups: ServiceMenuGroup[] = [
       {
         title: "Website Design & Development",
         description:
-          "Executive websites, landing pages, corporate platforms, and mobile-first builds designed to elevate your brand and convert serious clients.",
+          "Executive websites, landing pages and mobile-first builds designed to elevate your brand and convert better.",
         href: "/services/website-design",
         icon: Globe,
       },
       {
         title: "Digital Marketing",
         description:
-          "SEO, Meta Ads, Google Ads, content strategy, and lead generation campaigns built for stronger visibility, reach, and business growth.",
+          "SEO, Meta Ads, Google Ads and content strategies built for visibility, leads and long-term growth.",
         href: "/services/digital-marketing",
         icon: Megaphone,
       },
@@ -59,16 +59,16 @@ export const serviceMenuGroups: ServiceMenuGroup[] = [
     title: "Operations & Support",
     items: [
       {
-        title: "Accounting & Tax Returns",
+        title: "Accounting & Tax Services",
         description:
-          "Bookkeeping, VAT, statutory filings, tax returns, and financial support delivered with professional structure and business accuracy.",
+          "Bookkeeping, VAT, statutory filing and tax support delivered with structure, clarity and business accuracy.",
         href: "/services/accounting-tax-returns",
         icon: ReceiptText,
       },
       {
-        title: "Logistics",
+        title: "Logistics & Delivery",
         description:
-          "Import and export setup, sourcing support, procurement coordination, and logistics solutions that help businesses operate more smoothly.",
+          "Import and export setup, sourcing, procurement and logistics support to help operations run smoothly.",
         href: "/services/logistics",
         icon: Truck,
       },
@@ -80,16 +80,9 @@ export const serviceMenuGroups: ServiceMenuGroup[] = [
       {
         title: "Branding & Business Solutions",
         description:
-          "Brand identity, business documents, presentations, positioning assets, and premium support for businesses that want to look established.",
+          "Brand identity, business documents, presentations and premium support for businesses that want to look established.",
         href: "/services/branding-business-solutions",
         icon: Palette,
-      },
-      {
-        title: "Explore All Services",
-        description:
-          "View the complete MoBiz.mu service portfolio across website design, digital growth, accounting, logistics, and business solutions.",
-        href: "/services",
-        icon: BriefcaseBusiness,
       },
     ],
   },
@@ -106,7 +99,7 @@ export const dashboardHighlights = [
     title: "Analytics",
     icon: BarChart3,
     description:
-      "Track visitors, traffic patterns, and business performance from one executive dashboard.",
+      "Track visitors, traffic patterns and business performance from one executive dashboard.",
   },
   {
     title: "Invoices & Quotations",

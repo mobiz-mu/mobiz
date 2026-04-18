@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 type HeroImage = {
   src: string;
@@ -11,43 +11,44 @@ type HeroImage = {
 const landscapeImages: HeroImage[] = [
   {
     src: "/images/hero/H1.png",
-    alt: "MoBiz.mu Mauritius website design and development banner showing premium executive business website services and digital solutions",
+    alt: "MoBiz.mu Mauritius website design and development hero banner showcasing premium executive business website services and digital solutions",
   },
   {
     src: "/images/hero/H2.png",
-    alt: "MoBiz.mu Mauritius digital marketing banner showing SEO services social media marketing and online business growth solutions",
+    alt: "MoBiz.mu Mauritius digital marketing hero banner showcasing SEO services social media marketing and online business growth solutions",
   },
   {
     src: "/images/hero/H3.png",
-    alt: "MoBiz.mu Mauritius branding and business solutions banner with premium corporate identity and executive brand development visuals",
+    alt: "MoBiz.mu Mauritius branding and business solutions hero banner with premium corporate identity and executive brand development visuals",
   },
   {
     src: "/images/hero/H4.png",
-    alt: "MoBiz.mu Mauritius luxury business websites banner showing professional company presentation and premium web design services",
+    alt: "MoBiz.mu Mauritius luxury business websites hero banner showing professional company presentation and premium web design services",
   },
   {
     src: "/images/hero/H5.png",
-    alt: "MoBiz.mu Mauritius accounting services banner with bookkeeping financial management and executive business support visuals",
+    alt: "MoBiz.mu Mauritius accounting services hero banner with bookkeeping financial management and executive business support visuals",
   },
   {
     src: "/images/hero/H6.png",
-    alt: "MoBiz.mu Mauritius tax filing and compliance banner with premium finance and business tax return service visuals",
+    alt: "MoBiz.mu Mauritius tax filing and compliance hero banner with premium finance and business tax return service visuals",
   },
   {
     src: "/images/hero/H7.png",
-    alt: "MoBiz.mu Mauritius logistics solutions banner with delivery operations and professional business support visuals",
+    alt: "MoBiz.mu Mauritius logistics solutions hero banner with delivery operations and professional business support visuals",
   },
   {
     src: "/images/hero/H8.png",
-    alt: "MoBiz.mu Mauritius import export support banner with premium trade logistics and business expansion visuals",
+    alt: "MoBiz.mu Mauritius import export support hero banner with premium trade logistics and business expansion visuals",
   },
   {
     src: "/images/hero/H9.png",
-    alt: "MoBiz.mu Mauritius business support and strategic solutions banner with executive consulting and company growth visuals",
+    alt: "MoBiz.mu Mauritius business support and strategic solutions hero banner with executive consulting and company growth visuals",
   },
 ];
 
 const HERO_VIDEO_SRC = "/videos/herobannervideo.mp4";
+const HERO_VIDEO_POSTER = "/images/hero/video-poster.jpg";
 const AUTO_ADVANCE_MS = 5200;
 
 function SliderDots({
@@ -62,7 +63,7 @@ function SliderDots({
   return (
     <div className="absolute bottom-3 left-1/2 z-20 -translate-x-1/2">
       <div
-        className="flex items-center gap-1.5 rounded-full bg-white/10 px-2 py-1 backdrop-blur-sm"
+        className="flex items-center gap-1.5 rounded-full bg-black/20 px-2 py-1 backdrop-blur-sm"
         role="tablist"
         aria-label="Hero slides"
       >
@@ -76,8 +77,8 @@ function SliderDots({
             role="tab"
             className={`h-1.5 rounded-full transition-all duration-300 ${
               index === activeIndex
-                ? "w-5 bg-white/60"
-                : "w-1.5 bg-white/20 hover:bg-white/30"
+                ? "w-5 bg-white/70"
+                : "w-1.5 bg-white/30 hover:bg-white/45"
             }`}
           />
         ))}
@@ -90,13 +91,18 @@ function LandscapeSlider({
   images,
   activeIndex,
   onSelect,
+  className = "",
 }: {
   images: HeroImage[];
   activeIndex: number;
   onSelect: (index: number) => void;
+  className?: string;
 }) {
   return (
-    <div className="relative h-[420px] w-full overflow-hidden bg-white sm:h-[500px] lg:h-[560px] xl:h-[640px]">
+    <div
+      className={`relative w-full overflow-hidden bg-white ${className}`}
+      aria-label="MoBiz.mu hero banner slider"
+    >
       {images.map((image, index) => {
         const isActive = index === activeIndex;
 
@@ -115,18 +121,15 @@ function LandscapeSlider({
               alt={image.alt}
               fill
               priority={index === 0}
-              fetchPriority={index < 3 ? "high" : "auto"}
-              loading={index < 3 ? "eager" : "lazy"}
+              fetchPriority={index === 0 ? "high" : "auto"}
+              loading={index === 0 ? "eager" : "lazy"}
               quality={75}
-              sizes="(max-width: 1279px) 100vw, 74vw"
+              sizes="(max-width: 767px) 100vw, (max-width: 1279px) 100vw, 68vw"
               className="object-cover object-center"
             />
           </div>
         );
       })}
-
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-20 bg-gradient-to-b from-black/6 to-transparent" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-20 bg-gradient-to-t from-black/6 to-transparent" />
 
       <SliderDots
         total={images.length}
@@ -137,12 +140,55 @@ function LandscapeSlider({
   );
 }
 
-function VideoPanel() {
-  const sectionRef = useRef<HTMLDivElement | null>(null);
+function useScrollDirection() {
+  const [direction, setDirection] = useState<"up" | "down">("up");
+
+  useEffect(() => {
+    let lastY = window.scrollY;
+    let ticking = false;
+
+    const updateDirection = () => {
+      const y = window.scrollY;
+      const diff = y - lastY;
+
+      if (Math.abs(diff) > 6) {
+        setDirection(diff > 0 ? "down" : "up");
+        lastY = y;
+      }
+
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateDirection);
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return direction;
+}
+
+function VideoPanel({
+  className = "",
+  priority = false,
+}: {
+  className?: string;
+  priority?: boolean;
+}) {
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const [inView, setInView] = useState(true);
+
+  const [isInView, setIsInView] = useState(true);
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
   const [popupOpen, setPopupOpen] = useState(false);
+  const [pageVisible, setPageVisible] = useState(true);
+
+  const scrollDirection = useScrollDirection();
 
   useEffect(() => {
     const markInteracted = () => setHasUserInteracted(true);
@@ -159,45 +205,26 @@ function VideoPanel() {
   }, []);
 
   useEffect(() => {
-    const handlePopupOpen = () => {
-      setPopupOpen(true);
-      const video = videoRef.current;
-      if (video) {
-        video.pause();
-      }
+    const handleVisibility = () => {
+      setPageVisible(!document.hidden);
     };
 
-    const handlePopupClose = () => {
-      setPopupOpen(false);
-      const video = videoRef.current;
-      if (!video) return;
-      if (!inView) return;
-
-      video.currentTime = 0;
-      video.play().catch(() => {
-        // Browser may still block audible autoplay.
-      });
-    };
-
-    window.addEventListener("mobiz:popup-video-open", handlePopupOpen as EventListener);
-    window.addEventListener("mobiz:popup-video-close", handlePopupClose as EventListener);
-
-    return () => {
-      window.removeEventListener("mobiz:popup-video-open", handlePopupOpen as EventListener);
-      window.removeEventListener("mobiz:popup-video-close", handlePopupClose as EventListener);
-    };
-  }, [inView]);
+    handleVisibility();
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () =>
+      document.removeEventListener("visibilitychange", handleVisibility);
+  }, []);
 
   useEffect(() => {
-    const node = sectionRef.current;
+    const node = wrapperRef.current;
     if (!node) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setInView(entry.isIntersecting && entry.intersectionRatio > 0.45);
+        setIsInView(entry.isIntersecting && entry.intersectionRatio > 0.35);
       },
       {
-        threshold: [0, 0.2, 0.45, 0.7, 1],
+        threshold: [0, 0.15, 0.35, 0.6, 1],
       }
     );
 
@@ -206,56 +233,83 @@ function VideoPanel() {
   }, []);
 
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
+    const handlePopupOpen = () => {
+      setPopupOpen(true);
+      const video = videoRef.current;
+      if (video) video.pause();
+    };
 
-    if (popupOpen) {
-      video.pause();
-      return;
-    }
+    const handlePopupClose = () => {
+      setPopupOpen(false);
+    };
 
-    if (!inView) {
-      video.pause();
-      return;
-    }
+    window.addEventListener(
+      "mobiz:popup-video-open",
+      handlePopupOpen as EventListener
+    );
+    window.addEventListener(
+      "mobiz:popup-video-close",
+      handlePopupClose as EventListener
+    );
 
-    video.currentTime = 0;
-    video.muted = false;
-    video.volume = 1;
+    return () => {
+      window.removeEventListener(
+        "mobiz:popup-video-open",
+        handlePopupOpen as EventListener
+      );
+      window.removeEventListener(
+        "mobiz:popup-video-close",
+        handlePopupClose as EventListener
+      );
+    };
+  }, []);
 
-    video.play().catch(() => {
-      // Audible autoplay may be blocked by browser policy.
-    });
-  }, [inView, popupOpen]);
+  const shouldPause = useMemo(() => {
+    if (!pageVisible) return true;
+    if (popupOpen) return true;
+    if (!isInView) return true;
+    if (scrollDirection === "down") return true;
+    return false;
+  }, [pageVisible, popupOpen, isInView, scrollDirection]);
 
   useEffect(() => {
-    if (!hasUserInteracted) return;
-    if (popupOpen) return;
-    if (!inView) return;
-
     const video = videoRef.current;
     if (!video) return;
 
-    video.muted = false;
-    video.volume = 1;
+    if (shouldPause) {
+      video.pause();
+      return;
+    }
+
+    if (hasUserInteracted) {
+      video.muted = false;
+      video.volume = 1;
+    } else {
+      video.muted = true;
+      video.volume = 0;
+    }
+
     video.play().catch(() => {
-      // Keep best-effort behavior.
+      // Audible autoplay may be blocked by the browser until user interaction.
     });
-  }, [hasUserInteracted, inView, popupOpen]);
+  }, [shouldPause, hasUserInteracted]);
 
   return (
     <div
-      ref={sectionRef}
-      className="relative h-[420px] w-full overflow-hidden bg-black sm:h-[500px] lg:h-[560px] xl:h-[640px]"
+      ref={wrapperRef}
+      className={`relative w-full overflow-hidden ${className}`}
+      aria-label="MoBiz.mu hero introduction video"
     >
       <video
         ref={videoRef}
         src={HERO_VIDEO_SRC}
-        className="absolute inset-0 h-full w-full object-cover"
+        poster={HERO_VIDEO_POSTER}
+        className="absolute inset-0 h-full w-full object-cover object-[center_10%]"
         playsInline
-        preload="auto"
+        preload={priority ? "auto" : "metadata"}
         autoPlay
         loop
+        muted
       />
     </div>
   );
@@ -273,20 +327,36 @@ export default function HeroSliderClient() {
   }, []);
 
   return (
-    <section className="w-full bg-white py-0" aria-label="MoBiz.mu homepage hero">
+    <section
+      className="w-full bg-white py-0"
+      aria-label="MoBiz.mu homepage hero section"
+    >
       <div className="w-full px-0">
-        <div className="grid gap-0 bg-white xl:grid-cols-[1.86fr_0.64fr]">
-          <div className="hidden xl:block">
-            <LandscapeSlider
-              images={landscapeImages}
-              activeIndex={activeIndex}
-              onSelect={setActiveIndex}
-            />
-          </div>
+        {/* Mobile: video only */}
+        <div className="block md:hidden">
+          <VideoPanel className="h-[72svh] min-h-[520px]" priority />
+        </div>
 
-          <div className="w-full">
-            <VideoPanel />
-          </div>
+        {/* Tablet: banner only */}
+        <div className="hidden md:block xl:hidden">
+          <LandscapeSlider
+            images={landscapeImages}
+            activeIndex={activeIndex}
+            onSelect={setActiveIndex}
+            className="h-[520px] lg:h-[620px]"
+          />
+        </div>
+
+        {/* Desktop: banner left, video right */}
+        <div className="hidden xl:grid xl:grid-cols-[minmax(0,1.72fr)_minmax(340px,0.9fr)] 2xl:grid-cols-[minmax(0,1.76fr)_minmax(380px,0.86fr)]">
+          <LandscapeSlider
+            images={landscapeImages}
+            activeIndex={activeIndex}
+            onSelect={setActiveIndex}
+            className="h-[560px] 2xl:h-[640px]"
+          />
+
+          <VideoPanel className="h-[560px] 2xl:h-[640px]" priority />
         </div>
       </div>
     </section>
