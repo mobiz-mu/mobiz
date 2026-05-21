@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Container from "@/components/ui/Container";
+import SeoInternalLinks from "@/components/seo/SeoInternalLinks";
 import {
   ArrowRight,
   BadgeCheck,
@@ -724,6 +725,32 @@ export default function DigitalMarketingPage() {
                   can help you build a digital marketing presence that supports real
                   growth and stronger business visibility.
                 </p>
+
+               <SeoInternalLinks
+  eyebrow="Marketing SEO Pages"
+  title="Need digital marketing services in Mauritius?"
+  description="Explore our dedicated Mauritius digital marketing and SEO pages to understand how MoBiz.mu helps local businesses increase visibility, build trust and generate more enquiries online."
+  links={[
+    {
+      title: "Digital Marketing Mauritius",
+      description:
+        "Social media, content creation, Google visibility and online marketing support for Mauritius businesses.",
+      href: "/digital-marketing-mauritius",
+    },
+    {
+      title: "SEO Services Mauritius",
+      description:
+        "Technical SEO, local SEO, keyword targeting and Google Search Console support.",
+      href: "/seo-services-mauritius",
+    },
+    {
+      title: "Website Design Mauritius",
+      description:
+        "Premium websites built with strong structure, mobile responsiveness and SEO-ready foundations.",
+      href: "/website-design-mauritius",
+    },
+  ]}
+/>
 
                 <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
                   <Link

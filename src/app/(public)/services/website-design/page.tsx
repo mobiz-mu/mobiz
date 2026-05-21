@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Container from "@/components/ui/Container";
+import SeoInternalLinks from "@/components/seo/SeoInternalLinks";
 import {
   ArrowRight,
   BadgeCheck,
@@ -1026,6 +1027,32 @@ export default function WebsiteDesignPage() {
                   a digital presence that feels more elegant, more executive, and
                   more ready for growth.
                 </p>
+
+                <SeoInternalLinks
+  eyebrow="Website SEO Pages"
+  title="Looking for professional website design in Mauritius?"
+  description="Visit our dedicated Mauritius website design pages to learn more about our web design packages, ecommerce website solutions, SEO structure, process and local business website services."
+  links={[
+    {
+      title: "Website Design Mauritius",
+      description:
+        "Professional business websites, landing pages, booking websites and custom websites for Mauritius companies.",
+      href: "/website-design-mauritius",
+    },
+    {
+      title: "Ecommerce Website Mauritius",
+      description:
+        "Online stores, product catalogues and WhatsApp-ready ecommerce websites for Mauritius businesses.",
+      href: "/ecommerce-website-mauritius",
+    },
+    {
+      title: "SEO Services Mauritius",
+      description:
+        "Google ranking support, technical SEO, keyword pages and local SEO for Mauritius businesses.",
+      href: "/seo-services-mauritius",
+    },
+  ]}
+/>
 
                 <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
                   <Link

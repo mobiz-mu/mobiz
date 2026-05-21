@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Container from "@/components/ui/Container";
+import SeoInternalLinks from "@/components/seo/SeoInternalLinks";
 import {
   ArrowRight,
   BadgeCheck,
@@ -890,6 +891,51 @@ export default function ServicesPage() {
                   business solution, MoBiz.mu is here to help you move forward with a
                   more polished and professional presence.
                 </p>
+
+                <SeoInternalLinks
+  eyebrow="Popular Mauritius Services"
+  title="Explore our dedicated service pages for Mauritius businesses"
+  description="MoBiz.mu has dedicated SEO pages for the most searched business services in Mauritius, including websites, ecommerce, digital marketing, accounting, VAT filing, company registration and SEO."
+  links={[
+    {
+      title: "Website Design Mauritius",
+      description:
+        "Premium websites and custom business websites for Mauritius companies.",
+      href: "/website-design-mauritius",
+    },
+    {
+      title: "Ecommerce Website Mauritius",
+      description:
+        "Online stores and product catalogue websites for local brands and retailers.",
+      href: "/ecommerce-website-mauritius",
+    },
+    {
+      title: "Digital Marketing Mauritius",
+      description:
+        "Social media, Google visibility and online growth support for businesses.",
+      href: "/digital-marketing-mauritius",
+    },
+    {
+      title: "Accounting Services Mauritius",
+      description:
+        "Bookkeeping, VAT, tax filing, payroll and business accounting support.",
+      href: "/accounting-services-mauritius",
+    },
+    {
+      title: "Company Registration Mauritius",
+      description:
+        "Business registration, sole trader setup and company formation support.",
+      href: "/company-registration-mauritius",
+    },
+    {
+      title: "SEO Services Mauritius",
+      description:
+        "Technical SEO, local SEO and Google ranking support for Mauritius websites.",
+      href: "/seo-services-mauritius",
+    },
+  ]}
+/>
+
 
                 <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
                   <Link

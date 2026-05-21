@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Container from "@/components/ui/Container";
+import SeoInternalLinks from "@/components/seo/SeoInternalLinks";
 import {
   ArrowRight,
   BadgeCheck,
@@ -1001,6 +1002,32 @@ export default function AccountingTaxReturnsPage() {
                   document organization, MoBiz.mu can help you build a more
                   dependable accounting foundation for your business.
                 </p>
+
+                <SeoInternalLinks
+  eyebrow="Accounting SEO Pages"
+  title="Looking for accounting, VAT or company registration support in Mauritius?"
+  description="Visit our dedicated Mauritius accounting pages to learn more about bookkeeping, VAT filing, tax support, company registration and business setup services."
+  links={[
+    {
+      title: "Accounting Services Mauritius",
+      description:
+        "Bookkeeping, payroll, tax filing, financial statements and accounting support for Mauritius businesses.",
+      href: "/accounting-services-mauritius",
+    },
+    {
+      title: "VAT Filing Mauritius",
+      description:
+        "VAT computation, VAT return preparation and filing support for eligible Mauritius businesses.",
+      href: "/vat-filing-mauritius",
+    },
+    {
+      title: "Company Registration Mauritius",
+      description:
+        "Company registration, sole trader registration and business setup support in Mauritius.",
+      href: "/company-registration-mauritius",
+    },
+  ]}
+/>
 
                 <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
                   <Link
