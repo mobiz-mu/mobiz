@@ -23,6 +23,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: StaticRoute[] = [
     { path: "", priority: 1, changeFrequency: "daily" },
 
+    // Dedicated SEO landing pages
+     { path: "/website-design-mauritius", priority: 0.97, changeFrequency: "weekly" },
+     { path: "/ecommerce-website-mauritius", priority: 0.96, changeFrequency: "weekly" },
+     { path: "/digital-marketing-mauritius", priority: 0.96, changeFrequency: "weekly" },
+     { path: "/accounting-services-mauritius", priority: 0.96, changeFrequency: "weekly" },
+     { path: "/company-registration-mauritius", priority: 0.95, changeFrequency: "weekly" },
+     { path: "/vat-filing-mauritius", priority: 0.95, changeFrequency: "weekly" },
+     { path: "/seo-services-mauritius", priority: 0.95, changeFrequency: "weekly" },
+
     // Main commercial pages
     { path: "/services", priority: 0.98, changeFrequency: "weekly" },
     { path: "/services/website-design", priority: 0.96, changeFrequency: "weekly" },
