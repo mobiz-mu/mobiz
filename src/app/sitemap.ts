@@ -7,11 +7,12 @@ const BASE_URL = "https://mobiz.mu";
 type StaticRoute = {
   path: string;
   priority: number;
-  changeFrequency: "daily" | "weekly" | "monthly";
+  changeFrequency: "daily" | "weekly" | "monthly" | "yearly";
 };
 
 function resolveLastModified(value?: string | Date) {
   if (!value) return new Date();
+
   const date = value instanceof Date ? value : new Date(value);
   return Number.isNaN(date.getTime()) ? new Date() : date;
 }
@@ -21,25 +22,33 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const staticRoutes: StaticRoute[] = [
     { path: "", priority: 1, changeFrequency: "daily" },
-    { path: "/services", priority: 0.95, changeFrequency: "weekly" },
-    { path: "/services/website-design", priority: 0.93, changeFrequency: "weekly" },
-    { path: "/services/digital-marketing", priority: 0.93, changeFrequency: "weekly" },
-    { path: "/services/accounting-tax-returns", priority: 0.93, changeFrequency: "weekly" },
-    { path: "/services/logistics", priority: 0.91, changeFrequency: "weekly" },
-    { path: "/services/branding-business-solutions", priority: 0.91, changeFrequency: "weekly" },
+
+    // Main commercial pages
+    { path: "/services", priority: 0.98, changeFrequency: "weekly" },
+    { path: "/services/website-design", priority: 0.96, changeFrequency: "weekly" },
+    { path: "/services/digital-marketing", priority: 0.95, changeFrequency: "weekly" },
+    { path: "/services/accounting-tax-returns", priority: 0.95, changeFrequency: "weekly" },
+    { path: "/services/logistics", priority: 0.9, changeFrequency: "weekly" },
+    { path: "/services/branding-business-solutions", priority: 0.9, changeFrequency: "weekly" },
+
+    // Trust / conversion pages
     { path: "/portfolio", priority: 0.88, changeFrequency: "weekly" },
-    { path: "/blog", priority: 0.86, changeFrequency: "weekly" },
-    { path: "/testimonials", priority: 0.85, changeFrequency: "weekly" },
-    { path: "/why-us", priority: 0.85, changeFrequency: "weekly" },
-    { path: "/mauritius-services", priority: 0.84, changeFrequency: "weekly" },
-    { path: "/contact", priority: 0.84, changeFrequency: "weekly" },
-    { path: "/faq", priority: 0.8, changeFrequency: "weekly" },
-    { path: "/careers", priority: 0.7, changeFrequency: "weekly" },
-    { path: "/privacy-policy", priority: 0.35, changeFrequency: "monthly" },
-    { path: "/terms-of-use", priority: 0.35, changeFrequency: "monthly" },
-    { path: "/terms-of-service", priority: 0.35, changeFrequency: "monthly" },
-    { path: "/security-policy", priority: 0.35, changeFrequency: "monthly" },
-    { path: "/policies", priority: 0.32, changeFrequency: "monthly" },
+    { path: "/testimonials", priority: 0.86, changeFrequency: "weekly" },
+    { path: "/why-us", priority: 0.86, changeFrequency: "weekly" },
+    { path: "/mauritius-services", priority: 0.86, changeFrequency: "weekly" },
+    { path: "/contact", priority: 0.85, changeFrequency: "weekly" },
+    { path: "/faq", priority: 0.82, changeFrequency: "weekly" },
+    { path: "/careers", priority: 0.72, changeFrequency: "monthly" },
+
+    // Blog
+    { path: "/blog", priority: 0.84, changeFrequency: "weekly" },
+
+    // Policy pages
+    { path: "/privacy-policy", priority: 0.35, changeFrequency: "yearly" },
+    { path: "/terms-of-use", priority: 0.35, changeFrequency: "yearly" },
+    { path: "/terms-of-service", priority: 0.35, changeFrequency: "yearly" },
+    { path: "/security-policy", priority: 0.35, changeFrequency: "yearly" },
+    { path: "/policies", priority: 0.32, changeFrequency: "yearly" },
   ];
 
   const staticEntries: MetadataRoute.Sitemap = staticRoutes.map(
