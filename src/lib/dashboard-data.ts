@@ -3,12 +3,21 @@ import { supabaseServer } from "@/lib/supabase-server";
 export async function getDashboardKpis() {
   const [
     leadsRes,
+    newLeadsRes,
     subscribersRes,
+    customersRes,
     quotationsRes,
     invoicesRes,
   ] = await Promise.all([
     supabaseServer.from("leads").select("*", { count: "exact", head: true }),
-    supabaseServer.from("newsletter_subscribers").select("*", { count: "exact", head: true }),
+    supabaseServer
+      .from("leads")
+      .select("*", { count: "exact", head: true })
+      .eq("status", "new"),
+    supabaseServer
+      .from("newsletter_subscribers")
+      .select("*", { count: "exact", head: true }),
+    supabaseServer.from("customers").select("*", { count: "exact", head: true }),
     supabaseServer.from("quotations").select("*", { count: "exact", head: true }),
     supabaseServer.from("invoices").select("*", { count: "exact", head: true }),
   ]);
@@ -39,13 +48,41 @@ export async function getDashboardKpis() {
 
   return {
     leadsCount: leadsRes.count || 0,
+    newLeadsCount: newLeadsRes.count || 0,
     subscribersCount: subscribersRes.count || 0,
     quotationsCount: quotationsRes.count || 0,
     invoicesCount: invoicesRes.count || 0,
-    customersCount: leadsRes.count || 0,
+    customersCount: customersRes.count || 0,
+    pendingInvoicesCount: unpaidInvoices.data?.length || 0,
+    paidInvoicesCount: paidInvoices.data?.length || 0,
     unpaidInvoicesTotal: unpaidTotal,
     collectionsTotal,
   };
+}
+
+/**
+ * Conversion KPIs derived from the analytics_events table populated by the
+ * client tracker (lib/track.ts). Counts are all-time and resilient to a
+ * missing/empty table.
+ */
+export async function getConversionKpis() {
+  async function countEvent(eventName: string) {
+    const { count } = await supabaseServer
+      .from("analytics_events")
+      .select("*", { count: "exact", head: true })
+      .eq("event_name", eventName);
+    return count || 0;
+  }
+
+  const [whatsappClicks, phoneClicks, quoteClicks, formSubmits] =
+    await Promise.all([
+      countEvent("whatsapp_click"),
+      countEvent("phone_click"),
+      countEvent("quote_click"),
+      countEvent("lead_form_submit"),
+    ]);
+
+  return { whatsappClicks, phoneClicks, quoteClicks, formSubmits };
 }
 
 export async function getRecentActivity() {

@@ -4,6 +4,9 @@ import { useEffect, useMemo, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase-client";
 import StatusSelect from "@/components/dashboard/StatusSelect";
 import StatCard from "@/components/dashboard/StatCard";
+import EmptyState from "@/components/dashboard/EmptyState";
+import { TableSkeleton } from "@/components/dashboard/Skeleton";
+import { Inbox } from "lucide-react";
 
 type Lead = {
   id: string;
@@ -233,8 +236,12 @@ export default function LeadsPage() {
 
               {!filtered.length && !loading ? (
                 <tr>
-                  <td colSpan={8} className="px-4 py-10 text-center text-sm text-slate-500">
-                    No matching leads found.
+                  <td colSpan={8} className="px-4 py-6">
+                    <EmptyState
+                      icon={Inbox}
+                      title="No matching leads found"
+                      description="Try adjusting your search or filters. New enquiries from your forms and lead magnets will appear here automatically."
+                    />
                   </td>
                 </tr>
               ) : null}
@@ -297,14 +304,18 @@ export default function LeadsPage() {
           ))}
 
           {!filtered.length && !loading ? (
-            <div className="rounded-[22px] border border-slate-200 bg-slate-50 px-4 py-8 text-center text-sm text-slate-500">
-              No matching leads found.
-            </div>
+            <EmptyState
+              icon={Inbox}
+              title="No matching leads found"
+              description="Try adjusting your search or filters."
+            />
           ) : null}
         </div>
 
         {loading ? (
-          <div className="mt-6 text-sm text-slate-500">Loading leads...</div>
+          <div className="mt-6">
+            <TableSkeleton rows={5} />
+          </div>
         ) : null}
       </section>
     </main>

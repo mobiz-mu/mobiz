@@ -1,6 +1,19 @@
+import {
+  Users,
+  UserPlus,
+  BriefcaseBusiness,
+  FileCheck2,
+  FileSpreadsheet,
+  MessageCircle,
+  Phone,
+  MousePointerClick,
+  Mail,
+  Activity,
+} from "lucide-react";
 import StatCard from "@/components/dashboard/StatCard";
 import OverviewChartsClient from "@/components/dashboard/charts/OverviewChartsClient";
 import {
+  getConversionKpis,
   getDashboardChartData,
   getDashboardKpis,
   getRecentActivity,
@@ -15,28 +28,86 @@ function formatMoney(value: number) {
 
 export default async function DashboardOverviewPage() {
   const kpis = await getDashboardKpis();
+  const conversions = await getConversionKpis();
   const activity = await getRecentActivity();
   const chartData = await getDashboardChartData();
 
   return (
     <main className="space-y-6">
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
-        <StatCard title="Leads" value={String(kpis.leadsCount)} />
-        <StatCard title="Subscribers" value={String(kpis.subscribersCount)} />
-        <StatCard title="Customers" value={String(kpis.customersCount)} />
-        <StatCard title="Quotations" value={String(kpis.quotationsCount)} />
-        <StatCard title="Invoices" value={String(kpis.invoicesCount)} />
+        <StatCard
+          title="Total Leads"
+          value={String(kpis.leadsCount)}
+          hint={`${kpis.newLeadsCount} new`}
+          icon={Users}
+          href="/dashboard/leads"
+        />
+        <StatCard
+          title="New Leads"
+          value={String(kpis.newLeadsCount)}
+          icon={UserPlus}
+          href="/dashboard/leads"
+          tone="gold"
+        />
+        <StatCard
+          title="Customers"
+          value={String(kpis.customersCount)}
+          icon={BriefcaseBusiness}
+          href="/dashboard/customers"
+        />
+        <StatCard
+          title="Quotations"
+          value={String(kpis.quotationsCount)}
+          icon={FileCheck2}
+          href="/dashboard/quotations"
+        />
+        <StatCard
+          title="Invoices"
+          value={String(kpis.invoicesCount)}
+          hint={`${kpis.paidInvoicesCount} paid · ${kpis.pendingInvoicesCount} pending`}
+          icon={FileSpreadsheet}
+          href="/dashboard/invoices"
+        />
+      </section>
+
+      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <StatCard
+          title="WhatsApp Clicks"
+          value={String(conversions.whatsappClicks)}
+          icon={MessageCircle}
+          href="/dashboard/analytics"
+        />
+        <StatCard
+          title="Phone Clicks"
+          value={String(conversions.phoneClicks)}
+          icon={Phone}
+          href="/dashboard/analytics"
+        />
+        <StatCard
+          title="Quote Requests"
+          value={String(conversions.quoteClicks)}
+          icon={MousePointerClick}
+          href="/dashboard/analytics"
+        />
+        <StatCard
+          title="Form Submissions"
+          value={String(conversions.formSubmits)}
+          icon={Mail}
+          href="/dashboard/analytics"
+        />
       </section>
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         <StatCard
           title="Outstanding"
           value={formatMoney(kpis.unpaidInvoicesTotal)}
+          hint={`${kpis.pendingInvoicesCount} unpaid invoices`}
           tone="gold"
         />
         <StatCard
           title="Collections"
           value={formatMoney(kpis.collectionsTotal)}
+          hint={`${kpis.paidInvoicesCount} paid invoices`}
           tone="default"
         />
         <StatCard
@@ -44,6 +115,7 @@ export default async function DashboardOverviewPage() {
           value="Live"
           change="Connected to real records"
           tone="navy"
+          icon={Activity}
         />
       </section>
 

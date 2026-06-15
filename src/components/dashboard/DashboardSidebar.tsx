@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { dashboardNav } from "@/lib/dashboard-nav";
+import LogoutButton from "@/components/dashboard/LogoutButton";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 
@@ -58,6 +59,18 @@ export default function DashboardSidebar({
             );
           })}
         </nav>
+
+        <div className="border-t border-white/10 px-5 py-4">
+          <div className="mb-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+            <div className="text-xs font-semibold text-white/80">
+              Signed in
+            </div>
+            <div className="mt-0.5 text-xs text-white/55">
+              MoBiz.mu administrator
+            </div>
+          </div>
+          <LogoutButton />
+        </div>
       </div>
     </aside>
   );
