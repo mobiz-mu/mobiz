@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { blogPosts } from "@/lib/blog";
 import { portfolioItems } from "@/lib/portfolio";
+import { cityServiceSitemapEntries } from "@/lib/cityServicePages";
 
 const BASE_URL = "https://mobiz.mu";
 
@@ -65,6 +66,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/services/branding-business-solutions", priority: 0.9, changeFrequency: "weekly" },
 
     // Trust / conversion pages
+    { path: "/free-seo-audit", priority: 0.9, changeFrequency: "monthly" },
+    { path: "/free-website-review", priority: 0.9, changeFrequency: "monthly" },
+    { path: "/free-business-consultation", priority: 0.9, changeFrequency: "monthly" },
     { path: "/portfolio", priority: 0.88, changeFrequency: "weekly" },
     { path: "/testimonials", priority: 0.86, changeFrequency: "weekly" },
     { path: "/why-us", priority: 0.86, changeFrequency: "weekly" },
@@ -72,6 +76,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/contact", priority: 0.85, changeFrequency: "weekly" },
     { path: "/faq", priority: 0.82, changeFrequency: "weekly" },
     { path: "/careers", priority: 0.72, changeFrequency: "monthly" },
+
+    // Local SEO city x service pages (auto-generated, see lib/cityServicePages)
+    ...cityServiceSitemapEntries,
 
     // Blog
     { path: "/blog", priority: 0.84, changeFrequency: "weekly" },

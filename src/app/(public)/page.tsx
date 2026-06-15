@@ -1,5 +1,6 @@
 import BlogPreview from "@/components/home/BlogPreview";
 import CTASection from "@/components/home/CTASection";
+import LeadMagnetCTA from "@/components/lead/LeadMagnetCTA";
 import Hero from "@/components/home/Hero";
 import MauritiusServices from "@/components/home/MauritiusServices";
 import NewsletterSection from "@/components/home/NewsletterSection";
@@ -79,6 +80,7 @@ export default function HomePage() {
       <BlogPreview />
       <NewsletterSection />
       <MauritiusBusinessNews />
+      <LeadMagnetCTA />
       <CTASection />
     </main>
   );

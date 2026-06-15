@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Container from "@/components/ui/Container";
 import SeoInternalLinks from "@/components/seo/SeoInternalLinks";
+import LeadMagnetCTA from "@/components/lead/LeadMagnetCTA";
 import {
   ArrowRight,
   BadgeCheck,
@@ -957,6 +958,8 @@ export default function ServicesPage() {
             </div>
           </Container>
         </section>
+
+        <LeadMagnetCTA />
       </main>
     </>
   );

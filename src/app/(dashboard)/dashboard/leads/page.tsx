@@ -14,8 +14,21 @@ type Lead = {
   service: string;
   message: string;
   status: string;
+  source: string | null;
   created_at: string;
 };
+
+const SOURCE_LABELS: Record<string, string> = {
+  contact_form: "Contact form",
+  free_seo_audit: "Free SEO Audit",
+  free_website_review: "Free Website Review",
+  free_business_consultation: "Free Consultation",
+};
+
+function formatSource(source: string | null) {
+  if (!source) return "—";
+  return SOURCE_LABELS[source] || source.replace(/_/g, " ");
+}
 
 function formatDate(value: string) {
   return new Date(value).toLocaleString("en-MU", {
@@ -32,6 +45,7 @@ export default function LeadsPage() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [search, setSearch] = useState("");
   const [serviceFilter, setServiceFilter] = useState("all");
+  const [sourceFilter, setSourceFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [loading, setLoading] = useState(true);
 
@@ -68,14 +82,20 @@ export default function LeadsPage() {
       const matchesService =
         serviceFilter === "all" ? true : lead.service === serviceFilter;
 
+      const matchesSource =
+        sourceFilter === "all" ? true : (lead.source || "") === sourceFilter;
+
       const matchesStatus =
         statusFilter === "all" ? true : lead.status === statusFilter;
 
-      return matchesSearch && matchesService && matchesStatus;
+      return matchesSearch && matchesService && matchesSource && matchesStatus;
     });
-  }, [leads, search, serviceFilter, statusFilter]);
+  }, [leads, search, serviceFilter, sourceFilter, statusFilter]);
 
   const services = Array.from(new Set(leads.map((lead) => lead.service))).sort();
+  const sources = Array.from(
+    new Set(leads.map((lead) => lead.source).filter(Boolean) as string[])
+  ).sort();
 
   return (
     <main className="space-y-6">
@@ -122,6 +142,19 @@ export default function LeadsPage() {
             </select>
 
             <select
+              value={sourceFilter}
+              onChange={(e) => setSourceFilter(e.target.value)}
+              className="h-11 rounded-2xl border border-slate-200 bg-white px-4 text-sm text-[#071226] outline-none transition focus:border-[#0d1b3d]"
+            >
+              <option value="all">All sources</option>
+              {sources.map((source) => (
+                <option key={source} value={source}>
+                  {formatSource(source)}
+                </option>
+              ))}
+            </select>
+
+            <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
               className="h-11 rounded-2xl border border-slate-200 bg-white px-4 text-sm text-[#071226] outline-none transition focus:border-[#0d1b3d]"
@@ -143,6 +176,7 @@ export default function LeadsPage() {
                 <th className="px-4">Lead</th>
                 <th className="px-4">Company</th>
                 <th className="px-4">Service</th>
+                <th className="px-4">Source</th>
                 <th className="px-4">Contact</th>
                 <th className="px-4">Message</th>
                 <th className="px-4">Created</th>
@@ -164,6 +198,12 @@ export default function LeadsPage() {
 
                   <td className="px-4 py-4 text-sm text-slate-700">
                     {lead.service}
+                  </td>
+
+                  <td className="px-4 py-4 text-sm">
+                    <span className="inline-flex rounded-full border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-600">
+                      {formatSource(lead.source)}
+                    </span>
                   </td>
 
                   <td className="px-4 py-4 text-sm text-slate-700">
@@ -193,7 +233,7 @@ export default function LeadsPage() {
 
               {!filtered.length && !loading ? (
                 <tr>
-                  <td colSpan={7} className="px-4 py-10 text-center text-sm text-slate-500">
+                  <td colSpan={8} className="px-4 py-10 text-center text-sm text-slate-500">
                     No matching leads found.
                   </td>
                 </tr>
@@ -235,6 +275,10 @@ export default function LeadsPage() {
                 <div>
                   <span className="font-medium text-[#071226]">Service:</span>{" "}
                   {lead.service}
+                </div>
+                <div>
+                  <span className="font-medium text-[#071226]">Source:</span>{" "}
+                  {formatSource(lead.source)}
                 </div>
                 <div>
                   <span className="font-medium text-[#071226]">Phone:</span>{" "}

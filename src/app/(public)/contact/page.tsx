@@ -1,5 +1,6 @@
 ﻿import type { Metadata } from "next";
 import ContactPageClient from "./ContactPageClient";
+import LeadMagnetCTA from "@/components/lead/LeadMagnetCTA";
 import {
   CONTACT_AREA_SERVED,
   CONTACT_EMAIL,
@@ -78,6 +79,7 @@ export default function ContactPage() {
     <>
       <ContactJsonLd />
       <ContactPageClient />
+      <LeadMagnetCTA />
     </>
   );
 }
