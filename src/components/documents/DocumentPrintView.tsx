@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import Image from "next/image";
 import { BANK_ACCOUNTS, DOCUMENT_BRAND } from "@/lib/document-config";
 

@@ -1,9 +1,16 @@
 "use client";
 
-import type { ComponentType, CSSProperties } from "react";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
-import { serviceMenuGroups } from "@/lib/navigation";
+import {
+  ArrowUpRight,
+  Building2,
+  Globe2,
+  Megaphone,
+  Palette,
+  ReceiptText,
+  Settings2,
+  Truck,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type MegaMenuProps = {
@@ -11,71 +18,77 @@ type MegaMenuProps = {
   onClose: () => void;
 };
 
-function ServiceIcon({
-  Icon,
-}: {
-  Icon: ComponentType<{ className?: string }>;
-}) {
-  return (
-    <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-[#d9b85f]/40 bg-[linear-gradient(180deg,rgba(255,233,173,0.22)_0%,rgba(201,149,33,0.12)_56%,rgba(255,227,150,0.04)_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.45),0_8px_18px_rgba(7,18,38,0.18)]">
-      <span className="pointer-events-none absolute inset-[1px] rounded-[15px] bg-[radial-gradient(circle_at_28%_24%,rgba(255,255,255,0.58),rgba(255,255,255,0.12)_34%,transparent_58%)]" />
-      <Icon className="relative z-10 h-[17px] w-[17px] text-[#f4d77a] drop-shadow-[0_1px_1px_rgba(87,55,0,0.45)]" />
-    </div>
-  );
-}
-
-function getKeywordDescription(title: string) {
-  const map: Record<string, string> = {
-    "Website Design & Development":
-      "Luxury websites, e-commerce and business web solutions.",
-    "Digital Marketing":
-      "SEO, ads and social media growth for Mauritius brands.",
-    "Accounting & Tax Services":
-      "Bookkeeping, tax returns and accounting support.",
-    "Logistics & Delivery":
-      "Courier, logistics and delivery support across Mauritius.",
-    "Business Plans & Branding":
-      "Business plans, branding and professional identity design.",
-    "CV / Cover Letter / LinkedIn":
-      "CV writing, cover letters and LinkedIn profile upgrade.",
-  };
-
-  return (
-    map[title] ||
-    "Professional business solutions designed for growth in Mauritius."
-  );
-}
+const categories = [
+  {
+    title: "Website Design & Development",
+    href: "/services/website-design",
+    icon: Globe2,
+    color:
+      "bg-[linear-gradient(180deg,#ef4444_0%,#b91c1c_100%)] shadow-[0_8px_18px_rgba(185,28,28,0.22)]",
+  },
+  {
+    title: "Digital Marketing & SEO",
+    href: "/services/digital-marketing",
+    icon: Megaphone,
+    color:
+      "bg-[linear-gradient(180deg,#3b82f6_0%,#1d4ed8_100%)] shadow-[0_8px_18px_rgba(29,78,216,0.22)]",
+  },
+  {
+    title: "Accounting & Tax Services",
+    href: "/services/accounting-tax-returns",
+    icon: ReceiptText,
+    color:
+      "bg-[linear-gradient(180deg,#facc15_0%,#d97706_100%)] shadow-[0_8px_18px_rgba(217,119,6,0.22)]",
+  },
+  {
+    title: "Business Software & Automation",
+    href: "/web-application-development-mauritius",
+    icon: Settings2,
+    color:
+      "bg-[linear-gradient(180deg,#22c55e_0%,#15803d_100%)] shadow-[0_8px_18px_rgba(21,128,61,0.22)]",
+  },
+  {
+    title: "Mauritius Business Solutions",
+    href: "/mauritius-services",
+    icon: Building2,
+    color:
+      "bg-[linear-gradient(180deg,#fb923c_0%,#ea580c_100%)] shadow-[0_8px_18px_rgba(234,88,12,0.22)]",
+  },
+  {
+    title: "Logistics & Import/Export Support",
+    href: "/services/logistics",
+    icon: Truck,
+    color:
+      "bg-[linear-gradient(180deg,#8b5cf6_0%,#6d28d9_100%)] shadow-[0_8px_18px_rgba(109,40,217,0.22)]",
+  },
+  {
+    title: "Branding & Business Solutions",
+    href: "/services/branding-business-solutions",
+    icon: Palette,
+    color:
+      "bg-[linear-gradient(180deg,#ec4899_0%,#be185d_100%)] shadow-[0_8px_18px_rgba(190,24,93,0.22)]",
+  },
+];
 
 export default function MegaMenu({ open, onClose }: MegaMenuProps) {
-  const items: Array<
-    (typeof serviceMenuGroups)[number]["items"][number] & { group: string }
-  > = [];
-
-  for (const group of serviceMenuGroups) {
-    for (const item of group.items) {
-      items.push({ ...item, group: group.title });
-      if (items.length === 6) break;
-    }
-    if (items.length === 6) break;
-  }
-
   return (
     <div
       className={cn(
-        "absolute inset-x-0 top-[calc(100%+10px)] z-[90] hidden origin-top transition-all duration-300 ease-out lg:block",
+        "absolute left-1/2 top-full z-[90] hidden w-[365px] -translate-x-1/2 pt-3 lg:block",
+        "transition-all duration-300 ease-out",
         open
           ? "visible translate-y-0 opacity-100"
-          : "pointer-events-none invisible translate-y-3 opacity-0"
+          : "pointer-events-none invisible translate-y-2 opacity-0"
       )}
-      aria-label="Services mega menu"
-      onMouseLeave={onClose}
+      aria-label="Services dropdown menu"
     >
-      <div className="relative overflow-hidden rounded-[26px] border border-[#e7ebf2] bg-[linear-gradient(180deg,rgba(255,255,255,0.98)_0%,rgba(247,249,253,0.96)_100%)] p-3 shadow-[0_28px_80px_rgba(7,18,38,0.18)] backdrop-blur-[16px] xl:p-4">
-        <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-[#f4d77a]/65 to-transparent" />
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(244,215,122,0.08),transparent_24%),radial-gradient(circle_at_14%_18%,rgba(78,125,255,0.05),transparent_20%),radial-gradient(circle_at_86%_24%,rgba(69,120,255,0.05),transparent_22%),radial-gradient(circle_at_bottom,rgba(255,255,255,0.48),transparent_34%)]" />
+      <div className="absolute inset-x-0 top-0 h-3" />
 
-        <div className="relative z-10 grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-3 xl:gap-3">
-          {items.map((item, index) => {
+      <div className="relative overflow-hidden rounded-[18px] border border-slate-200 bg-white p-2.5 shadow-[0_24px_64px_rgba(7,18,38,0.18)]">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-red-500 via-yellow-400 to-green-500" />
+
+        <div className="space-y-1.5 pt-1">
+          {categories.map((item) => {
             const Icon = item.icon;
 
             return (
@@ -83,34 +96,23 @@ export default function MegaMenu({ open, onClose }: MegaMenuProps) {
                 key={item.title}
                 href={item.href}
                 onClick={onClose}
-                aria-label={`Open ${item.title} service page`}
-                className="group relative min-w-0 overflow-hidden rounded-[22px] border border-[#243a68]/72 bg-[linear-gradient(180deg,rgba(8,18,44,0.95)_0%,rgba(10,24,58,0.98)_52%,rgba(7,16,38,1)_100%)] px-3.5 py-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),inset_0_-10px_16px_rgba(0,0,0,0.16),0_12px_24px_rgba(7,18,38,0.16)] transition-all duration-300 hover:-translate-y-1 hover:border-[#d9b85f]/58 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.08),inset_0_-10px_16px_rgba(0,0,0,0.16),0_18px_34px_rgba(7,18,38,0.22),0_0_24px_rgba(217,184,95,0.08)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#071226] focus-visible:ring-offset-2 xl:px-4 xl:py-4"
-                style={
-                  {
-                    transitionDelay: open ? `${index * 22}ms` : "0ms",
-                  } as CSSProperties
-                }
+                className="group flex items-center gap-3 rounded-[14px] px-2.5 py-2.5 text-[#071226] transition duration-300 hover:bg-slate-50 hover:shadow-[0_10px_22px_rgba(7,18,38,0.06)]"
               >
-                <span className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.10),transparent_32%),radial-gradient(circle_at_bottom_right,rgba(217,184,95,0.07),transparent_28%)]" />
-                <span className="pointer-events-none absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-[#f4d77a]/45 to-transparent" />
+                <span
+                  className={cn(
+                    "relative flex h-8 w-8 shrink-0 items-center justify-center rounded-xl",
+                    item.color
+                  )}
+                >
+                  <span className="pointer-events-none absolute inset-[1px] rounded-[11px] bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.45),transparent_42%)]" />
+                  <Icon className="relative z-10 h-[14px] w-[14px] text-white" />
+                </span>
 
-                <div className="relative z-10 flex items-start gap-3">
-                  <ServiceIcon Icon={Icon} />
+                <span className="min-w-0 flex-1 truncate text-[13px] font-semibold">
+                  {item.title}
+                </span>
 
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-start justify-between gap-2">
-                      <span className="line-clamp-2 text-[14px] font-semibold leading-[1.35] tracking-[0.01em] text-white xl:text-[14.5px]">
-                        {item.title}
-                      </span>
-
-                      <ArrowUpRight className="mt-0.5 h-4 w-4 shrink-0 text-[#d7b55b] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                    </div>
-
-                    <p className="mt-1.5 line-clamp-2 text-[11.5px] leading-[1.55] text-white/80 xl:text-[12px]">
-                      {getKeywordDescription(item.title)}
-                    </p>
-                  </div>
-                </div>
+                <ArrowUpRight className="h-3.5 w-3.5 shrink-0 text-slate-300 transition duration-300 group-hover:text-[#d92121]" />
               </Link>
             );
           })}
@@ -119,3 +121,4 @@ export default function MegaMenu({ open, onClose }: MegaMenuProps) {
     </div>
   );
 }
+

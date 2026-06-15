@@ -1,92 +1,94 @@
-import Container from "@/components/ui/Container";
+﻿import Container from "@/components/ui/Container";
 import Link from "next/link";
-import Image from "next/image";
 import {
   ArrowUpRight,
-  Heart,
+  BriefcaseBusiness,
+  Building2,
+  Calculator,
+  Globe2,
   Mail,
   MapPin,
+  Megaphone,
   Phone,
   Search,
+  ShieldCheck,
+  ShoppingBag,
   Sparkles,
 } from "lucide-react";
 
-const coreServices = [
+const serviceLinks = [
   { label: "Website Design", href: "/services/website-design" },
+  { label: "E-Commerce Solutions", href: "/ecommerce-website-mauritius" },
   { label: "Digital Marketing", href: "/services/digital-marketing" },
-  { label: "Accounting & Tax Returns", href: "/services/accounting-tax-returns" },
-  { label: "Logistics", href: "/services/logistics" },
-  {
-    label: "Branding & Business Solutions",
-    href: "/services/branding-business-solutions",
-  },
+  { label: "Accounting & Tax", href: "/services/accounting-tax-returns" },
+  { label: "Logistics Support", href: "/services/logistics" },
+  { label: "Branding Solutions", href: "/services/branding-business-solutions" },
 ];
 
 const companyLinks = [
   { label: "Portfolio", href: "/portfolio" },
   { label: "Why MoBiz.mu", href: "/why-us" },
   { label: "Testimonials", href: "/testimonials" },
-  { label: "Mauritius Services", href: "/mauritius-services" },
+  { label: "Mauritius Solutions", href: "/mauritius-services" },
   { label: "Blog", href: "/blog" },
-  { label: "FAQ", href: "/faq" },
-  { label: "Careers", href: "/careers" },
+  { label: "Contact", href: "/contact" },
 ];
 
 const policyLinks = [
-  { label: "Terms of Use", href: "/terms-of-use" },
-  { label: "Terms of Service", href: "/terms-of-service" },
   { label: "Privacy Policy", href: "/privacy-policy" },
+  { label: "Terms of Service", href: "/terms-of-service" },
   { label: "Security Policy", href: "/security-policy" },
 ];
 
-const popularSearches = [
-  { label: "Website Design Mauritius", href: "/website-design-mauritius" },
-  { label: "Ecommerce Website Mauritius", href: "/ecommerce-website-mauritius" },
-  { label: "Digital Marketing Mauritius", href: "/digital-marketing-mauritius" },
-  { label: "Accounting Services Mauritius", href: "/accounting-services-mauritius" },
-  { label: "Company Registration Mauritius", href: "/company-registration-mauritius" },
-  { label: "VAT Filing Mauritius", href: "/vat-filing-mauritius" },
-  { label: "SEO Services Mauritius", href: "/seo-services-mauritius" },
-
-  { label: "Car Rental Website Mauritius", href: "/car-rental-website-mauritius" },
-  { label: "Booking Website Mauritius", href: "/booking-website-mauritius" },
-  { label: "Tour Operator Website Mauritius", href: "/tour-operator-website-mauritius" },
-  { label: "Hotel Website Mauritius", href: "/hotel-website-mauritius" },
-  { label: "Villa Booking Website Mauritius", href: "/villa-booking-website-mauritius" },
-  { label: "Real Estate Website Mauritius", href: "/real-estate-website-mauritius" },
-  { label: "Restaurant Website Mauritius", href: "/restaurant-website-mauritius" },
-  { label: "Salon Website Mauritius", href: "/salon-website-mauritius" },
-  { label: "Clinic Website Mauritius", href: "/doctor-clinic-website-mauritius" },
-  { label: "School Website Mauritius", href: "/school-website-mauritius" },
-  { label: "Construction Website Mauritius", href: "/construction-website-mauritius" },
-  { label: "Accounting Firm Website Mauritius", href: "/accounting-firm-website-mauritius" },
-  { label: "Law Firm Website Mauritius", href: "/law-firm-website-mauritius" },
-  { label: "Ecommerce Store Mauritius", href: "/ecommerce-store-mauritius" },
-  { label: "Custom Website Mauritius", href: "/custom-website-mauritius" },
+const seoSearches = [
   {
-    label: "Web Application Development Mauritius",
+    label: "Website Design Mauritius",
+    href: "/website-design-mauritius",
+    Icon: Globe2,
+    color: "from-[#ef4444] to-[#991b1b]",
+  },
+  {
+    label: "Ecommerce Website Mauritius",
+    href: "/ecommerce-website-mauritius",
+    Icon: ShoppingBag,
+    color: "from-[#f97316] to-[#c2410c]",
+  },
+  {
+    label: "Digital Marketing Mauritius",
+    href: "/digital-marketing-mauritius",
+    Icon: Megaphone,
+    color: "from-[#3b82f6] to-[#1e3a8a]",
+  },
+  {
+    label: "Accounting Services Mauritius",
+    href: "/accounting-services-mauritius",
+    Icon: Calculator,
+    color: "from-[#facc15] to-[#b45309]",
+  },
+  {
+    label: "Company Registration Mauritius",
+    href: "/company-registration-mauritius",
+    Icon: Building2,
+    color: "from-[#22c55e] to-[#166534]",
+  },
+  {
+    label: "SEO Services Mauritius",
+    href: "/seo-services-mauritius",
+    Icon: Search,
+    color: "from-[#06b6d4] to-[#155e75]",
+  },
+  {
+    label: "Business Software Mauritius",
     href: "/web-application-development-mauritius",
+    Icon: BriefcaseBusiness,
+    color: "from-[#8b5cf6] to-[#5b21b6]",
   },
-  { label: "Accounting Software Mauritius", href: "/accounting-software-mauritius" },
-  {
-    label: "Inventory Management System Mauritius",
-    href: "/inventory-management-system-mauritius",
-  },
-  { label: "Stock Management System Mauritius", href: "/stock-management-system-mauritius" },
-  { label: "CRM Software Mauritius", href: "/crm-software-mauritius" },
-  { label: "Booking System Mauritius", href: "/booking-system-mauritius" },
-  { label: "Invoice Software Mauritius", href: "/invoice-software-mauritius" },
 ];
-
-const mapEmbedSrc =
-  "https://www.google.com/maps?q=MoBiz.mu%20La%20Croisette%20Grand%20Baie%20Mauritius&z=15&output=embed";
-
-const googleReviewLink = "https://g.page/r/CQN8HIPUVP1DEBM/review";
 
 const whatsappLink =
   "https://wa.me/23055068119?text=Hello%20MoBiz.mu%2C%20I%20want%20to%20discuss%20a%20business%20service.";
 
-function FooterList({
+function FooterColumn({
   title,
   links,
 }: {
@@ -95,16 +97,19 @@ function FooterList({
 }) {
   return (
     <div>
-      <h4 className="text-[11px] font-black uppercase tracking-[0.22em] text-[#f3d77a]">
+      <h3
+        className="text-[11px] font-black uppercase tracking-[0.22em] text-[#f8d75a]"
+        style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
+      >
         {title}
-      </h4>
+      </h3>
 
-      <ul className="mt-4 space-y-2.5">
+      <ul className="mt-3 space-y-2">
         {links.map((link) => (
           <li key={link.href}>
             <Link
               href={link.href}
-              className="group inline-flex text-sm font-medium leading-6 text-white/72 transition hover:text-[#f3d77a]"
+              className="group inline-flex text-[13px] font-semibold leading-5 text-white/68 transition hover:text-[#f8d75a]"
             >
               <span className="transition duration-300 group-hover:translate-x-1">
                 {link.label}
@@ -120,39 +125,49 @@ function FooterList({
 export default function Footer() {
   return (
     <footer
-      className="relative overflow-hidden border-t border-white/10 bg-[#071226] text-white"
+      className="relative left-1/2 w-screen -translate-x-1/2 overflow-hidden bg-[#071226] text-white"
       aria-labelledby="footer-heading"
     >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(243,215,122,0.18),transparent_32%),radial-gradient(circle_at_bottom_right,rgba(37,99,235,0.16),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.03),transparent)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_8%_10%,rgba(248,215,90,0.16),transparent_24%),radial-gradient(circle_at_90%_80%,rgba(19,163,127,0.16),transparent_26%),linear-gradient(135deg,#071226_0%,#0b1831_45%,#071f5f_100%)]" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-white/18" />
 
-      <Container className="relative py-8 sm:py-10 lg:py-12">
+      <Container className="relative z-10 max-w-[1520px] py-8 sm:py-9 lg:py-10">
         <h2 id="footer-heading" className="sr-only">
           MoBiz.mu footer
         </h2>
 
-        <div className="overflow-hidden rounded-[30px] border border-white/15 bg-white/[0.045] shadow-[0_28px_90px_rgba(0,0,0,0.28)] backdrop-blur-xl">
-          <div className="grid gap-8 p-5 sm:p-7 lg:grid-cols-[1.05fr_0.95fr] lg:p-8 xl:grid-cols-[1.05fr_0.82fr_0.78fr]">
+        <div className="rounded-[30px] border border-white/12 bg-white/[0.055] p-5 shadow-[0_28px_90px_rgba(0,0,0,0.24)] backdrop-blur-xl sm:p-6 lg:p-7">
+          <div className="grid gap-7 lg:grid-cols-[1.12fr_0.88fr] lg:items-start">
             <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#f3d77a]/30 bg-[#f3d77a]/10 px-4 py-2 text-[10px] font-black uppercase tracking-[0.24em] text-[#f3d77a]">
+              <div
+                className="inline-flex items-center gap-2 rounded-full border border-[#f8d75a]/28 bg-[#f8d75a]/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.22em] text-[#f8d75a]"
+                style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
+              >
                 <Sparkles className="h-3.5 w-3.5" />
                 MoBiz.mu
               </div>
 
-              <h3 className="mt-5 max-w-xl text-balance text-[2rem] font-black leading-[1.08] tracking-tight text-white sm:text-[2.5rem] lg:text-[2.8rem]">
+              <h3
+                className="mt-4 max-w-3xl text-balance text-3xl font-black leading-[1.08] tracking-tight text-white sm:text-4xl lg:text-[2.7rem]"
+                style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
+              >
                 Premium Business Solutions in Mauritius
               </h3>
 
-              <p className="mt-5 max-w-xl text-sm leading-7 text-white/70 sm:text-[15px]">
-                Website design, ecommerce development, SEO, digital marketing,
-                accounting, company registration, VAT filing, logistics,
-                branding and business support for ambitious businesses in
-                Mauritius, Rodrigues and Réunion.
+              <p
+                className="mt-4 max-w-3xl text-pretty text-[14px] leading-7 text-white/72 sm:text-[15px]"
+                style={{ fontFamily: '"Poppins", sans-serif' }}
+              >
+                MoBiz.mu helps Mauritius businesses grow with website design,
+                ecommerce websites, SEO, digital marketing, accounting and tax
+                services, company registration, VAT filing, logistics support,
+                branding and business software solutions.
               </p>
 
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <Link
                   href="/contact"
-                  className="inline-flex items-center justify-center rounded-full bg-[#f3d77a] px-5 py-3 text-sm font-black text-[#071226] shadow-[0_16px_34px_rgba(243,215,122,0.18)] transition hover:-translate-y-0.5 hover:bg-white"
+                  className="inline-flex items-center justify-center rounded-full bg-[#f8d75a] px-5 py-3 text-sm font-black text-[#071226] shadow-[0_16px_34px_rgba(248,215,90,0.18)] transition hover:-translate-y-0.5 hover:bg-white"
                 >
                   Request a Quote
                   <ArrowUpRight className="ml-2 h-4 w-4" />
@@ -168,27 +183,27 @@ export default function Footer() {
                 </Link>
               </div>
 
-              <div className="mt-7 grid gap-3 text-sm text-white/78">
-                <div className="flex items-start gap-3">
-                  <MapPin className="mt-0.5 h-[18px] w-[18px] shrink-0 text-[#f3d77a]" />
-                  <span>La Croisette, Grand Baie, Mauritius</span>
+              <div className="mt-5 grid gap-2 text-[13px] font-semibold text-white/72 sm:grid-cols-3">
+                <div className="flex items-start gap-2.5">
+                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#f8d75a]" />
+                  <span>La Croisette, Grand Baie</span>
                 </div>
 
-                <div className="flex items-start gap-3">
-                  <Mail className="mt-0.5 h-[18px] w-[18px] shrink-0 text-[#f3d77a]" />
+                <div className="flex items-start gap-2.5">
+                  <Mail className="mt-0.5 h-4 w-4 shrink-0 text-[#f8d75a]" />
                   <Link
                     href="mailto:support@mobiz.mu"
-                    className="transition hover:text-[#f3d77a]"
+                    className="transition hover:text-[#f8d75a]"
                   >
                     support@mobiz.mu
                   </Link>
                 </div>
 
-                <div className="flex items-start gap-3">
-                  <Phone className="mt-0.5 h-[18px] w-[18px] shrink-0 text-[#f3d77a]" />
+                <div className="flex items-start gap-2.5">
+                  <Phone className="mt-0.5 h-4 w-4 shrink-0 text-[#f8d75a]" />
                   <Link
                     href="tel:+23055068119"
-                    className="transition hover:text-[#f3d77a]"
+                    className="transition hover:text-[#f8d75a]"
                   >
                     +230 5506 8119
                   </Link>
@@ -196,133 +211,66 @@ export default function Footer() {
               </div>
             </div>
 
-            <div className="grid gap-7 sm:grid-cols-3 xl:col-span-1">
-              <FooterList title="Core Services" links={coreServices} />
-              <FooterList title="Company" links={companyLinks} />
-              <FooterList title="Policies" links={policyLinks} />
+            <div className="grid gap-6 sm:grid-cols-3">
+              <FooterColumn title="Services" links={serviceLinks} />
+              <FooterColumn title="Company" links={companyLinks} />
+              <FooterColumn title="Policies" links={policyLinks} />
             </div>
+          </div>
 
-            <div className="xl:pl-2">
-              <h4 className="text-[11px] font-black uppercase tracking-[0.22em] text-[#f3d77a]">
-                Location
-              </h4>
+          <div className="my-6 h-px bg-white/10" />
 
-              <div className="mt-4 overflow-hidden rounded-[24px] border border-white/10 bg-white/5 shadow-[0_18px_42px_rgba(2,8,20,0.2)]">
-                <div className="relative h-[190px] w-full sm:h-[220px] xl:h-[170px]">
-                  <iframe
-                    src={mapEmbedSrc}
-                    title="MoBiz.mu Google Map location"
-                    className="h-full w-full border-0"
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    allowFullScreen
-                  />
-                </div>
+          <div className="grid gap-4 lg:grid-cols-[0.32fr_0.68fr] lg:items-center">
+            <div>
+              <div
+                className="inline-flex items-center gap-2 rounded-full border border-white/14 bg-white/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-[#f8d75a]"
+                style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
+              >
+                <ShieldCheck className="h-3.5 w-3.5" />
+                Popular Mauritius Searches
               </div>
 
-              <div className="mt-4 rounded-[24px] border border-white/10 bg-white p-3 shadow-[0_18px_42px_rgba(2,8,20,0.2)]">
-                <div className="grid items-center gap-3 sm:grid-cols-[92px_minmax(0,1fr)] xl:grid-cols-1 2xl:grid-cols-[92px_minmax(0,1fr)]">
-                  <Link
-                    href={googleReviewLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Leave a Google review for MoBiz.mu"
-                    className="group block"
-                  >
-                    <div className="relative mx-auto h-[92px] w-[92px] overflow-hidden rounded-[18px] border border-slate-200 bg-white transition duration-300 group-hover:scale-[1.03] group-hover:shadow-[0_12px_24px_rgba(7,18,38,0.12)]">
-                      <Image
-                        src="/icons/googleQRcodereviews.png"
-                        alt="Google reviews QR code for MoBiz.mu"
-                        fill
-                        sizes="92px"
-                        className="object-contain p-2"
-                      />
-                    </div>
-                  </Link>
+              <p
+                className="mt-2 max-w-md text-[12.5px] leading-5 text-white/60"
+                style={{ fontFamily: '"Poppins", sans-serif' }}
+              >
+                SEO pages built for high-intent Mauritius business searches.
+              </p>
+            </div>
 
-                  <div className="min-w-0 text-center sm:text-left xl:text-center 2xl:text-left">
+            <div className="-mx-5 overflow-x-auto px-5 pb-1 sm:mx-0 sm:overflow-visible sm:px-0">
+              <div className="flex min-w-max gap-2 sm:min-w-0 sm:flex-wrap lg:justify-end">
+                {seoSearches.map((link) => {
+                  const Icon = link.Icon;
+
+                  return (
                     <Link
-                      href={googleReviewLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label="Open Google reviews page for MoBiz.mu"
-                      className="block"
+                      key={link.href}
+                      href={link.href}
+                      className="group inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.07] px-3 py-2 text-[12px] font-bold text-white/76 transition hover:-translate-y-0.5 hover:border-[#f8d75a]/35 hover:bg-white hover:text-[#071226]"
                     >
-                      <div className="relative h-[76px] w-full overflow-hidden rounded-[18px] border border-slate-200 bg-white">
-                        <Image
-                          src="/images/google-reviews-cover.jpg"
-                          alt="Google reviews cover image for MoBiz.mu"
-                          fill
-                          sizes="(max-width: 640px) 100vw, 240px"
-                          className="object-contain bg-white"
-                        />
-                      </div>
+                      <span
+                        className={`inline-flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br ${link.color} text-white shadow-[0_8px_16px_rgba(0,0,0,0.18)]`}
+                      >
+                        <Icon className="h-3.5 w-3.5" />
+                      </span>
+                      {link.label}
                     </Link>
-
-                    <p className="mt-2 text-sm font-black text-[#071226]">
-                      Support MoBiz.mu
-                    </p>
-
-                    <p className="mt-1 text-xs leading-5 text-slate-500">
-                      Scan or tap to leave your Google review.
-                    </p>
-                  </div>
-                </div>
+                  );
+                })}
               </div>
             </div>
           </div>
 
-          <div className="border-t border-white/10 bg-white/[0.03] px-5 py-6 sm:px-7 lg:px-8">
-            <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-              <div className="max-w-xl">
-                <div className="inline-flex items-center gap-2 rounded-full border border-[#f3d77a]/25 bg-[#f3d77a]/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.22em] text-[#f3d77a]">
-                  <Search className="h-3.5 w-3.5" />
-                  Popular Searches
-                </div>
+          <div className="mt-6 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-5 text-center lg:flex-row lg:text-left">
+            <p className="text-[12.5px] text-white/58">
+              Copyright 2026 MoBiz.mu. All rights reserved.
+            </p>
 
-                <p className="mt-3 text-sm leading-6 text-white/66">
-                  High-intent Mauritius SEO pages for businesses searching for
-                  websites, booking systems, ecommerce stores and custom software.
-                </p>
-              </div>
-
-              <div className="flex flex-wrap gap-2 lg:max-w-[780px] lg:justify-end">
-                {popularSearches.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="rounded-full border border-white/12 bg-white/[0.07] px-3.5 py-2 text-xs font-bold text-white/76 transition hover:-translate-y-0.5 hover:border-[#f3d77a]/40 hover:bg-[#f3d77a] hover:text-[#071226]"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="border-t border-white/10 px-5 py-5 sm:px-7 lg:px-8">
-            <div className="flex flex-col items-center justify-between gap-4 text-center lg:flex-row lg:text-left">
-              <div>
-                <p className="text-sm text-white/66">
-                  © 2026 MoBiz.mu — All rights reserved.
-                </p>
-
-                <p className="mt-1 text-sm font-medium text-white/82">
-                  Website design, accounting, tax, digital marketing and
-                  business solutions in Mauritius.
-                </p>
-              </div>
-
-              <div className="flex items-center justify-center gap-2.5">
-                <span className="text-sm font-semibold text-white/88">
-                  Built with Love
-                </span>
-                <span className="relative inline-flex">
-                  <span className="absolute inline-flex h-8 w-8 animate-ping rounded-full bg-red-500/35" />
-                  <Heart className="relative h-8 w-8 animate-pulse fill-[#e11d48] text-[#e11d48] drop-shadow-[0_0_14px_rgba(225,29,72,0.55)]" />
-                </span>
-              </div>
-            </div>
+            <p className="text-[12.5px] font-semibold text-white/76">
+              Website design, accounting, tax, SEO and digital marketing in
+              Mauritius.
+            </p>
           </div>
         </div>
       </Container>

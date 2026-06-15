@@ -27,6 +27,7 @@ export default async function NewslettersPage() {
             </h2>
           </div>
 
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
           <a
             href="/api/newsletters/export"
             className="rounded-full bg-[#071226] px-5 py-3 text-sm font-semibold text-white"
@@ -55,8 +56,12 @@ export default async function NewslettersPage() {
                   <td className="px-4 py-4 text-sm text-slate-700">
                     {item.full_name || "—"}
                   </td>
-                  <td className="px-4 py-4 text-sm text-slate-700">{item.source}</td>
-                  <td className="px-4 py-4 text-sm text-slate-700">{item.status}</td>
+                  <td className="px-4 py-4 text-sm text-slate-700">
+                    {item.source}
+                  </td>
+                  <td className="px-4 py-4 text-sm text-slate-700">
+                    {item.status}
+                  </td>
                   <td className="rounded-r-2xl px-4 py-4 text-sm text-slate-700">
                     {new Date(item.created_at).toLocaleString()}
                   </td>
@@ -65,7 +70,10 @@ export default async function NewslettersPage() {
 
               {!subscribers?.length ? (
                 <tr>
-                  <td colSpan={5} className="px-4 py-8 text-center text-sm text-slate-500">
+                  <td
+                    colSpan={5}
+                    className="px-4 py-8 text-center text-sm text-slate-500"
+                  >
                     No newsletter subscribers yet.
                   </td>
                 </tr>

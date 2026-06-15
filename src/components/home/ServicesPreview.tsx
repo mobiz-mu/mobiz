@@ -1,11 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
-import Container from "@/components/ui/Container";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
-import { ArrowRight, Sparkles } from "lucide-react";
+import Container from "@/components/ui/Container";
+import { ArrowRight } from "lucide-react";
 
 type ServiceItem = {
   title: string;
@@ -13,304 +11,148 @@ type ServiceItem = {
   href: string;
   imageSrc: string;
   imageAlt: string;
-  keywords: string[];
-  bullets: string[];
-  eyebrow: string;
 };
 
 const services: ServiceItem[] = [
   {
-    eyebrow: "Mauritius Digital Solutions",
     title: "Website Design & Development",
     description:
-      "Premium website design in Mauritius for businesses that want to look established, executive, and trustworthy. We create luxury business websites, landing pages, e-commerce websites, and conversion-focused digital experiences for companies across Mauritius, Rodrigues, Réunion, and the wider Indian Ocean region.",
+      "Premium business websites, landing pages, e-commerce stores, and conversion-focused digital experiences for Mauritius businesses.",
     href: "/services/website-design",
-    imageSrc: "/images/services/websites.png",
+    imageSrc: "/images/services/cards/website-design-development.webp",
     imageAlt:
-      "Premium website design and development service image for MoBiz.mu in Mauritius showing a luxury digital business presentation",
-    keywords: [
-      "Website Design Mauritius",
-      "Luxury Business Website",
-      "E-commerce Development",
-    ],
-    bullets: [
-      "Corporate websites, landing pages, and premium online presentation",
-      "Mobile-first structure with stronger user experience and conversion flow",
-      "SEO-ready layout and performance-focused development",
-    ],
+      "Premium website design and development illustration for MoBiz.mu Mauritius",
   },
   {
-    eyebrow: "Mauritius Marketing Services",
-    title: "Digital Marketing",
+    title: "Digital Marketing & SEO",
     description:
-      "Executive digital marketing services in Mauritius built to increase visibility, leads, and business growth. From SEO in Mauritius to Meta Ads, Google Ads, and content strategy, MoBiz.mu helps businesses across Mauritius, Rodrigues, and Réunion reach the right audience with a stronger premium brand presence.",
+      "SEO, social media marketing, Meta Ads, Google visibility, and lead generation strategies to help your business grow online.",
     href: "/services/digital-marketing",
-    imageSrc: "/images/services/digital-marketing.png",
+    imageSrc: "/images/services/cards/digital-marketing-seo.webp",
     imageAlt:
-      "Premium digital marketing service image for MoBiz.mu in Mauritius showing online growth, social media, and campaign strategy visuals",
-    keywords: [
-      "Digital Marketing Mauritius",
-      "SEO Mauritius",
-      "Meta Ads & Google Ads",
-    ],
-    bullets: [
-      "SEO, search visibility, and content-led online growth",
-      "Meta Ads and Google Ads campaign support",
-      "Premium brand positioning with lead generation strategy",
-    ],
+      "Digital marketing and SEO illustration for MoBiz.mu Mauritius",
   },
   {
-    eyebrow: "Mauritius Accounting Services",
-    title: "Accounting & Tax Returns",
+    title: "Accounting & Tax Services",
     description:
-      "Professional accounting services in Mauritius for startups, SMEs, and established companies that need reliable finance support and business compliance. We assist with bookkeeping, VAT, payroll, statutory filing, and tax returns with a polished, dependable, and business-focused approach.",
+      "Professional bookkeeping, VAT support, tax returns, payroll, and financial organization for startups and growing companies.",
     href: "/services/accounting-tax-returns",
-    imageSrc: "/images/services/accounting.png",
+    imageSrc: "/images/services/cards/accounting-tax-services.webp",
     imageAlt:
-      "Premium accounting and tax services image for MoBiz.mu in Mauritius showing professional finance and business compliance support",
-    keywords: [
-      "Accounting Services Mauritius",
-      "Tax Returns Mauritius",
-      "Bookkeeping & VAT",
-    ],
-    bullets: [
-      "Bookkeeping, VAT, payroll, and statutory filing support",
-      "Tax returns and structured business compliance",
-      "Reliable financial organization for growing businesses",
-    ],
+      "Accounting and tax services illustration for MoBiz.mu Mauritius",
   },
   {
-    eyebrow: "Mauritius Logistics Solutions",
-    title: "Logistics Solutions",
+    title: "Business Software & Automation",
     description:
-      "Premium logistics support in Mauritius for businesses that need smoother import and export coordination, sourcing support, and operational structure. MoBiz.mu helps companies manage logistics processes with more clarity, stronger business support, and dependable day-to-day execution.",
-    href: "/services/logistics",
-    imageSrc: "/images/services/logistics.png",
+      "Custom web apps, CRM systems, booking systems, inventory management, invoice software, and business automation tools.",
+    href: "/web-application-development-mauritius",
+    imageSrc: "/images/services/cards/business-software-automation.webp",
     imageAlt:
-      "Premium logistics solutions image for MoBiz.mu in Mauritius showing import export, delivery, and operational business support",
-    keywords: [
-      "Logistics Mauritius",
-      "Import Export Support",
-      "Business Delivery Coordination",
-    ],
-    bullets: [
-      "Import and export setup with operational support",
-      "Procurement, sourcing, and logistics coordination",
-      "Business-friendly solutions for smoother daily operations",
-    ],
+      "Business software and automation illustration for MoBiz.mu Mauritius",
   },
   {
-    eyebrow: "Mauritius Branding Solutions",
+    title: "Logistics & Import/Export Support",
+    description:
+      "Import, export, sourcing, delivery coordination, and operational support for smoother business movement and supply flow.",
+    href: "/services/logistics",
+    imageSrc: "/images/services/cards/logistics-import-export.webp",
+    imageAlt:
+      "Logistics and import export support illustration for MoBiz.mu Mauritius",
+  },
+  {
     title: "Branding & Business Solutions",
     description:
-      "High-end branding and business solutions in Mauritius for companies that want to present themselves like serious market leaders. We create brand kits, business plans, decks, proposals, CV services, and launch-ready assets designed for Mauritius and the wider Indian Ocean market.",
+      "Brand kits, business plans, company profiles, proposals, launch assets, and premium presentation support for serious businesses.",
     href: "/services/branding-business-solutions",
-    imageSrc: "/images/services/branding.png",
+    imageSrc: "/images/services/cards/branding-business-solutions.webp",
     imageAlt:
-      "Premium branding and business solutions image for MoBiz.mu in Mauritius showing brand development, presentations, and business launch assets",
-    keywords: [
-      "Branding Mauritius",
-      "Business Plans & Decks",
-      "Professional Brand Assets",
-    ],
-    bullets: [
-      "Brand kits, proposals, and investor or pitch presentations",
-      "Business plans, CV services, and polished launch assets",
-      "Premium positioning for stronger trust and presentation",
-    ],
+      "Branding and business solutions illustration for MoBiz.mu Mauritius",
   },
 ];
 
-function PremiumServiceButton({
-  href,
-  children,
-  className,
-}: {
-  href: string;
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <Link
-      href={href}
-      className={cn(
-        "group relative inline-flex items-center justify-center overflow-hidden rounded-full border border-[#f3d77a] bg-[linear-gradient(180deg,#06101f_0%,#0a1730_50%,#102349_100%)] px-5 py-3 text-sm font-semibold text-[#ffe08a] shadow-[0_18px_34px_rgba(7,18,38,0.18),inset_0_1px_0_rgba(255,255,255,0.12),0_0_0_1px_rgba(243,215,122,0.08)] transition-all duration-300 hover:-translate-y-0.5 hover:text-[#fff1b8] hover:shadow-[0_24px_40px_rgba(7,18,38,0.24),0_0_18px_rgba(243,215,122,0.16),inset_0_1px_0_rgba(255,255,255,0.16)] active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f3d77a] focus-visible:ring-offset-2",
-        className
-      )}
-      aria-label={`Explore ${typeof children === "string" ? children : "service"}`}
-    >
-      <span className="pointer-events-none absolute inset-[1px] rounded-full bg-[linear-gradient(180deg,rgba(255,255,255,0.14)_0%,rgba(255,255,255,0.03)_38%,rgba(255,255,255,0.00)_100%)]" />
-      <span className="pointer-events-none absolute left-4 top-1.5 h-5 w-16 rounded-full bg-white/10 blur-lg" />
-      <span className="pointer-events-none absolute right-3 bottom-1.5 h-6 w-14 rounded-full bg-[#f3d77a]/12 blur-lg" />
-      <span className="relative z-10 inline-flex items-center">
-        {children}
-      </span>
-    </Link>
-  );
-}
-
 export default function ServicesPreview() {
-  const sectionRef = useRef<HTMLElement | null>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const node = sectionRef.current;
-    if (!node) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
-      },
-      {
-        threshold: 0.12,
-        rootMargin: "0px 0px -8% 0px",
-      }
-    );
-
-    observer.observe(node);
-
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <section
-      ref={sectionRef}
       id="core-services"
       aria-labelledby="core-services-heading"
-      className="w-full scroll-mt-24 bg-white py-2 sm:py-3 lg:py-4"
+      className="w-full scroll-mt-24 bg-white py-10 sm:py-12 lg:py-16"
     >
-      <Container className="max-w-[1400px]">
-        <div className="mx-auto max-w-5xl text-center">
-          <h2
-            id="core-services-heading"
-            className={cn(
-              "text-balance text-3xl font-semibold tracking-tight text-[#071226] transition-all duration-700 sm:text-4xl lg:text-[3.4rem] lg:leading-[1.04]",
-              visible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
-            )}
+      <Container className="max-w-[1520px]">
+        <div className="mx-auto max-w-4xl text-center">
+          <div
+            className="text-[11px] font-bold uppercase tracking-[0.28em] text-[#ff7a1a]"
             style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
           >
-            Our Core Services
+            Premium Business Services
+          </div>
+
+          <h2
+            id="core-services-heading"
+            className="mt-3 text-balance text-3xl font-bold tracking-tight text-[#071f5f] sm:text-4xl lg:text-[3.2rem] lg:leading-[1.05]"
+            style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
+          >
+            Services Built To Grow Your Business
           </h2>
 
           <p
-            className={cn(
-              "mx-auto mt-4 max-w-4xl text-pretty text-[14px] leading-7 text-[#31425f] transition-all duration-700 delay-100 sm:text-[15px] lg:text-[16px]",
-              visible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
-            )}
+            className="mx-auto mt-4 max-w-3xl text-pretty text-[14px] leading-7 text-[#31425f] sm:text-[15px] lg:text-[16px]"
             style={{ fontFamily: '"Poppins", sans-serif' }}
           >
-            MoBiz.mu brings together premium business services for Mauritius, Rodrigues, Réunion, and the wider Indian Ocean region — from luxury website design and digital marketing to accounting, logistics, and branding solutions built for serious business growth.
+            MoBiz.mu helps Mauritius businesses look more professional, generate more leads, manage operations better, and build a stronger digital presence.
           </p>
         </div>
 
-        <div className="mt-3 space-y-3 sm:mt-4 sm:space-y-4 lg:mt-5 lg:space-y-4">
-          {services.map((service, index) => {
-            const isReversed = index % 2 === 1;
+        <div className="mt-8 grid gap-7 sm:mt-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-9">
+          {services.map((service, index) => (
+            <article
+              key={service.title}
+              className="group flex min-h-full flex-col overflow-hidden rounded-[30px] border border-[#e8eef8] bg-[#f6f9ff] p-4 shadow-[0_22px_55px_rgba(7,18,38,0.10)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(7,18,38,0.16)]"
+            >
+              <div className="relative aspect-[1.58/1] w-full overflow-hidden rounded-[22px] bg-[#dfeaff]">
+                <Image
+                  src={service.imageSrc}
+                  alt={service.imageAlt}
+                  fill
+                  priority={index < 3}
+                  loading={index < 3 ? "eager" : "lazy"}
+                  fetchPriority={index < 3 ? "high" : "auto"}
+                  quality={75}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.025]"
+                />
+              </div>
 
-            return (
-              <article
-                key={service.title}
-                className={cn(
-                  "grid items-stretch gap-2.5 lg:grid-cols-2 lg:gap-3 xl:gap-4",
-                  visible ? "opacity-100" : "opacity-0"
-                )}
-                style={{ transitionDelay: `${index * 120}ms` }}
-              >
-                <div
-                  className={cn(
-                    "transition-all duration-700",
-                    visible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0",
-                    isReversed ? "lg:order-2" : "lg:order-1"
-                  )}
+              <div className="flex flex-1 flex-col px-1 pb-2 pt-4">
+                <h3
+                  className="text-[1.28rem] font-bold tracking-tight text-[#071f5f] sm:text-[1.4rem]"
+                  style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
                 >
-                  <div className="relative aspect-[1.28/1] w-full overflow-hidden sm:aspect-[1.32/1] lg:aspect-[1.36/1]">
-                    <Image
-                      src={service.imageSrc}
-                      alt={service.imageAlt}
-                      width={1400}
-                      height={1400}
-                      priority={index === 0}
-                      loading={index === 0 ? "eager" : "lazy"}
-                      fetchPriority={index === 0 ? "high" : "auto"}
-                      quality={75}
-                      sizes="(max-width: 1024px) 100vw, 50vw"
-                      className="h-full w-full object-contain object-center"
-                    />
-                  </div>
-                </div>
+                  {service.title}
+                </h3>
 
-                <div
-                  className={cn(
-                    "flex h-full min-h-[220px] flex-col justify-center transition-all duration-700 sm:min-h-[260px] lg:min-h-[300px]",
-                    visible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0",
-                    isReversed ? "lg:order-1" : "lg:order-2"
-                  )}
-                  style={{ transitionDelay: `${120 + index * 120}ms` }}
+                <p
+                  className="mt-3 min-h-[92px] text-[14px] leading-7 text-[#111827] sm:text-[15px]"
+                  style={{ fontFamily: '"Poppins", sans-serif' }}
                 >
-                  <div
-                    className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#8b6a18] sm:text-[11px]"
-                    style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
+                  {service.description}
+                </p>
+
+                <div className="mt-auto flex justify-center pt-5">
+                  <Link
+                    href={service.href}
+                    className="group/btn inline-flex items-center justify-center rounded-[14px] bg-[linear-gradient(135deg,#ff4b1f_0%,#ff9914_100%)] px-6 py-3 text-sm font-bold text-white shadow-[0_14px_28px_rgba(255,122,24,0.28)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_36px_rgba(255,122,24,0.36)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff8a1f] focus-visible:ring-offset-2"
+                    aria-label={`Read more about ${service.title}`}
                   >
-                    {service.eyebrow}
-                  </div>
-
-                  <h3
-                    className="mt-2 text-balance text-[1.85rem] font-semibold tracking-tight text-[#071226] sm:text-[2.1rem] lg:text-[2.35rem] lg:leading-[1.05]"
-                    style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
-                  >
-                    {service.title}
-                  </h3>
-
-                  <p
-                    className="mt-2.5 text-[14px] leading-[1.65] text-slate-600 sm:text-[15px] lg:text-[15.5px]"
-                    style={{ fontFamily: '"Poppins", sans-serif' }}
-                  >
-                    {service.description}
-                  </p>
-
-                  <div className="mt-3 grid gap-2">
-                    {service.bullets.map((bullet) => (
-                      <div key={bullet} className="flex items-start gap-3">
-                        <div className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#071226] text-[#f3d77a] shadow-[0_10px_20px_rgba(7,18,38,0.12)]">
-                          <Sparkles className="h-3.5 w-3.5" />
-                        </div>
-                        <div
-                          className="text-sm leading-6 text-slate-700"
-                          style={{ fontFamily: '"Poppins", sans-serif' }}
-                        >
-                          {bullet}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="mt-3 flex flex-wrap gap-1.5">
-                    {service.keywords.map((keyword) => (
-                      <span
-                        key={keyword}
-                        className="rounded-full border border-[#d7dee9] bg-[#f8fafc] px-3 py-1.5 text-[11px] font-medium text-[#071226] sm:text-xs"
-                        style={{ fontFamily: '"Poppins", sans-serif' }}
-                      >
-                        {keyword}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div className="mt-4">
-                    <PremiumServiceButton href={service.href} className="min-w-[185px]">
-                      Explore Service
-                      <ArrowRight className="ml-2 h-4 w-4 text-[#ffe08a] transition-transform duration-300 group-hover:translate-x-0.5" />
-                    </PremiumServiceButton>
-                  </div>
+                    Read more
+                    <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover/btn:translate-x-0.5" />
+                  </Link>
                 </div>
-              </article>
-            );
-          })}
+              </div>
+            </article>
+          ))}
         </div>
       </Container>
     </section>
   );
 }
+

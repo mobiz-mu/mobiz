@@ -6,6 +6,25 @@ type IanaBootstrapResponse = {
   services: IanaBootstrapEntry[];
 };
 
+type RdapEvent = {
+  eventAction?: string;
+  eventDate?: string;
+};
+
+type VcardRow = [string, unknown, string, unknown];
+
+type RdapEntity = {
+  roles?: string[];
+  handle?: string | null;
+  vcardArray?: [string, VcardRow[]];
+};
+
+type RdapResponse = {
+  entities?: RdapEntity[];
+  events?: RdapEvent[];
+  status?: string[];
+};
+
 export type DomainCheckResult = {
   domain: string;
   tld: string;
@@ -21,29 +40,33 @@ export type DomainCheckResult = {
 const IANA_RDAP_BOOTSTRAP_URL = "https://data.iana.org/rdap/dns.json";
 
 function extractEventDate(
-  events: Array<{ eventAction?: string; eventDate?: string }> | undefined,
+  events: RdapEvent[] | undefined,
   action: string
 ): string | null {
   if (!events) return null;
-  const match = events.find((e) => e.eventAction === action);
+
+  const match = events.find((event) => event.eventAction === action);
   return match?.eventDate ?? null;
 }
 
-function extractRegistrarName(entities: any[] | undefined): string | null {
+function extractRegistrarName(entities: RdapEntity[] | undefined): string | null {
   if (!entities) return null;
 
   for (const entity of entities) {
-    const roles: string[] = entity?.roles ?? [];
+    const roles = entity.roles ?? [];
+
     if (roles.includes("registrar")) {
-      const vcardArray = entity?.vcardArray;
+      const vcardArray = entity.vcardArray;
+
       if (Array.isArray(vcardArray) && Array.isArray(vcardArray[1])) {
         for (const row of vcardArray[1]) {
           if (Array.isArray(row) && row[0] === "fn") {
-            return row[3] ?? null;
+            return typeof row[3] === "string" ? row[3] : null;
           }
         }
       }
-      return entity?.handle ?? null;
+
+      return entity.handle ?? null;
     }
   }
 
@@ -95,7 +118,9 @@ export async function checkDomainRdap(domain: string): Promise<DomainCheckResult
     };
   }
 
-  const rdapUrl = `${rdapBase.replace(/\/$/, "")}/domain/${encodeURIComponent(domain)}`;
+  const rdapUrl = `${rdapBase.replace(/\/$/, "")}/domain/${encodeURIComponent(
+    domain
+  )}`;
 
   const res = await fetch(rdapUrl, {
     headers: { accept: "application/rdap+json, application/json" },
@@ -126,7 +151,7 @@ export async function checkDomainRdap(domain: string): Promise<DomainCheckResult
     };
   }
 
-  const data = await res.json();
+  const data = (await res.json()) as RdapResponse;
 
   return {
     domain,

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { FormEvent, useMemo, useState } from "react";
 import Container from "@/components/ui/Container";
-import { ArrowRight, Globe, Search } from "lucide-react";
+import { ArrowRight, Globe, Search, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const extensions = [".com", ".mu", ".net", ".org", ".co", ".info"];
@@ -99,180 +99,191 @@ export default function DomainAvailabilitySection() {
     <section
       id="domain-availability"
       aria-labelledby="domain-availability-heading"
-      className="w-full bg-white py-3 sm:py-4 lg:py-5"
+      className="domain-full-bg relative left-1/2 w-screen -translate-x-1/2 overflow-hidden bg-[#071226] py-10 sm:py-12 lg:min-h-[520px] lg:py-16"
     >
-      <Container className="max-w-[1400px]">
-        <div className="relative overflow-hidden rounded-[28px] border border-[#d8ece8] px-4 py-4 text-white shadow-[0_20px_48px_rgba(8,66,89,0.12)] sm:px-5 sm:py-5 lg:px-6 lg:py-6">
-          <div className="absolute inset-0 bg-[linear-gradient(135deg,#083b67_0%,#0c5f88_22%,#1187a1_44%,#13a37f_68%,#1ba957_100%)]" />
-          <div className="absolute inset-0 opacity-70 animate-[domainWave_10s_ease-in-out_infinite] bg-[radial-gradient(120%_70%_at_0%_50%,rgba(255,255,255,0.12),transparent_45%),radial-gradient(90%_60%_at_100%_50%,rgba(255,255,255,0.10),transparent_42%),radial-gradient(80%_50%_at_50%_100%,rgba(255,255,255,0.08),transparent_40%)]" />
-          <div className="absolute inset-0 opacity-50 animate-[domainWaveReverse_14s_ease-in-out_infinite] bg-[radial-gradient(110%_65%_at_20%_30%,rgba(255,255,255,0.10),transparent_42%),radial-gradient(100%_55%_at_80%_70%,rgba(255,255,255,0.08),transparent_40%)]" />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.10)_0%,rgba(255,255,255,0.03)_45%,rgba(255,255,255,0.02)_100%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(7,18,38,0.97)_0%,rgba(7,18,38,0.91)_35%,rgba(7,18,38,0.58)_62%,rgba(7,18,38,0.16)_100%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_13%_20%,rgba(255,255,255,0.16),transparent_24%),radial-gradient(circle_at_70%_88%,rgba(22,163,127,0.18),transparent_28%)]" />
+      <div className="absolute inset-x-0 top-0 h-px bg-white/20" />
+      <div className="absolute inset-x-0 bottom-0 h-px bg-white/10" />
 
-          <div className="relative z-10 mx-auto max-w-5xl text-center">
+      <Container className="relative z-10 max-w-[1500px]">
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,0.62fr)_minmax(260px,0.38fr)] lg:items-center">
+          <div className="max-w-4xl">
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/18 bg-white/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/90 backdrop-blur-md">
+              <ShieldCheck className="h-3.5 w-3.5 text-[#f8d75a]" />
+              Mauritius Domain Support
+            </div>
+
             <h2
               id="domain-availability-heading"
-              className="text-balance text-[1.55rem] font-semibold tracking-tight text-white sm:text-[1.9rem] lg:text-[2.35rem] lg:leading-[1.05]"
+              className="mt-4 max-w-3xl text-balance text-[2rem] font-bold tracking-tight text-white sm:text-[2.5rem] lg:text-[3.25rem] lg:leading-[1.03]"
               style={{ fontFamily: '"Quicksand", "Poppins", sans-serif' }}
             >
               Check domain name availability for your business in Mauritius.
             </h2>
 
             <p
-              className="mx-auto mt-2 max-w-3xl text-[13px] leading-6 text-white/90 sm:text-[14px] lg:text-[15px]"
+              className="mt-4 max-w-2xl text-pretty text-[14px] leading-7 text-white/88 sm:text-[16px] lg:text-[17px]"
               style={{ fontFamily: '"Poppins", sans-serif' }}
             >
-              Search your business name and secure a stronger online identity with MoBiz.mu.
+              Search your business name, secure the right domain, and build a stronger online identity with MoBiz.mu.
             </p>
-          </div>
 
-          <form
-            onSubmit={onSubmit}
-            className="relative z-10 mx-auto mt-4 max-w-5xl"
-          >
-            <div className="grid gap-2.5 lg:grid-cols-[1fr_auto]">
-              <div className="flex items-center gap-3 rounded-[20px] border border-white/15 bg-white/94 px-4 py-3 shadow-[0_10px_24px_rgba(7,18,38,0.06)] backdrop-blur-xl sm:px-4 sm:py-3.5">
-                <div className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-[linear-gradient(180deg,#0a5c7a_0%,#0f7a88_100%)] text-[#ffe27a] shadow-[0_10px_20px_rgba(8,66,89,0.16)]">
-                  <Globe className="h-4.5 w-4.5" />
-                </div>
+            <form onSubmit={onSubmit} className="mt-6 max-w-4xl">
+              <div className="rounded-[26px] border border-white/18 bg-white/12 p-2 shadow-[0_24px_65px_rgba(0,0,0,0.22)] backdrop-blur-xl">
+                <div className="grid gap-2 lg:grid-cols-[1fr_auto]">
+                  <div className="flex items-center gap-3 rounded-[20px] bg-white px-4 py-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] sm:px-5">
+                    <div className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] bg-[linear-gradient(180deg,#082a4a_0%,#0d6174_100%)] text-[#f8d75a] shadow-[0_12px_24px_rgba(7,18,38,0.22)]">
+                      <Globe className="h-5 w-5" />
+                    </div>
 
-                <div className="min-w-0 flex-1">
-                  <label
-                    htmlFor="domainName"
-                    className="mb-1 block text-left text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500"
-                    style={{ fontFamily: '"Poppins", sans-serif' }}
+                    <div className="min-w-0 flex-1">
+                      <label
+                        htmlFor="domainName"
+                        className="mb-1 block text-left text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500"
+                        style={{ fontFamily: '"Poppins", sans-serif' }}
+                      >
+                        Search Domain Name
+                      </label>
+
+                      <input
+                        id="domainName"
+                        type="text"
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        placeholder="yourbusiness"
+                        className="w-full border-0 bg-transparent p-0 text-[16px] font-medium text-[#071226] outline-none placeholder:text-slate-400 sm:text-[18px]"
+                        autoComplete="off"
+                        spellCheck={false}
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={!cleanName || loading}
+                    className={cn(
+                      "inline-flex min-h-[62px] items-center justify-center gap-2 rounded-[20px] border px-6 text-sm font-bold transition-all duration-300 sm:text-[15px]",
+                      !cleanName || loading
+                        ? "cursor-not-allowed border-white/10 bg-white/18 text-white/55"
+                        : "border-[#f8d75a]/80 bg-[linear-gradient(135deg,#d92121_0%,#b9131b_48%,#082a4a_100%)] text-white shadow-[0_18px_34px_rgba(217,33,33,0.30),inset_0_1px_0_rgba(255,255,255,0.16)] hover:-translate-y-0.5 hover:shadow-[0_24px_44px_rgba(217,33,33,0.38),inset_0_1px_0_rgba(255,255,255,0.16)]"
+                    )}
                   >
-                    Search Domain Name
-                  </label>
-                  <input
-                    id="domainName"
-                    type="text"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder="name.com"
-                    className="w-full border-0 bg-transparent p-0 text-[15px] text-[#071226] outline-none placeholder:text-slate-400 sm:text-[16px]"
-                    autoComplete="off"
-                    spellCheck={false}
-                  />
+                    <Search className="h-4.5 w-4.5 text-[#f8d75a]" />
+                    {loading ? "Checking..." : "Check Availability"}
+                  </button>
                 </div>
               </div>
+            </form>
 
-              <button
-                type="submit"
-                disabled={!cleanName || loading}
-                className={cn(
-                  "inline-flex items-center justify-center gap-2 rounded-[20px] border px-5 py-3.5 text-sm font-semibold transition-all duration-300 sm:px-6",
-                  !cleanName || loading
-                    ? "cursor-not-allowed border-white/10 bg-white/20 text-white/50"
-                    : "border-[#f5c54e] bg-[linear-gradient(180deg,#c91522_0%,#a90f18_60%,#8f0d17_100%)] text-[#ffe27a] shadow-[0_16px_30px_rgba(140,14,22,0.22),inset_0_1px_0_rgba(255,255,255,0.12)] hover:-translate-y-0.5 hover:shadow-[0_20px_36px_rgba(140,14,22,0.28),inset_0_1px_0_rgba(255,255,255,0.12)]"
-                )}
-              >
-                <Search className="h-4.5 w-4.5" />
-                {loading ? "Checking..." : "Check Availability"}
-              </button>
+            <div className="mt-5 flex flex-wrap gap-2">
+              {extensions.map((item) => (
+                <span
+                  key={item}
+                  className="rounded-full border border-white/16 bg-white/10 px-3 py-1.5 text-xs font-semibold text-white/88 backdrop-blur-md"
+                >
+                  {item}
+                </span>
+              ))}
             </div>
-          </form>
+          </div>
 
-          {error ? (
-            <div className="relative z-10 mx-auto mt-4 max-w-3xl rounded-[16px] border border-red-200/50 bg-white/95 px-4 py-3 text-sm text-red-700">
-              {error}
-            </div>
-          ) : null}
+          <div className="hidden lg:block" aria-hidden="true" />
+        </div>
 
-          {searched && results.length > 0 ? (
-            <div className="relative z-10 mx-auto mt-4 max-w-6xl">
-              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                {results.map((result) => {
-                  const isAvailable = result.status === "available";
-                  const fullDomain = result.domain;
+        {error ? (
+          <div className="relative z-10 mt-5 max-w-3xl rounded-[18px] border border-red-200/50 bg-white/95 px-4 py-3 text-sm text-red-700 shadow-[0_18px_34px_rgba(0,0,0,0.14)]">
+            {error}
+          </div>
+        ) : null}
 
-                  return (
-                    <div
-                      key={fullDomain}
-                      className="rounded-[20px] border border-white/14 bg-white/95 p-4 shadow-[0_12px_24px_rgba(7,18,38,0.05)] backdrop-blur-xl"
-                    >
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="min-w-0">
-                          <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#0b7c91]">
-                            Domain
-                          </div>
-                          <div className="mt-1 break-all text-[1.02rem] font-semibold text-[#071226]">
-                            {fullDomain}
-                          </div>
+        {searched && results.length > 0 ? (
+          <div className="relative z-10 mt-6">
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+              {results.map((result) => {
+                const isAvailable = result.status === "available";
+                const fullDomain = result.domain;
+
+                return (
+                  <div
+                    key={fullDomain}
+                    className="rounded-[22px] border border-white/18 bg-white/96 p-4 shadow-[0_16px_34px_rgba(0,0,0,0.16)] backdrop-blur-xl"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <div className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#0b7c91]">
+                          Domain
                         </div>
 
-                        <div
-                          className={cn(
-                            "rounded-full px-3 py-1 text-[11px] font-semibold",
-                            isAvailable
-                              ? "bg-emerald-50 text-emerald-700"
-                              : result.status === "registered"
-                              ? "bg-red-50 text-red-700"
-                              : "bg-amber-50 text-amber-700"
-                          )}
-                        >
-                          {isAvailable
-                            ? "Available"
-                            : result.status === "registered"
-                              ? "Taken"
-                              : result.status === "unsupported"
-                                ? "Unsupported"
-                                : "Unknown"}
+                        <div className="mt-1 break-all text-[1.02rem] font-bold text-[#071226]">
+                          {fullDomain}
                         </div>
                       </div>
 
-                      <p className="mt-3 text-[13px] leading-6 text-slate-600">
-                        {isAvailable
-                          ? "This domain looks available. Contact MoBiz.mu on WhatsApp to register it."
-                          : result.status === "registered"
-                            ? `This domain appears registered${
-                                result.registrar ? ` with ${result.registrar}` : ""
-                              }. Contact MoBiz.mu for alternatives or other extensions.`
-                            : result.error || "Unable to confirm this domain right now."}
-                      </p>
-
-                      <Link
-                        href={getWhatsAppHref(fullDomain)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#0b5c74] transition hover:text-[#0f8d66]"
+                      <div
+                        className={cn(
+                          "rounded-full px-3 py-1 text-[11px] font-bold",
+                          isAvailable
+                            ? "bg-emerald-50 text-emerald-700"
+                            : result.status === "registered"
+                              ? "bg-red-50 text-red-700"
+                              : "bg-amber-50 text-amber-700"
+                        )}
                       >
-                        Contact on WhatsApp
-                        <ArrowRight className="h-4 w-4 text-[#caa43f] transition-transform duration-300 group-hover:translate-x-0.5" />
-                      </Link>
+                        {isAvailable
+                          ? "Available"
+                          : result.status === "registered"
+                            ? "Taken"
+                            : result.status === "unsupported"
+                              ? "Unsupported"
+                              : "Unknown"}
+                      </div>
                     </div>
-                  );
-                })}
-              </div>
+
+                    <p className="mt-3 text-[13px] leading-6 text-slate-600">
+                      {isAvailable
+                        ? "This domain looks available. Contact MoBiz.mu on WhatsApp to register it."
+                        : result.status === "registered"
+                          ? `This domain appears registered${
+                              result.registrar ? ` with ${result.registrar}` : ""
+                            }. Contact MoBiz.mu for alternatives or other extensions.`
+                          : result.error || "Unable to confirm this domain right now."}
+                    </p>
+
+                    <Link
+                      href={getWhatsAppHref(fullDomain)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group mt-4 inline-flex items-center gap-2 text-sm font-bold text-[#0b5c74] transition hover:text-[#d92121]"
+                    >
+                      Contact on WhatsApp
+                      <ArrowRight className="h-4 w-4 text-[#caa43f] transition-transform duration-300 group-hover:translate-x-0.5" />
+                    </Link>
+                  </div>
+                );
+              })}
             </div>
-          ) : null}
-        </div>
-
-        <style jsx>{`
-          @keyframes domainWave {
-            0% {
-              transform: translate3d(0, 0, 0) scale(1);
-            }
-            50% {
-              transform: translate3d(1.5%, -1.5%, 0) scale(1.03);
-            }
-            100% {
-              transform: translate3d(0, 0, 0) scale(1);
-            }
-          }
-
-          @keyframes domainWaveReverse {
-            0% {
-              transform: translate3d(0, 0, 0) scale(1);
-            }
-            50% {
-              transform: translate3d(-1.5%, 1.5%, 0) scale(1.04);
-            }
-            100% {
-              transform: translate3d(0, 0, 0) scale(1);
-            }
-          }
-        `}</style>
+          </div>
+        ) : null}
       </Container>
+
+      <style jsx>{`
+        .domain-full-bg {
+          background-image: url("/images/domain/domain-bg-mobile.webp");
+          background-size: cover;
+          background-position: center top;
+          background-repeat: no-repeat;
+        }
+
+        @media (min-width: 768px) {
+          .domain-full-bg {
+            background-image: url("/images/domain/domain-bg-desktop.webp");
+            background-size: cover;
+            background-position: center right;
+            background-repeat: no-repeat;
+          }
+        }
+      `}</style>
     </section>
   );
 }
