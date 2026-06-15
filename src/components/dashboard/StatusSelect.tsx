@@ -4,7 +4,7 @@ import { useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase-client";
 
 type StatusSelectProps = {
-  table: "leads" | "quotations" | "invoices" | "proposals";
+  table: "leads" | "quotations" | "invoices" | "proposals" | "directory_businesses";
   id: string;
   value: string;
   options: string[];

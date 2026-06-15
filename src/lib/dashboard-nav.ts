@@ -9,6 +9,7 @@ import {
   Users,
   BriefcaseBusiness,
   FolderKanban,
+  Store,
 } from "lucide-react";
 
 export type DashboardNavItem = {
@@ -27,6 +28,7 @@ export const dashboardNav: DashboardNavItem[] = [
   { title: "Newsletters", href: "/dashboard/newsletters", icon: Mail },
   { title: "Testimonials", href: "/dashboard/testimonials", icon: Star },
   { title: "Portfolio", href: "/dashboard/portfolio", icon: FolderKanban },
+  { title: "Directory", href: "/dashboard/directory", icon: Store },
   { title: "Users", href: "/dashboard/users", icon: Users },
   { title: "Settings", href: "/dashboard/settings", icon: Settings },
 ];

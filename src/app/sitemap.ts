@@ -2,6 +2,8 @@ import type { MetadataRoute } from "next";
 import { blogPosts } from "@/lib/blog";
 import { portfolioItems } from "@/lib/portfolio";
 import { cityServiceSitemapEntries } from "@/lib/cityServicePages";
+import { directoryCategories } from "@/lib/directoryCategories";
+import { directoryCities, getApprovedBusinessSlugs } from "@/lib/directory";
 
 const BASE_URL = "https://mobiz.mu";
 
@@ -18,7 +20,7 @@ function resolveLastModified(value?: string | Date) {
   return Number.isNaN(date.getTime()) ? new Date() : date;
 }
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
   const staticRoutes: StaticRoute[] = [
@@ -70,6 +72,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/free-website-review", priority: 0.9, changeFrequency: "monthly" },
     { path: "/free-business-consultation", priority: 0.9, changeFrequency: "monthly" },
     { path: "/portfolio", priority: 0.88, changeFrequency: "weekly" },
+    { path: "/directory", priority: 0.9, changeFrequency: "daily" },
+    { path: "/directory/submit", priority: 0.7, changeFrequency: "monthly" },
     { path: "/testimonials", priority: 0.86, changeFrequency: "weekly" },
     { path: "/why-us", priority: 0.86, changeFrequency: "weekly" },
     { path: "/mauritius-services", priority: 0.86, changeFrequency: "weekly" },
@@ -114,5 +118,40 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.76,
   }));
 
-  return [...staticEntries, ...blogEntries, ...portfolioEntries];
+  const directoryCategoryEntries: MetadataRoute.Sitemap =
+    directoryCategories.map((c) => ({
+      url: `${BASE_URL}/directory/category/${c.slug}`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.82,
+    }));
+
+  const directoryCityEntries: MetadataRoute.Sitemap = directoryCities.map(
+    (c) => ({
+      url: `${BASE_URL}/directory/city/${c.slug}`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.8,
+    })
+  );
+
+  // Approved business profiles (safe: returns [] if the table/DB is unavailable).
+  const businessSlugs = await getApprovedBusinessSlugs();
+  const directoryBusinessEntries: MetadataRoute.Sitemap = businessSlugs.map(
+    (b) => ({
+      url: `${BASE_URL}/directory/business/${b.slug}`,
+      lastModified: resolveLastModified(b.updatedAt),
+      changeFrequency: "weekly",
+      priority: 0.7,
+    })
+  );
+
+  return [
+    ...staticEntries,
+    ...blogEntries,
+    ...portfolioEntries,
+    ...directoryCategoryEntries,
+    ...directoryCityEntries,
+    ...directoryBusinessEntries,
+  ];
 }
