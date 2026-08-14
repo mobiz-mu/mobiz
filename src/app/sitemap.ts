@@ -93,36 +93,11 @@ const STATIC_ROUTES: StaticRoute[] = [
   { path: "/policies", priority: 0.32, changeFrequency: "yearly" },
 ];
 
-/**
- * Routes that are planned and listed above but whose page files are not built
- * yet. They are filtered out so the sitemap never advertises a URL that would
- * 404 — remove a slug from here the moment its page ships.
- *
- * TODO: Build these pages, then empty this list.
- */
-const NOT_YET_BUILT = new Set<string>([
-  "/monthly-packages",
-  "/free-seo-audit",
-  "/free-website-review",
-  "/free-business-consultation",
-  "/testimonials",
-  "/why-us",
-  "/contact",
-  "/faq",
-  "/about",
-  "/careers",
-  "/privacy-policy",
-  "/terms-of-use",
-  "/terms-of-service",
-  "/security-policy",
-  "/policies",
-]);
-
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
   return [
-    ...STATIC_ROUTES.filter(({ path }) => !NOT_YET_BUILT.has(path)).map(({ path, priority, changeFrequency }) => ({
+    ...STATIC_ROUTES.map(({ path, priority, changeFrequency }) => ({
       url: `${SITE_URL}${path}`,
       lastModified: now,
       changeFrequency,
