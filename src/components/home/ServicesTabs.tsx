@@ -104,7 +104,7 @@ export function ServicesTabs() {
 
       <Container className="relative">
         <div className="mb-14">
-          <p className="mb-5 font-mono text-[10px] uppercase tracking-[0.2em] text-brand/85">
+          <p className="mb-5 font-mono text-[10px] uppercase tracking-[0.2em] text-brand-bright/90">
             Five business divisions
           </p>
           <h2
@@ -155,7 +155,7 @@ export function ServicesTabs() {
                 <span
                   aria-hidden
                   className="font-mono text-[10px]"
-                  style={{ color: ACCENTS[division.accent].hex }}
+                  style={{ color: ACCENTS[division.accent].onDark }}
                 >
                   {division.num}
                 </span>
@@ -217,7 +217,7 @@ export function ServicesTabs() {
                 <Link
                   href={active.href}
                   className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-text-primary underline-offset-4 hover:underline"
-                  style={{ color: accent.hex }}
+                  style={{ color: accent.onDark }}
                 >
                   Explore {active.shortLabel}
                   <ArrowRight aria-hidden className="size-4" />
@@ -233,7 +233,7 @@ export function ServicesTabs() {
                     <Check
                       aria-hidden
                       className="mt-0.5 size-4 shrink-0"
-                      style={{ color: accent.hex }}
+                      style={{ color: accent.onDark }}
                     />
                     <span className="text-sm text-text-body">{highlight}</span>
                   </li>

@@ -62,7 +62,7 @@ export function ServicesMenu({ activePath }: { activePath: string }) {
         aria-controls={panelId}
         onClick={() => setOpen((o) => !o)}
         className={cn(
-          "flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-200",
+          "flex min-h-11 items-center gap-1 rounded-lg px-3 text-sm font-medium transition-colors duration-200",
           isActive || open ? "text-brand-mid" : "text-text-secondary hover:text-text-primary",
         )}
       >
@@ -99,7 +99,7 @@ export function ServicesMenu({ activePath }: { activePath: string }) {
                 <span
                   aria-hidden
                   className="w-5 shrink-0 font-mono text-[10px]"
-                  style={{ color: ACCENTS[division.accent].hex }}
+                  style={{ color: ACCENTS[division.accent].onDark }}
                 >
                   {division.num}
                 </span>

@@ -53,7 +53,9 @@ export function TechBackground({ variant = "service", className }: TechBackgroun
           />
           {variant === "full" ? (
             <div
-              className="absolute bottom-0 left-0 size-[500px] -translate-x-[15%] translate-y-[15%] rounded-full blur-3xl"
+              /* Anchored from the TOP: a bottom-anchored layer moves whenever the
+                 page grows, and a 500px element shifting scores real CLS. */
+            className="absolute left-0 top-[420px] size-[500px] -translate-x-[15%] rounded-full blur-3xl"
               style={{
                 background:
                   "radial-gradient(circle, rgba(26,86,219,0.06), transparent 70%)",

@@ -19,7 +19,7 @@ export function BlogPreview() {
   const posts = blogPosts.slice(0, 3);
 
   return (
-    <Section spacing="default" className="bg-ink-950" aria-labelledby="insights-heading">
+    <Section deferPaint spacing="default" className="bg-ink-950" aria-labelledby="insights-heading">
       <Container className="relative">
         <div className="mb-11 flex flex-wrap items-end justify-between gap-6">
           <Reveal>
@@ -50,7 +50,7 @@ export function BlogPreview() {
                   sizes="(min-width: 768px) 33vw, 100vw"
                   className="transition-transform duration-500 group-hover:scale-[1.04]"
                 />
-                <span className="mt-5 font-mono text-[9px] uppercase tracking-widest text-brand">
+                <span className="mt-5 font-mono text-[9px] uppercase tracking-widest text-brand-bright">
                   {post.category}
                 </span>
                 <h3 className="mt-2.5 text-lg font-bold leading-snug text-text-primary transition-colors group-hover:text-brand-mid">

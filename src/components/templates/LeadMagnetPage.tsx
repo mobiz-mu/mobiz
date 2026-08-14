@@ -35,7 +35,7 @@ type LeadMagnetPageProps = {
  * added.
  */
 export function LeadMagnetPage({ data, accent, visualDivision }: LeadMagnetPageProps) {
-  const hex = ACCENTS[accent].hex;
+  const { onDark } = ACCENTS[accent];
   const breadcrumbs = [{ label: "Home", href: "/" }, { label: data.eyebrow }];
 
   return (
@@ -83,7 +83,7 @@ export function LeadMagnetPage({ data, accent, visualDivision }: LeadMagnetPageP
                     key={benefit}
                     className="flex items-start gap-3 rounded-lg border border-line bg-surface-0 px-4 py-3.5"
                   >
-                    <Check aria-hidden className="mt-0.5 size-4 shrink-0" style={{ color: hex }} />
+                    <Check aria-hidden className="mt-0.5 size-4 shrink-0" style={{ color: onDark }} />
                     <span className="text-sm leading-relaxed text-text-body">{benefit}</span>
                   </li>
                 ))}

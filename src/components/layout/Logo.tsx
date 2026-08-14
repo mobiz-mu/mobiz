@@ -37,7 +37,7 @@ export function Logo({ className, priority = false }: LogoProps) {
         className="size-8 shrink-0 rounded-md object-contain"
       />
       <span className="text-[17px] font-bold tracking-tight text-text-primary">
-        Mobiz<span className="text-brand">.mu</span>
+        Mobiz<span className="text-brand-bright">.mu</span>
       </span>
     </Link>
   );

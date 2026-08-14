@@ -28,7 +28,7 @@ const ACCENT_BY_PACKAGE: Record<string, AccentId> = {
 
 export function PricingPreview() {
   return (
-    <Section spacing="flagship" className="bg-ink-900" aria-labelledby="packages-heading">
+    <Section deferPaint spacing="flagship" className="bg-ink-900" aria-labelledby="packages-heading">
       <span aria-hidden className="absolute inset-0 tech-grid" />
 
       <Container className="relative">
@@ -72,7 +72,7 @@ export function PricingPreview() {
                             className="rounded-md px-2.5 py-1 font-mono text-[9px] font-bold uppercase tracking-wider"
                             style={{
                               border: `1px solid ${accent.hex}70`,
-                              color: accent.hex,
+                              color: accent.onDark,
                               background: `${accent.hex}18`,
                             }}
                           >
@@ -97,7 +97,7 @@ export function PricingPreview() {
                             <Check
                               aria-hidden
                               className="mt-0.5 size-3.5 shrink-0"
-                              style={{ color: accent.hex }}
+                              style={{ color: accent.onDark }}
                             />
                             <span className="text-xs leading-relaxed text-text-body">
                               {feature}
@@ -111,7 +111,7 @@ export function PricingPreview() {
                         className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border px-5 py-2.5 text-sm font-semibold transition-colors"
                         style={{
                           borderColor: `${accent.hex}55`,
-                          color: accent.hex,
+                          color: accent.onDark,
                           background: `${accent.hex}12`,
                         }}
                       >

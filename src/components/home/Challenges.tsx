@@ -137,7 +137,7 @@ export function Challenges() {
 
       <Container className="relative">
         <Reveal className="mb-14 lg:mb-16">
-          <p className="mb-5 font-mono text-[10px] uppercase tracking-[0.2em] text-brand/85">
+          <p className="mb-5 font-mono text-[10px] uppercase tracking-[0.2em] text-brand-bright/90">
             Business challenges
           </p>
           <h2
@@ -157,7 +157,7 @@ export function Challenges() {
 
         <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {CHALLENGES.map((card, index) => {
-            const { hex } = ACCENTS[card.accent];
+            const { hex, onDark } = ACCENTS[card.accent];
             return (
               <li key={card.service} className="flex">
                 <Reveal direction={directionForColumn(index)} className="flex w-full">
@@ -191,7 +191,7 @@ export function Challenges() {
                         <Icon3D icon={card.icon} accent={card.accent} />
                         <span
                           className="font-mono text-[10px] font-bold uppercase tracking-[0.1em]"
-                          style={{ color: hex }}
+                          style={{ color: onDark }}
                         >
                           {card.service}
                         </span>
@@ -218,7 +218,7 @@ export function Challenges() {
                         <ArrowRight
                           aria-hidden
                           className="size-3.5 transition-transform duration-200 group-hover:translate-x-1"
-                          style={{ color: hex }}
+                          style={{ color: onDark }}
                         />
                       </div>
                     </div>

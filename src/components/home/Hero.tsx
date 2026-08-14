@@ -107,48 +107,35 @@ export function Hero() {
       <TechBackground variant="full" />
 
       <div className="relative pt-[68px]">
-        {/* Desktop — text and orbit share the viewport height */}
-        <div className="hidden lg:grid lg:min-h-[calc(100vh-68px)] lg:grid-cols-2">
-          <div className="relative z-10 flex flex-col justify-center px-8 py-[8vh] xl:px-16">
+        <div className="flex flex-col lg:grid lg:min-h-[calc(100vh-68px)] lg:grid-cols-2">
+          <div className="relative z-10 px-5 pb-10 pt-[10vh] sm:px-8 lg:flex lg:flex-col lg:justify-center lg:px-8 lg:py-[8vh] xl:px-16">
             <HeroCopy />
           </div>
-          <div className="relative z-10 flex items-center justify-center py-[68px] pr-6">
-            <div className="enter-scale w-[min(640px,48vw)]" style={{ animationDelay: "0.85s" }}>
-              <OrbitScene
-                items={HERO_ORBIT_ITEMS}
-                centreImage="/images/hero/orbit-figure.png"
-                centreAlt=""
-                priority
-              />
-            </div>
-          </div>
-        </div>
 
-        {/*
-         * Mobile — a genuinely different composition, not a squeezed desktop:
-         * copy first, then a smaller orbit carrying half the cards.
-         */}
-        <div className="flex flex-col lg:hidden">
-          <div className="relative z-10 px-5 pb-10 pt-[10vh] sm:px-8">
-            <HeroCopy />
-          </div>
-          <div className="flex items-center justify-center px-4 pb-14">
+          {/*
+           * One orbit for every breakpoint. `compact` thins the ring below `lg`
+           * via CSS rather than rendering a second scene — that previously
+           * duplicated the DOM and preloaded the centre figure twice.
+           *
+           * No `priority`: the LCP element here is the H1, and preloading a
+           * large decorative PNG competes with it.
+           */}
+          <div className="flex items-center justify-center px-4 pb-14 lg:py-[68px] lg:pr-6">
             <div
-              className="enter-scale w-[min(440px,92vw)]"
-              style={{ animationDelay: "0.95s" }}
+              className="enter-scale w-[min(440px,92vw)] lg:w-[min(640px,48vw)]"
+              style={{ animationDelay: "0.85s" }}
             >
               <OrbitScene
                 items={HERO_ORBIT_ITEMS}
                 centreImage="/images/hero/orbit-figure.png"
                 centreAlt=""
                 compact
-                duration={44}
-                priority
               />
             </div>
           </div>
         </div>
       </div>
+
     </section>
   );
 }

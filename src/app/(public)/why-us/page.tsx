@@ -118,7 +118,7 @@ export default function WhyUsPage() {
                       className="size-1.5 shrink-0 rounded-full"
                       style={{ background: accent.hex }}
                     />
-                    <span style={{ color: accent.hex }}>{division.num}</span>
+                    <span style={{ color: accent.onDark }}>{division.num}</span>
                   </p>
                   <h2 className="mb-5 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-[1.08] tracking-tight text-text-primary text-balance">
                     {service.title}

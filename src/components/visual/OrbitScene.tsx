@@ -41,7 +41,7 @@ const CARD_W = 158;
 const u = (px: number) => `${((px / DS) * 100).toFixed(4)}cqw`;
 
 function OrbitCard({ item }: { item: OrbitItem }) {
-  const { hex } = ACCENTS[item.accent];
+  const { hex, onLight } = ACCENTS[item.accent];
 
   return (
     <div
@@ -84,7 +84,7 @@ function OrbitCard({ item }: { item: OrbitItem }) {
         </div>
         <div
           className="font-mono font-semibold tracking-wide"
-          style={{ fontSize: u(9.5), color: hex, marginTop: u(3) }}
+          style={{ fontSize: u(9.5), color: onLight, marginTop: u(3) }}
         >
           {item.sub}
         </div>
@@ -115,7 +115,14 @@ export function OrbitScene({
   className,
   priority = false,
 }: OrbitSceneProps) {
-  const visible = compact ? items.filter((_, i) => i % 2 === 0) : items;
+  /*
+   * `compact` used to drop items server-side, which forced the hero to render a
+   * second <OrbitScene> for mobile — duplicating the DOM and preloading the
+   * centre figure twice. Now every card is rendered once and the alternates are
+   * hidden below `lg` with CSS, so the ring thins out on small screens without
+   * a second scene.
+   */
+  const visible = items;
   const count = visible.length;
   // The card spins opposite the pivot at the same rate, which is what keeps its
   // text upright as it travels the ring.
@@ -200,7 +207,9 @@ export function OrbitScene({
             className="float-c relative"
             style={{
               height: u(RADIUS * 2),
-              width: u(RADIUS * 1.45),
+              // 3:4 to match the asset's intrinsic 900x1200 — a mismatched box
+              // makes next/image letterbox and trips the aspect-ratio audit.
+              width: u(RADIUS * 2 * 0.75),
               marginBottom: u(-RADIUS * 0.08),
               willChange: "transform",
             }}
@@ -211,6 +220,7 @@ export function OrbitScene({
               fill
               sizes="(min-width: 1024px) 45vw, 90vw"
               priority={priority}
+              fetchPriority={priority ? "high" : "auto"}
               className="object-contain object-bottom mix-blend-screen"
               style={{ filter: "brightness(1.12) contrast(1.06) saturate(1.05)" }}
             />
@@ -225,7 +235,10 @@ export function OrbitScene({
           // Base angle — where this card sits on the ring. Static.
           <div
             key={item.id}
-            className="absolute left-1/2 top-1/2 z-30 size-0"
+            className={cn(
+              "absolute left-1/2 top-1/2 z-30 size-0",
+              compact && index % 2 === 1 && "hidden lg:block",
+            )}
             style={{ rotate: `${angle}deg` }}
           >
             {/* Spin. Disabled under reduced motion, leaving the base angle. */}

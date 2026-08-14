@@ -53,7 +53,7 @@ export function ServicesHubPage({
         primaryCta={{ label: "Talk to Mobiz", href: "/contact" }}
         whatsappMessage="Hello Mobiz, I would like to know which service is right for my business."
         visual={
-          <OrbitScene items={HERO_ORBIT_ITEMS} duration={42} compact priority />
+          <OrbitScene items={HERO_ORBIT_ITEMS} duration={42} compact />
         }
       />
 
@@ -102,7 +102,7 @@ export function ServicesHubPage({
                       className="size-1.5 shrink-0 rounded-full"
                       style={{ background: accent.hex }}
                     />
-                    <span style={{ color: accent.hex }}>{division.num}</span>
+                    <span style={{ color: accent.onDark }}>{division.num}</span>
                     <span className="text-text-muted">{division.shortLabel}</span>
                   </p>
                   <h2 className="mb-5 text-[clamp(1.75rem,3.4vw,2.5rem)] font-bold leading-[1.05] tracking-tight text-text-primary text-balance">
@@ -116,7 +116,7 @@ export function ServicesHubPage({
                     className="inline-flex min-h-11 items-center gap-2 rounded-xl border px-5 py-2.5 text-sm font-semibold transition-colors"
                     style={{
                       borderColor: `${accent.hex}55`,
-                      color: accent.hex,
+                      color: accent.onDark,
                       background: `${accent.hex}12`,
                     }}
                   >

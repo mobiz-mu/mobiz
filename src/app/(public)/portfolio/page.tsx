@@ -69,7 +69,7 @@ export default function PortfolioPage() {
                     className="transition-transform duration-700 group-hover:scale-[1.04]"
                   />
                   <div className="flex flex-1 flex-col gap-3 p-6 sm:p-7">
-                    <span className="font-mono text-[10px] uppercase tracking-widest text-brand">
+                    <span className="font-mono text-[10px] uppercase tracking-widest text-brand-bright">
                       {project.category}
                     </span>
                     <h2 className="text-xl font-bold leading-snug tracking-tight text-text-primary sm:text-2xl">

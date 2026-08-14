@@ -72,7 +72,7 @@ function WebsiteVisual() {
             <div className="h-8 rounded" style={{ background: `${hex}30` }} />
             <div className="h-1 w-2/3 rounded-full bg-white/10" />
             <div
-              className="mt-2 rounded-md py-1.5 text-center font-mono text-[6px] text-white"
+              className="mt-2 rounded-md py-1.5 text-center font-mono text-[6px] font-bold text-[#04240f]"
               style={{ background: "var(--color-whatsapp)" }}
             >
               WHATSAPP
@@ -172,12 +172,12 @@ function AccountingVisual() {
 }
 
 function InventoryVisual() {
-  const { hex } = ACCENTS.emerald;
+  const { hex, onDark } = ACCENTS.emerald;
   return (
     <div className="space-y-4">
       <DashboardPanel title="Stock control" status="Live" accent="emerald">
         <div className="mb-3 flex items-center gap-3 rounded-md border border-line bg-surface-1 px-3 py-3">
-          <Barcode aria-hidden className="size-5 shrink-0" style={{ color: hex }} />
+          <Barcode aria-hidden className="size-5 shrink-0" style={{ color: onDark }} />
           <span aria-hidden className="flex h-7 flex-1 items-end gap-[2px]">
             {[3, 1, 2, 1, 3, 2, 1, 1, 3, 1, 2, 3, 1, 2, 1, 3, 2, 1].map((w, i) => (
               <span
@@ -219,7 +219,7 @@ function InventoryVisual() {
 }
 
 function BusinessVisual() {
-  const { hex } = ACCENTS.red;
+  const { hex, onDark } = ACCENTS.red;
   const nodes = [
     { icon: FileText, label: "Business plan" },
     { icon: Workflow, label: "Workflow" },
@@ -246,7 +246,7 @@ function BusinessVisual() {
                   background: i === 2 ? `${hex}22` : "var(--color-surface-1)",
                 }}
               >
-                <node.icon aria-hidden className="size-4" style={{ color: hex }} />
+                <node.icon aria-hidden className="size-4" style={{ color: onDark }} />
               </span>
               <span className="min-w-0 flex-1 rounded-md border border-line bg-surface-1 px-3 py-2.5">
                 <span className="block text-[11px] font-semibold text-text-body">

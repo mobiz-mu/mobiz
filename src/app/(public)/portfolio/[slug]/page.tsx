@@ -81,7 +81,7 @@ export default async function PortfolioDetailPage({
         <Container className="relative pb-12 pt-[calc(68px+2.5rem)]">
           <Breadcrumbs items={breadcrumbs} className="mb-8" />
           <div className="max-w-3xl">
-            <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.18em] text-brand">
+            <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.18em] text-brand-bright">
               {project.category}
             </p>
             <h1 className="enter-lcp mb-5 text-[clamp(2rem,4.6vw,3.5rem)] font-bold leading-[1.04] tracking-tight text-text-primary text-balance">

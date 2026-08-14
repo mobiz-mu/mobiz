@@ -35,7 +35,7 @@ export function PolicyPage({ doc }: { doc: PolicyDocument }) {
         <Container className="relative pb-12 pt-[calc(68px+2.5rem)]">
           <Breadcrumbs items={breadcrumbs} className="mb-8" />
           <div className="max-w-3xl">
-            <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.18em] text-brand">
+            <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.18em] text-brand-bright">
               Legal
             </p>
             <h1 className="enter-lcp mb-5 text-[clamp(1.875rem,4.2vw,3rem)] font-bold leading-[1.05] tracking-tight text-text-primary">
@@ -84,7 +84,7 @@ export function PolicyPage({ doc }: { doc: PolicyDocument }) {
                   className="mb-10 scroll-mt-24"
                 >
                   <h2 className="mb-4 flex gap-3 text-lg font-bold leading-snug tracking-tight text-text-primary sm:text-xl">
-                    <span aria-hidden className="shrink-0 font-mono text-brand">
+                    <span aria-hidden className="shrink-0 font-mono text-brand-bright">
                       {section.number}
                     </span>
                     {section.title}

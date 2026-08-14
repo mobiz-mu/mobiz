@@ -97,7 +97,7 @@ export default function MonthlyPackagesPage() {
                     <span className="text-xs font-semibold text-text-primary">{pkg.name}</span>
                     <span
                       className="font-mono text-[11px] font-bold"
-                      style={{ color: accent.hex }}
+                      style={{ color: accent.onDark }}
                     >
                       {pkg.priceLabel}
                     </span>
@@ -147,7 +147,7 @@ export default function MonthlyPackagesPage() {
                               className="rounded-md px-2.5 py-1 font-mono text-[9px] font-bold uppercase tracking-wider"
                               style={{
                                 border: `1px solid ${accent.hex}70`,
-                                color: accent.hex,
+                                color: accent.onDark,
                                 background: `${accent.hex}18`,
                               }}
                             >
@@ -170,7 +170,7 @@ export default function MonthlyPackagesPage() {
                         {pkg.inherits ? (
                           <p
                             className="mt-4 text-xs font-semibold"
-                            style={{ color: accent.hex }}
+                            style={{ color: accent.onDark }}
                           >
                             {pkg.inherits}
                           </p>
@@ -193,7 +193,7 @@ export default function MonthlyPackagesPage() {
                                       <Check
                                         aria-hidden
                                         className="mt-0.5 size-3.5 shrink-0"
-                                        style={{ color: accent.hex }}
+                                        style={{ color: accent.onDark }}
                                       />
                                       <span className="text-xs leading-relaxed text-text-body">
                                         {feature}
@@ -262,7 +262,7 @@ export default function MonthlyPackagesPage() {
           <div className="mt-11 space-y-8">
             {Object.entries(grouped).map(([category, addons]) => (
               <div key={category}>
-                <h3 className="mb-4 font-mono text-[10px] uppercase tracking-widest text-brand">
+                <h3 className="mb-4 font-mono text-[10px] uppercase tracking-widest text-brand-bright">
                   {ADDON_CATEGORY_LABELS[category as PackageAddOn["category"]]}
                 </h3>
                 <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">

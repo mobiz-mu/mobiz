@@ -50,7 +50,7 @@ export default function AboutPage() {
         background="full"
         primaryCta={{ label: "Talk to Mobiz", href: "/contact" }}
         whatsappMessage="Hello Mobiz, I would like to know more about how you work."
-        visual={<OrbitScene items={HERO_ORBIT_ITEMS} duration={44} compact priority />}
+        visual={<OrbitScene items={HERO_ORBIT_ITEMS} duration={44} compact />}
       />
 
       {/* The problem, set as editorial type rather than three cards. */}

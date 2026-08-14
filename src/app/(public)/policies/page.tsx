@@ -69,7 +69,7 @@ export default function PoliciesPage() {
                           background: `${accent.hex}12`,
                         }}
                       >
-                        <Icon className="size-5" style={{ color: accent.hex }} />
+                        <Icon className="size-5" style={{ color: accent.onDark }} />
                       </span>
 
                       <h2 className="mb-2.5 text-lg font-bold text-text-primary">
@@ -86,7 +86,7 @@ export default function PoliciesPage() {
                         <ArrowRight
                           aria-hidden
                           className="size-4 transition-transform duration-200 group-hover:translate-x-1"
-                          style={{ color: accent.hex }}
+                          style={{ color: accent.onDark }}
                         />
                       </span>
                     </Link>

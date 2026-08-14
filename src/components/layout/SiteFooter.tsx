@@ -155,14 +155,14 @@ export function SiteFooter() {
               {CONTACT_EMAIL}
             </a>
 
-            <ul className="mt-5 flex flex-wrap gap-3">
+            <ul className="mt-3 flex flex-wrap gap-x-4">
               {SOCIAL_LINKS.map((social) => (
                 <li key={social.name}>
                   <a
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs font-medium text-text-body underline-offset-4 transition-colors hover:text-text-primary hover:underline"
+                    className="inline-flex min-h-11 items-center px-1 text-xs font-medium text-text-body underline-offset-4 transition-colors hover:text-text-primary hover:underline"
                   >
                     {social.name}
                   </a>
@@ -176,12 +176,12 @@ export function SiteFooter() {
               <h2 className="mb-5 font-mono text-[9px] font-semibold uppercase tracking-widest text-text-muted">
                 {group.heading}
               </h2>
-              <ul className="space-y-3">
+              <ul className="space-y-0.5">
                 {group.links.map((link) => (
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-sm text-text-body transition-colors hover:text-brand-mid"
+                      className="inline-flex min-h-11 items-center text-sm text-text-body transition-colors hover:text-brand-mid"
                     >
                       {link.label}
                     </Link>

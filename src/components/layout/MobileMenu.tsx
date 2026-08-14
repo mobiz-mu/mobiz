@@ -108,7 +108,7 @@ export function MobileMenu({ open, onClose, activePath }: MobileMenuProps) {
                     <span
                       aria-hidden
                       className="w-5 shrink-0 font-mono text-[10px]"
-                      style={{ color: ACCENTS[division.accent].hex }}
+                      style={{ color: ACCENTS[division.accent].onDark }}
                     >
                       {division.num}
                     </span>

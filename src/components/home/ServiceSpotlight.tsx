@@ -41,6 +41,7 @@ export function ServiceSpotlight({
   return (
     <Section
       spacing="default"
+      deferPaint
       aria-labelledby={headingId}
       className={cn("overflow-hidden", surface === "raised" ? "bg-ink-900" : "bg-ink-950")}
     >
@@ -65,7 +66,7 @@ export function ServiceSpotlight({
                 className="size-1.5 shrink-0 rounded-full"
                 style={{ background: accent.hex }}
               />
-              <span style={{ color: accent.hex }}>{division.num}</span>
+              <span style={{ color: accent.onDark }}>{division.num}</span>
               <span className="text-text-muted">{division.shortLabel}</span>
             </p>
 
@@ -86,7 +87,7 @@ export function ServiceSpotlight({
                   <Check
                     aria-hidden
                     className="mt-0.5 size-4 shrink-0"
-                    style={{ color: accent.hex }}
+                    style={{ color: accent.onDark }}
                   />
                   <span className="text-sm leading-relaxed text-text-body">{point}</span>
                 </li>
@@ -98,7 +99,7 @@ export function ServiceSpotlight({
               className="inline-flex min-h-11 items-center gap-2 rounded-xl border px-5 py-2.5 text-sm font-semibold transition-colors"
               style={{
                 borderColor: `${accent.hex}55`,
-                color: accent.hex,
+                color: accent.onDark,
                 background: `${accent.hex}12`,
               }}
             >

@@ -59,7 +59,7 @@ export default function BlogPage() {
               className="transition-transform duration-700 group-hover:scale-[1.03]"
             />
             <div className="flex flex-col justify-center gap-4 p-7 sm:p-10">
-              <span className="font-mono text-[10px] uppercase tracking-widest text-brand">
+              <span className="font-mono text-[10px] uppercase tracking-widest text-brand-bright">
                 {lead.category} · {getArticleBody(lead.slug).readTime}
               </span>
               <h2 className="text-2xl font-bold leading-tight tracking-tight text-text-primary sm:text-3xl">
@@ -88,7 +88,7 @@ export default function BlogPage() {
                     sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                     className="transition-transform duration-500 group-hover:scale-[1.04]"
                   />
-                  <span className="mt-5 font-mono text-[9px] uppercase tracking-widest text-brand">
+                  <span className="mt-5 font-mono text-[9px] uppercase tracking-widest text-brand-bright">
                     {post.category} · {getArticleBody(post.slug).readTime}
                   </span>
                   <h2 className="mt-2.5 text-lg font-bold leading-snug text-text-primary transition-colors group-hover:text-brand-mid">

@@ -1,17 +1,14 @@
-"use client";
-
-import { motion, useReducedMotion } from "motion/react";
 import type { ElementType, ReactNode } from "react";
-import { VARIANTS, VIEWPORT, type RevealDirection } from "./variants";
+import type { RevealDirection } from "./variants";
 import { cn } from "@/lib/utils";
 
 type RevealProps = {
   children: ReactNode;
   /** Entrance direction. Choose by composition, not by rotating mechanically. */
   direction?: RevealDirection;
+  /** Seconds of delay, mapped onto the shared stagger step. */
   delay?: number;
   className?: string;
-  /** Render as a semantic element instead of a div. */
   as?: ElementType;
   id?: string;
 };
@@ -19,49 +16,38 @@ type RevealProps = {
 /**
  * Scroll entrance for below-the-fold content.
  *
- * This is a thin client boundary: `children` are still rendered on the server
- * and stream into the HTML, so the text is crawlable and only the wrapper
- * hydrates.
+ * This is a SERVER component — it renders a plain element carrying a
+ * `data-reveal` attribute and ships no JavaScript of its own. The single
+ * `RevealObserver` mounted in the public layout flips `data-visible` when the
+ * element scrolls in, and CSS runs the transition on the compositor.
  *
- * Do NOT use this above the fold — it starts at opacity 0, so an LCP element
- * inside it would wait for hydration. Above-the-fold entrances use the CSS-only
- * `.enter-*` classes in globals.css, which paint on the first frame.
+ * Content is server-rendered visible; the hidden state is only applied once the
+ * observer is armed. With JS disabled or reduced motion on, everything is simply
+ * present.
  *
- * With `prefers-reduced-motion` the element renders in its final state with no
- * transition at all, rather than animating quickly.
+ * Do not use above the fold for the LCP element — those use the CSS-only
+ * `.enter-*` classes so they paint on frame one.
  */
 export function Reveal({
   children,
   direction = "up",
   delay = 0,
   className,
-  as = "div",
+  as: Tag = "div",
   id,
 }: RevealProps) {
-  const reduced = useReducedMotion();
-  const MotionTag = motion[as as keyof typeof motion] as typeof motion.div;
-
-  if (reduced) {
-    const Tag = as;
-    return (
-      <Tag className={className} id={id}>
-        {children}
-      </Tag>
-    );
-  }
+  // The CSS delay step is 80ms; express `delay` in those units.
+  const index = delay > 0 ? Math.round((delay * 1000) / 80) : undefined;
 
   return (
-    <MotionTag
+    <Tag
       id={id}
+      data-reveal={direction}
       className={cn(className)}
-      variants={VARIANTS[direction]}
-      initial="hidden"
-      whileInView="visible"
-      viewport={VIEWPORT}
-      transition={{ delay }}
+      style={index ? ({ ["--i" as string]: index } as React.CSSProperties) : undefined}
     >
       {children}
-    </MotionTag>
+    </Tag>
   );
 }
 

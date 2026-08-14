@@ -20,7 +20,7 @@ export function MauritiusCoverage() {
   const websiteService = serviceTemplates["website-design"];
 
   return (
-    <Section spacing="default" className="overflow-hidden bg-ink-900" aria-labelledby="coverage-heading">
+    <Section deferPaint spacing="default" className="overflow-hidden bg-ink-900" aria-labelledby="coverage-heading">
       <span aria-hidden className="absolute inset-0 tech-grid" />
       <span
         aria-hidden

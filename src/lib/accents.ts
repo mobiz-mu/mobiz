@@ -21,8 +21,21 @@ export type AccentId = "red" | "blue" | "sky" | "yellow" | "green" | "emerald";
 
 export type Accent = {
   id: AccentId;
-  /** Solid hex for borders, text and SVG strokes. */
+  /** Solid hex for borders, text and SVG strokes on DARK surfaces. */
   hex: string;
+  /**
+   * Darker variant for text on WHITE/light surfaces (orbit cards, mockups).
+   * The `hex` values are tuned for the near-black page and drop to ~3:1 on
+   * white, so anything sitting on a light card must use this instead.
+   */
+  onLight: string;
+  /**
+   * Lightened variant for small TEXT on the dark page (labels, eyebrows,
+   * mockup captions). `hex` is tuned as a graphic colour and lands around
+   * 3:1 against #050505, which fails for text — these all clear 4.5:1.
+   * Keep using `hex` for borders, dots and SVG, which are exempt.
+   */
+  onDark: string;
   /** "r, g, b" — feeds `--glow-hue` for gradient borders and blooms. */
   rgb: string;
   /** Human label used in aria text where colour alone would carry meaning. */
@@ -30,12 +43,12 @@ export type Accent = {
 };
 
 export const ACCENTS: Record<AccentId, Accent> = {
-  red: { id: "red", hex: "#c01822", rgb: "192, 24, 34", label: "Mobiz red" },
-  blue: { id: "blue", hex: "#1a56db", rgb: "26, 86, 219", label: "Blue" },
-  sky: { id: "sky", hex: "#0ea5e9", rgb: "14, 165, 233", label: "Sky" },
-  yellow: { id: "yellow", hex: "#ca8a04", rgb: "202, 138, 4", label: "Amber" },
-  green: { id: "green", hex: "#16a34a", rgb: "22, 163, 74", label: "Green" },
-  emerald: { id: "emerald", hex: "#059669", rgb: "5, 150, 105", label: "Emerald" },
+  red: { id: "red", hex: "#c01822", onLight: "#a3141d", onDark: "#ff3344", rgb: "192, 24, 34", label: "Mobiz red" },
+  blue: { id: "blue", hex: "#1a56db", onLight: "#1a4fc4", onDark: "#6b9bff", rgb: "26, 86, 219", label: "Blue" },
+  sky: { id: "sky", hex: "#0ea5e9", onLight: "#0369a1", onDark: "#38bdf8", rgb: "14, 165, 233", label: "Sky" },
+  yellow: { id: "yellow", hex: "#ca8a04", onLight: "#8a5f03", onDark: "#eab308", rgb: "202, 138, 4", label: "Amber" },
+  green: { id: "green", hex: "#16a34a", onLight: "#12803b", onDark: "#4ade80", rgb: "22, 163, 74", label: "Green" },
+  emerald: { id: "emerald", hex: "#059669", onLight: "#04704f", onDark: "#34d399", rgb: "5, 150, 105", label: "Emerald" },
 };
 
 export function accent(id: AccentId): Accent {

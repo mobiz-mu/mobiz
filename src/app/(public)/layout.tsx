@@ -2,6 +2,7 @@ import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
 import { AIAssistantLauncher } from "@/components/ai/AIAssistantLauncher";
+import { RevealObserver } from "@/components/motion/RevealObserver";
 import { isAiEnabled } from "@/lib/ai/config";
 
 /**
@@ -22,6 +23,8 @@ export default function PublicLayout({
         {children}
       </main>
       <SiteFooter />
+      {/* Single observer driving every [data-reveal] on the page. */}
+      <RevealObserver />
       <WhatsAppFloat />
       <AIAssistantLauncher enabled={isAiEnabled()} />
     </>

@@ -23,7 +23,7 @@ export function PortfolioPreview() {
   if (!lead) return null;
 
   return (
-    <Section spacing="flagship" className="bg-ink-950" aria-labelledby="work-heading">
+    <Section deferPaint spacing="flagship" className="bg-ink-950" aria-labelledby="work-heading">
       <span aria-hidden className="absolute inset-0 tech-grid-fine" />
 
       <Container className="relative">
@@ -59,7 +59,7 @@ export function PortfolioPreview() {
               className="transition-transform duration-700 group-hover:scale-[1.03]"
             />
             <div className="flex flex-col justify-center gap-4 p-7 sm:p-10">
-              <span className="font-mono text-[10px] uppercase tracking-widest text-brand">
+              <span className="font-mono text-[10px] uppercase tracking-widest text-brand-bright">
                 {lead.category}
               </span>
               <h3 className="text-2xl font-bold leading-tight tracking-tight text-text-primary sm:text-3xl">

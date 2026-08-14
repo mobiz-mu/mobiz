@@ -70,7 +70,7 @@ export function FeatureGrid({
   surface?: "base" | "raised";
 }) {
   if (features.length === 0) return null;
-  const hex = ACCENTS[accent].hex;
+  const { hex } = ACCENTS[accent];
 
   return (
     <Section
@@ -126,7 +126,7 @@ export function ProcessSteps({
   accent?: AccentId;
 }) {
   if (steps.length === 0) return null;
-  const hex = ACCENTS[accent].hex;
+  const { hex, onDark } = ACCENTS[accent];
 
   return (
     <Section spacing="default" deferPaint className="bg-ink-950">
@@ -151,7 +151,7 @@ export function ProcessSteps({
                     className="relative z-10 flex size-12 shrink-0 items-center justify-center rounded-lg border font-mono text-sm font-bold"
                     style={{
                       borderColor: `${hex}45`,
-                      color: hex,
+                      color: onDark,
                       background: "var(--color-ink-950)",
                     }}
                   >
@@ -189,7 +189,7 @@ export function BenefitList({
   accent?: AccentId;
 }) {
   if (benefits.length === 0) return null;
-  const hex = ACCENTS[accent].hex;
+  const { hex, onDark } = ACCENTS[accent];
 
   return (
     <Section spacing="default" deferPaint className="overflow-hidden bg-ink-900">
@@ -210,7 +210,7 @@ export function BenefitList({
                   key={benefit}
                   className="flex items-start gap-3 rounded-lg border border-line bg-surface-0 px-4 py-3.5"
                 >
-                  <Check aria-hidden className="mt-0.5 size-4 shrink-0" style={{ color: hex }} />
+                  <Check aria-hidden className="mt-0.5 size-4 shrink-0" style={{ color: onDark }} />
                   <span className="text-sm leading-relaxed text-text-body">{benefit}</span>
                 </li>
               ))}
@@ -236,7 +236,7 @@ export function IndustryList({
   accent?: AccentId;
 }) {
   if (industries.length === 0) return null;
-  const hex = ACCENTS[accent].hex;
+  const { hex } = ACCENTS[accent];
 
   return (
     <Section spacing="calm" deferPaint className="bg-ink-950">

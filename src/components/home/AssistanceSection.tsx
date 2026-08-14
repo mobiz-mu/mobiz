@@ -25,7 +25,7 @@ export function AssistanceSection() {
   const aiEnabled = isAiEnabled();
 
   return (
-    <Section spacing="default" className="overflow-hidden bg-ink-900" aria-labelledby="assistance-heading">
+    <Section deferPaint spacing="default" className="overflow-hidden bg-ink-900" aria-labelledby="assistance-heading">
       <span aria-hidden className="absolute inset-0 tech-grid" />
 
       <Container className="relative">

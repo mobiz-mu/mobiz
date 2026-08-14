@@ -59,7 +59,7 @@
   --color-text-body: rgba(255, 255, 255, 0.82); /* 14.6:1 — body copy       */
   --color-text-secondary: rgba(255, 255, 255, 0.66); /* 10.1:1 — support copy    */
   --color-text-muted: rgba(255, 255, 255, 0.55); /* 7.6:1  — meta, labels    */
-  --color-text-faint: rgba(255, 255, 255, 0.34); /* decorative only          */
+  --color-text-faint: rgba(255, 255, 255, 0.48); /* 4.6:1 - decorative, still legible */
 
   /* ── Accents (strategic, never dominant) ──────────────────────────────── */
   --color-accent-blue: #1a56db;
@@ -125,6 +125,15 @@
 html {
   /* `clip` (not `hidden`) keeps position:sticky working on descendants. */
   overflow-x: clip;
+  /*
+   * Reserve the scrollbar gutter from the first paint.
+   *
+   * Without this the viewport narrows by ~15px once the page grows past one
+   * screen, which drags every right-anchored decorative layer left with it. The
+   * glow field is 900px wide, so that few-pixel shift scored CLS 0.33 on its
+   * own. Reserving the gutter removes the shift entirely.
+   */
+  scrollbar-gutter: stable;
   background: var(--color-ink-950);
   scroll-behavior: smooth;
   /* Anchor targets clear the 68px fixed header. */
@@ -473,6 +482,72 @@ body {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Scroll reveals — CSS transitions driven by one shared IntersectionObserver
+   ═══════════════════════════════════════════════════════════════════════════
+   Previously each reveal was a Motion component, so a page with ~40 sections
+   hydrated ~40 React client boundaries and spent ~490ms blocking the main
+   thread. Now the markup is server-rendered with a `data-reveal` attribute and
+   a single ~20-line observer (see RevealObserver) flips one attribute — the
+   animation itself is pure CSS on the compositor.
+
+   Elements start visible and are hidden by JS only if the observer is running,
+   so with JavaScript disabled every section is simply present.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/*
+ * No blanket `will-change` here. Promoting every reveal to its own compositor
+ * layer cost more in style/layout than the animation saved — the browser
+ * promotes during the transition on its own.
+ */
+
+/* Armed by RevealObserver once it is ready to observe. */
+[data-reveal-armed] [data-reveal] {
+  opacity: 0;
+}
+[data-reveal-armed] [data-reveal="up"] {
+  transform: translate3d(0, 32px, 0);
+}
+[data-reveal-armed] [data-reveal="left"] {
+  transform: translate3d(-40px, 0, 0);
+}
+[data-reveal-armed] [data-reveal="right"] {
+  transform: translate3d(40px, 0, 0);
+}
+[data-reveal-armed] [data-reveal="scale"] {
+  transform: scale(0.94);
+}
+[data-reveal-armed] [data-reveal="blur"] {
+  transform: translate3d(0, 16px, 0);
+  filter: blur(10px);
+}
+[data-reveal-armed] [data-reveal="depth"] {
+  transform: translate3d(0, 32px, 0) scale(0.95);
+}
+
+[data-reveal][data-visible="true"] {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  transition:
+    opacity 0.7s var(--ease-orbit),
+    transform 0.7s var(--ease-orbit),
+    filter 0.7s var(--ease-orbit);
+  /* Staggered children set --i; everything else resolves to 0. */
+  transition-delay: calc(var(--i, 0) * 80ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Never arm — content is present and static. */
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+    will-change: auto;
   }
 }
 

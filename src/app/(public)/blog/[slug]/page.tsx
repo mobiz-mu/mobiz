@@ -87,7 +87,7 @@ export default async function BlogArticlePage({
         <TechBackground variant="calm" />
         <Container size="prose" className="relative pb-12 pt-[calc(68px+2.5rem)]">
           <Breadcrumbs items={breadcrumbs} className="mb-8" />
-          <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.18em] text-brand">
+          <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.18em] text-brand-bright">
             {post.category} · {body.readTime}
           </p>
           <h1 className="enter-lcp text-[clamp(1.875rem,4.2vw,3rem)] font-bold leading-[1.08] tracking-tight text-text-primary text-balance">
@@ -177,7 +177,7 @@ export default async function BlogArticlePage({
                       rounded="lg"
                       sizes="(min-width: 640px) 33vw, 100vw"
                     />
-                    <span className="mt-4 font-mono text-[9px] uppercase tracking-widest text-brand">
+                    <span className="mt-4 font-mono text-[9px] uppercase tracking-widest text-brand-bright">
                       {item.category}
                     </span>
                     <h3 className="mt-2 text-base font-bold leading-snug text-text-primary transition-colors group-hover:text-brand-mid">

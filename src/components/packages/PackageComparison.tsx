@@ -49,7 +49,7 @@ export function PackageComparison() {
               <th
                 scope="colgroup"
                 colSpan={MONTHLY_PACKAGES.length + 1}
-                className="px-5 py-3 font-mono text-[10px] uppercase tracking-widest text-brand"
+                className="px-5 py-3 font-mono text-[10px] uppercase tracking-widest text-brand-bright"
               >
                 {group.title}
               </th>

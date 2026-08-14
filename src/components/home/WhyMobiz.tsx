@@ -54,7 +54,7 @@ const REASONS: Reason[] = [
  */
 export function WhyMobiz() {
   return (
-    <Section spacing="flagship" className="bg-ink-950" aria-labelledby="why-heading">
+    <Section deferPaint spacing="flagship" className="bg-ink-950" aria-labelledby="why-heading">
       <Container className="relative">
         <Reveal className="mb-12">
           <SectionHeading

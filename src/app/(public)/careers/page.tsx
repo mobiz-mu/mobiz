@@ -79,7 +79,7 @@ export default function CareersPage() {
                       className="mb-4 inline-flex w-fit rounded-md px-2.5 py-1 font-mono text-[9px] font-bold uppercase tracking-wider"
                       style={{
                         border: `1px solid ${accent.hex}55`,
-                        color: accent.hex,
+                        color: accent.onDark,
                         background: `${accent.hex}14`,
                       }}
                     >
