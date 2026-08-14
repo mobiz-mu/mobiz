@@ -129,7 +129,7 @@ export function Challenges() {
       <span aria-hidden className="absolute inset-0 tech-grid" />
       <span
         aria-hidden
-        className="pointer-events-none absolute left-1/2 top-0 h-[280px] w-[900px] -translate-x-1/2 blur-3xl"
+        className="pointer-events-none absolute left-1/2 top-0 h-[280px] w-[900px] -translate-x-1/2"
         style={{
           background: "radial-gradient(ellipse, rgba(192,24,34,0.10), transparent 70%)",
         }}

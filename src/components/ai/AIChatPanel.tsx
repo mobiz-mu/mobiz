@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
 import { ArrowUp, Bot, X } from "lucide-react";
 import { WhatsAppIcon } from "@/components/ui/icons";
 import { SUGGESTED_QUESTIONS } from "@/lib/ai/suggested-questions";
@@ -40,7 +39,6 @@ export function AIChatPanel({ onClose }: AIChatPanelProps) {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const logRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
-  const reduced = useReducedMotion();
 
   /* Focus trap, Escape, scroll lock, focus restore. */
   useEffect(() => {
@@ -127,16 +125,13 @@ export function AIChatPanel({ onClose }: AIChatPanelProps) {
     : generalEscalationUrl();
 
   return (
-    <motion.div
+    <div
       ref={panelRef}
       role="dialog"
       aria-modal="true"
       aria-labelledby={titleId}
-      initial={reduced ? false : { opacity: 0, y: 24, scale: 0.98 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={reduced ? { opacity: 0 } : { opacity: 0, y: 16, scale: 0.98 }}
-      transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
       className={cn(
+        "tab-swap",
         "fixed z-50 flex flex-col border border-line bg-ink-800 shadow-menu",
         // Mobile: near-full-screen bottom sheet
         "inset-x-0 bottom-0 top-16 rounded-t-2xl",
@@ -291,7 +286,7 @@ export function AIChatPanel({ onClose }: AIChatPanelProps) {
           Talk to a person on WhatsApp
         </a>
       </div>
-    </motion.div>
+    </div>
   );
 }
 

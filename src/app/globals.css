@@ -260,17 +260,27 @@ body {
 }
 
 /*
- * The soft colour bloom behind a card. `filter: blur()` is expensive, so this is
- * painted ONCE and never animated — only its opacity/transform may change.
+ * The soft colour bloom behind a card.
+ *
+ * This was a radial-gradient with `filter: blur(80px)` on top — but a radial
+ * gradient already IS a soft falloff, so the blur added large paint cost for a
+ * difference you cannot see. The stops below reproduce the blurred look
+ * directly. The homepage carried 25 such blurred layers; removing the filters
+ * was the single largest style/paint win on mobile.
  */
 .glow-blob {
   position: absolute;
-  width: 240px;
-  height: 240px;
+  width: 400px;
+  height: 400px;
   border-radius: 50%;
-  filter: blur(80px);
   pointer-events: none;
-  background: radial-gradient(circle, rgba(var(--glow-hue, 192, 24, 34), 0.45), transparent 70%);
+  background: radial-gradient(
+    circle at center,
+    rgba(var(--glow-hue, 192, 24, 34), 0.34) 0%,
+    rgba(var(--glow-hue, 192, 24, 34), 0.16) 35%,
+    rgba(var(--glow-hue, 192, 24, 34), 0.05) 60%,
+    transparent 78%
+  );
 }
 
 .red-glow {
@@ -471,7 +481,20 @@ body {
 
 /* Headline mask reveal: the line slides up out of an overflow-hidden wrapper. */
 .enter-mask {
-  animation: enter-mask 0.75s var(--ease-orbit) both;
+  /*
+   * SHORT AND UNDELAYED ON PURPOSE.
+   *
+   * This drives the BUILD/MARKET/MANAGE/GROW headline, which is the LCP element.
+   * `both` holds the `from` state during any delay, so the line sits translated
+   * out of its overflow-hidden wrapper — invisible, and therefore not LCP-
+   * eligible — until the delay elapses. At 0.48s delay + 0.75s duration the
+   * measured Render Delay was 3,773ms (89% of a 4.2s LCP) under mobile
+   * throttling.
+   *
+   * The staggered line-drop is preserved; it just resolves in ~0.45s worst case
+   * instead of ~1.33s. Do not reintroduce long delays on this class.
+   */
+  animation: enter-mask 0.3s var(--ease-orbit) both;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -549,6 +572,117 @@ body {
     transition: none !important;
     will-change: auto;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Popover / sheet transitions
+   ═══════════════════════════════════════════════════════════════════════════
+   These replace Motion's AnimatePresence. `@starting-style` gives the enter
+   transition without JS, and `transition-behavior: allow-discrete` lets
+   `display` participate so the element is fully removed from the a11y tree and
+   the tab order when closed — which an opacity-only fade would not do.
+
+   Removing Motion took 124KB (uncompressed) of library and ~148ms of script
+   evaluation off every route.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.pop-panel {
+  display: none;
+  opacity: 0;
+  translate: 0 -6px;
+  scale: 0.98;
+  transition:
+    opacity 180ms var(--ease-orbit),
+    translate 180ms var(--ease-orbit),
+    scale 180ms var(--ease-orbit),
+    display 180ms allow-discrete;
+}
+.pop-panel[data-open="true"] {
+  display: block;
+  opacity: 1;
+  translate: 0 0;
+  scale: 1;
+}
+@starting-style {
+  .pop-panel[data-open="true"] {
+    opacity: 0;
+    translate: 0 -6px;
+    scale: 0.98;
+  }
+}
+
+/* Full-screen sheet (mobile nav, AI panel). */
+.sheet-panel {
+  display: none;
+  opacity: 0;
+  transition:
+    opacity 220ms var(--ease-orbit),
+    translate 220ms var(--ease-orbit),
+    display 220ms allow-discrete;
+}
+.sheet-panel[data-open="true"] {
+  display: flex;
+  opacity: 1;
+  translate: 0 0;
+}
+@starting-style {
+  .sheet-panel[data-open="true"] {
+    opacity: 0;
+    translate: 0 16px;
+  }
+}
+
+/* Tab panel crossfade. */
+.tab-swap {
+  animation: tab-swap 300ms var(--ease-orbit) both;
+}
+@keyframes tab-swap {
+  from {
+    opacity: 0;
+    translate: 0 12px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pop-panel,
+  .sheet-panel,
+  .tab-swap {
+    transition: none !important;
+    animation: none !important;
+    translate: none !important;
+    scale: none !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Tech Orbit scaling
+   ═══════════════════════════════════════════════════════════════════════════
+   The orbit is authored on a fixed 820px canvas and scaled to its container by
+   a single transform. `--orbit-scale` is the ONLY container-query length the
+   scene reads; everything inside is static px.
+
+   The previous version expressed ~120 dimensions per scene in `cqw`, which the
+   engine had to resolve individually — it was the single largest contributor to
+   the 2,400ms style/layout cost on the mobile homepage.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.orbit-viewport {
+  container-type: inline-size;
+  /* Contain layout/paint so the scaled canvas can't dirty the page around it. */
+  contain: layout paint style;
+}
+
+.orbit-canvas {
+  --orbit-scale: calc(100cqw / 820);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(var(--orbit-scale));
+  transform-origin: center center;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════

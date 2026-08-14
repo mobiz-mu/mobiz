@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useRef } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ArrowRight } from "lucide-react";
 import { mainNavLinks, secondaryNavLinks, serviceDivisions } from "@/lib/navigation";
 import { ACCENTS } from "@/lib/accents";
@@ -25,7 +24,6 @@ type MobileMenuProps = {
  */
 export function MobileMenu({ open, onClose, activePath }: MobileMenuProps) {
   const panelRef = useRef<HTMLDivElement>(null);
-  const reduced = useReducedMotion();
 
   useEffect(() => {
     if (!open) return;
@@ -73,22 +71,19 @@ export function MobileMenu({ open, onClose, activePath }: MobileMenuProps) {
   }, [open, onClose]);
 
   return (
-    <AnimatePresence>
-      {open ? (
-        <motion.div
-          ref={panelRef}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Site navigation"
-          initial={reduced ? false : { opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.22 }}
-          className="fixed inset-0 z-40 flex flex-col bg-ink-950 pt-[68px] xl:hidden"
-        >
+    <div
+      ref={panelRef}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Site navigation"
+      data-open={open}
+      // Always mounted. `display` transitions via allow-discrete, so when closed
+      // the dialog is fully out of the a11y tree and the tab order.
+      className="sheet-panel fixed inset-0 z-40 flex-col bg-ink-950 pt-[68px] xl:hidden"
+    >
           <span
             aria-hidden
-            className="pointer-events-none absolute left-1/2 top-0 h-40 w-[500px] -translate-x-1/2 rounded-full opacity-20 blur-3xl"
+            className="pointer-events-none absolute left-1/2 top-0 h-40 w-[500px] -translate-x-1/2 rounded-full opacity-20"
             style={{ background: "radial-gradient(ellipse,#c01822,transparent)" }}
           />
 
@@ -163,9 +158,7 @@ export function MobileMenu({ open, onClose, activePath }: MobileMenuProps) {
               <ArrowRight aria-hidden className="size-4" />
             </Link>
           </div>
-        </motion.div>
-      ) : null}
-    </AnimatePresence>
+    </div>
   );
 }
 

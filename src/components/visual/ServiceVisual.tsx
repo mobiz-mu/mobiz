@@ -178,15 +178,18 @@ function InventoryVisual() {
       <DashboardPanel title="Stock control" status="Live" accent="emerald">
         <div className="mb-3 flex items-center gap-3 rounded-md border border-line bg-surface-1 px-3 py-3">
           <Barcode aria-hidden className="size-5 shrink-0" style={{ color: onDark }} />
-          <span aria-hidden className="flex h-7 flex-1 items-end gap-[2px]">
-            {[3, 1, 2, 1, 3, 2, 1, 1, 3, 1, 2, 3, 1, 2, 1, 3, 2, 1].map((w, i) => (
-              <span
-                key={i}
-                className="h-full bg-white/70"
-                style={{ width: w, opacity: 0.35 + (w / 3) * 0.5 }}
-              />
-            ))}
-          </span>
+          {/*
+            * A single repeating-linear-gradient instead of 18 individual spans.
+            * Same barcode, 17 fewer DOM nodes per instance.
+            */}
+          <span
+            aria-hidden
+            className="h-7 flex-1"
+            style={{
+              background:
+                "repeating-linear-gradient(90deg, rgba(255,255,255,0.75) 0 2px, transparent 2px 4px, rgba(255,255,255,0.45) 4px 5px, transparent 5px 9px, rgba(255,255,255,0.7) 9px 12px, transparent 12px 14px)",
+            }}
+          />
         </div>
 
         <ul className="space-y-2">
@@ -279,7 +282,16 @@ export function ServiceVisual({
 }) {
   const Visual = VISUALS[division];
   return (
-    <div className={cn("relative", className)} aria-hidden>
+    /*
+     * Rendered from `md` up only.
+     *
+     * These are aria-hidden decorative interface illustrations — a dashboard
+     * mockup is not legible at 375px, and five of them accounted for a large
+     * share of the homepage's 1,629 elements, which the browser must still
+     * style and lay out. Phones get the copy-led composition; the Tech Orbit
+     * still carries the visual identity on mobile.
+     */
+    <div className={cn("relative hidden md:block", className)} aria-hidden>
       <Visual />
     </div>
   );

@@ -34,7 +34,7 @@ export default function NotFound() {
         <span aria-hidden className="absolute inset-0 tech-grid" />
         <span
           aria-hidden
-          className="pointer-events-none absolute left-1/2 top-1/3 h-[420px] w-[620px] -translate-x-1/2 blur-3xl"
+          className="pointer-events-none absolute left-1/2 top-1/3 h-[420px] w-[620px] -translate-x-1/2"
           style={{
             background: "radial-gradient(ellipse, rgba(192,24,34,0.16), transparent 70%)",
           }}

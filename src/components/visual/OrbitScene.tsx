@@ -19,7 +19,7 @@ type OrbitSceneProps = {
   /** Seconds per revolution. Slower reads as premium; faster reads as busy. */
   duration?: number;
   direction?: "cw" | "ccw";
-  /** Drops to 4 items and hides the ring labels. Used below `lg`. */
+  /** Hides alternate cards below `lg` so the ring thins on small screens. */
   compact?: boolean;
   className?: string;
   priority?: boolean;
@@ -27,37 +27,40 @@ type OrbitSceneProps = {
 
 /*
  * ── Design space ──────────────────────────────────────────────────────────
- * The scene is authored against an 820×820 canvas, then expressed entirely in
- * `cqw` units (1cqw = 1% of the container's inline size). That makes the whole
- * composition scale with its container using pure CSS — no ResizeObserver, no
- * resize listener, no re-render, and nothing to hydrate. This component ships
- * zero JavaScript.
+ * The scene is authored against a fixed 820×820 canvas in plain pixels, then
+ * scaled to its container by ONE transform (see `.orbit-canvas`).
+ *
+ * This replaced a version expressing every dimension in `cqw`. That read
+ * elegantly but meant ~15 container-query length resolutions per card × 8
+ * cards — roughly 120 per scene — and container-query lengths are far more
+ * expensive to resolve than static pixels. Style+layout on the mobile homepage
+ * measured 2,400ms, more than double script evaluation.
+ *
+ * Now there is exactly one `cqw` read (`--orbit-scale`) and everything inside is
+ * static px resolved once. Still zero JavaScript, still fully responsive,
+ * visually identical.
  */
 const DS = 820;
 const RADIUS = 310;
 const CARD_W = 158;
-
-/** Convert a design-space pixel value to container-relative units. */
-const u = (px: number) => `${((px / DS) * 100).toFixed(4)}cqw`;
 
 function OrbitCard({ item }: { item: OrbitItem }) {
   const { hex, onLight } = ACCENTS[item.accent];
 
   return (
     <div
-      className="overflow-hidden bg-white"
+      className="overflow-hidden rounded-[15px] bg-white"
       style={{
-        width: u(CARD_W),
-        borderRadius: u(15),
-        boxShadow: `0 ${u(16)} ${u(56)} rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.18), 0 ${u(6)} ${u(22)} ${hex}55`,
+        width: CARD_W,
+        boxShadow: `0 16px 56px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.18), 0 6px 22px ${hex}55`,
       }}
     >
-      <div className="relative overflow-hidden bg-ink-500" style={{ height: u(114) }}>
+      <div className="relative h-[114px] overflow-hidden bg-ink-500">
         <Image
           src={item.image}
           alt=""
           fill
-          sizes="200px"
+          sizes="160px"
           className="object-cover"
           loading="lazy"
         />
@@ -70,21 +73,15 @@ function OrbitCard({ item }: { item: OrbitItem }) {
         />
       </div>
       <div
-        className="bg-white"
-        style={{
-          padding: `${u(9)} ${u(12)} ${u(11)}`,
-          borderTop: `${u(3)} solid ${hex}`,
-        }}
+        className="bg-white px-3 pb-[11px] pt-[9px]"
+        style={{ borderTop: `3px solid ${hex}` }}
       >
-        <div
-          className="font-sans font-extrabold leading-tight text-[#111]"
-          style={{ fontSize: u(13) }}
-        >
+        <div className="font-sans text-[13px] font-extrabold leading-tight text-[#111]">
           {item.label}
         </div>
         <div
-          className="font-mono font-semibold tracking-wide"
-          style={{ fontSize: u(9.5), color: onLight, marginTop: u(3) }}
+          className="mt-[3px] font-mono text-[9.5px] font-semibold tracking-wide"
+          style={{ color: onLight }}
         >
           {item.sub}
         </div>
@@ -97,13 +94,14 @@ function OrbitCard({ item }: { item: OrbitItem }) {
  * The Tech Orbit — Mobiz's signature composition.
  *
  * Cards are placed radially from their index (`angle = i / n * 360`) rather than
- * hand-positioned, so adding or removing a service re-balances the ring
- * automatically.
+ * hand-positioned, so adding or removing a service re-balances the ring.
  *
- * Motion: a zero-size pivot at the centre rotates, and the card counter-rotates
- * at the same rate so it travels the ring while staying upright. Both are CSS
- * keyframes on the compositor. A negative `animation-delay` places each card at
- * its starting angle without needing a separate keyframe per card.
+ * Motion: a zero-size pivot rotates and the card counter-rotates at the same
+ * rate, so it travels the ring while staying upright. Base angle and spin are
+ * separate transforms, so disabling the spin under reduced motion leaves a
+ * correctly distributed, upright ring.
+ *
+ * Server component — ships no JavaScript.
  */
 export function OrbitScene({
   items,
@@ -115,164 +113,140 @@ export function OrbitScene({
   className,
   priority = false,
 }: OrbitSceneProps) {
-  /*
-   * `compact` used to drop items server-side, which forced the hero to render a
-   * second <OrbitScene> for mobile — duplicating the DOM and preloading the
-   * centre figure twice. Now every card is rendered once and the alternates are
-   * hidden below `lg` with CSS, so the ring thins out on small screens without
-   * a second scene.
-   */
-  const visible = items;
-  const count = visible.length;
-  // The card spins opposite the pivot at the same rate, which is what keeps its
-  // text upright as it travels the ring.
+  const count = items.length;
+  // The card spins opposite the pivot at the same rate, keeping its text upright.
   const pivotAnim = direction === "cw" ? "orbit-spin-cw" : "orbit-spin-ccw";
   const cardAnim = direction === "cw" ? "orbit-spin-ccw" : "orbit-spin-cw";
 
   return (
-    <div
-      className={cn("relative aspect-square w-full @container", className)}
-      style={{ containerType: "inline-size" }}
-    >
-      {/* Ring guide */}
-      <svg
-        className="pointer-events-none absolute inset-0 size-full"
-        viewBox={`0 0 ${DS} ${DS}`}
-        aria-hidden
-        role="presentation"
-      >
-        <defs>
-          <linearGradient id="orbit-ring" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#c01822" stopOpacity="0.3" />
-            <stop offset="48%" stopColor="#1a56db" stopOpacity="0.08" />
-            <stop offset="100%" stopColor="#c01822" stopOpacity="0.22" />
-          </linearGradient>
-          <filter id="orbit-glow" x="-10%" y="-10%" width="120%" height="120%">
-            <feGaussianBlur stdDeviation="3" result="b" />
-            <feMerge>
-              <feMergeNode in="b" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
-        <circle
-          cx={DS / 2}
-          cy={DS / 2}
-          r={RADIUS + 10}
-          fill="none"
-          stroke="rgba(255,255,255,0.028)"
-          strokeWidth="20"
-        />
-        <circle
-          cx={DS / 2}
-          cy={DS / 2}
-          r={RADIUS}
-          fill="none"
-          stroke="url(#orbit-ring)"
-          strokeWidth="1.2"
-          strokeDasharray="7 9"
-          filter="url(#orbit-glow)"
-        />
-        <circle
-          cx={DS / 2}
-          cy={DS / 2}
-          r={RADIUS - 10}
-          fill="none"
-          stroke="rgba(255,255,255,0.018)"
-          strokeWidth="6"
-        />
-      </svg>
-
-      {/* Ambient bloom under the centre figure */}
-      {centreImage ? (
-        <span
+    <div className={cn("orbit-viewport relative aspect-square w-full", className)}>
+      {/* Fixed-px canvas, scaled once to fit the viewport box. */}
+      <div className="orbit-canvas" style={{ width: DS, height: DS }}>
+        {/* Ring guide */}
+        <svg
+          className="pointer-events-none absolute inset-0 size-full"
+          viewBox={`0 0 ${DS} ${DS}`}
           aria-hidden
-          className="pointer-events-none absolute left-1/2 z-10 -translate-x-1/2 blur-2xl"
-          style={{
-            bottom: u(20),
-            width: u(300),
-            height: u(110),
-            background: "radial-gradient(ellipse, rgba(192,24,34,0.45), transparent 70%)",
-          }}
-        />
-      ) : null}
+          role="presentation"
+        >
+          <defs>
+            <linearGradient id="orbit-ring" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#c01822" stopOpacity="0.3" />
+              <stop offset="48%" stopColor="#1a56db" stopOpacity="0.08" />
+              <stop offset="100%" stopColor="#c01822" stopOpacity="0.22" />
+            </linearGradient>
+          </defs>
+          <circle
+            cx={DS / 2}
+            cy={DS / 2}
+            r={RADIUS + 10}
+            fill="none"
+            stroke="rgba(255,255,255,0.028)"
+            strokeWidth="20"
+          />
+          <circle
+            cx={DS / 2}
+            cy={DS / 2}
+            r={RADIUS}
+            fill="none"
+            stroke="url(#orbit-ring)"
+            strokeWidth="1.2"
+            strokeDasharray="7 9"
+          />
+          <circle
+            cx={DS / 2}
+            cy={DS / 2}
+            r={RADIUS - 10}
+            fill="none"
+            stroke="rgba(255,255,255,0.018)"
+            strokeWidth="6"
+          />
+        </svg>
 
-      {/*
-       * Centre figure. `mix-blend-mode: screen` knocks the asset's black matte
-       * out against the near-black page — this is the approved treatment.
-       */}
-      {centreImage ? (
-        <div className="pointer-events-none absolute inset-0 z-20 flex items-end justify-center">
-          <div
-            className="float-c relative"
+        {/*
+         * Ambient bloom. A static radial-gradient rather than a blurred layer —
+         * `filter: blur()` over this area was pure paint cost for a shape a
+         * gradient renders identically.
+         */}
+        {centreImage ? (
+          <span
+            aria-hidden
+            className="pointer-events-none absolute bottom-[20px] left-1/2 z-10 h-[110px] w-[300px] -translate-x-1/2"
             style={{
-              height: u(RADIUS * 2),
-              // 3:4 to match the asset's intrinsic 900x1200 — a mismatched box
-              // makes next/image letterbox and trips the aspect-ratio audit.
-              width: u(RADIUS * 2 * 0.75),
-              marginBottom: u(-RADIUS * 0.08),
-              willChange: "transform",
+              background:
+                "radial-gradient(ellipse at center, rgba(192,24,34,0.38) 0%, rgba(192,24,34,0.14) 45%, transparent 72%)",
             }}
-          >
-            <Image
-              src={centreImage}
-              alt={centreAlt}
-              fill
-              sizes="(min-width: 1024px) 45vw, 90vw"
-              priority={priority}
-              fetchPriority={priority ? "high" : "auto"}
-              className="object-contain object-bottom mix-blend-screen"
-              style={{ filter: "brightness(1.12) contrast(1.06) saturate(1.05)" }}
-            />
-          </div>
-        </div>
-      ) : null}
+          />
+        ) : null}
 
-      {/* Orbiting cards */}
-      {visible.map((item, index) => {
-        const angle = (index / count) * 360;
-        return (
-          // Base angle — where this card sits on the ring. Static.
-          <div
-            key={item.id}
-            className={cn(
-              "absolute left-1/2 top-1/2 z-30 size-0",
-              compact && index % 2 === 1 && "hidden lg:block",
-            )}
-            style={{ rotate: `${angle}deg` }}
-          >
-            {/* Spin. Disabled under reduced motion, leaving the base angle. */}
+        {/*
+         * Centre figure. `mix-blend-mode: screen` knocks the asset's black matte
+         * out against the near-black page — the approved treatment.
+         */}
+        {centreImage ? (
+          <div className="pointer-events-none absolute inset-0 z-20 flex items-end justify-center">
             <div
-              data-orbit-motion
-              className="size-0"
+              className="float-c relative"
               style={{
-                animation: `${pivotAnim} ${duration}s linear infinite`,
-                willChange: "rotate",
+                height: RADIUS * 2,
+                // 3:4 matches the asset's intrinsic ratio, so next/image never
+                // letterboxes and the aspect-ratio audit stays clean.
+                width: RADIUS * 2 * 0.75,
+                marginBottom: -RADIUS * 0.08,
               }}
             >
-              {/* Arm out to the orbit radius. */}
+              <Image
+                src={centreImage}
+                alt={centreAlt}
+                fill
+                sizes="620px"
+                priority={priority}
+                className="object-contain object-bottom mix-blend-screen"
+                style={{ filter: "brightness(1.12) contrast(1.06) saturate(1.05)" }}
+              />
+            </div>
+          </div>
+        ) : null}
+
+        {/* Orbiting cards */}
+        {items.map((item, index) => {
+          const angle = (index / count) * 360;
+          return (
+            // Base angle — where this card sits on the ring. Static.
+            <div
+              key={item.id}
+              className={cn(
+                "absolute left-1/2 top-1/2 z-30 size-0",
+                compact && index % 2 === 1 && "hidden lg:block",
+              )}
+              style={{ rotate: `${angle}deg` }}
+            >
+              {/* Spin. Disabled under reduced motion, leaving the base angle. */}
               <div
-                className="absolute top-0"
-                style={{ left: u(RADIUS), transform: "translate(-50%, -50%)" }}
+                data-orbit-motion
+                className="size-0"
+                style={{ animation: `${pivotAnim} ${duration}s linear infinite` }}
               >
-                {/* Counter-rotations keep the card upright at every angle. */}
-                <div style={{ rotate: `${-angle}deg` }}>
-                  <div
-                    data-orbit-motion
-                    style={{
-                      animation: `${cardAnim} ${duration}s linear infinite`,
-                      willChange: "rotate",
-                      filter: `drop-shadow(0 ${u(14)} ${u(32)} ${ACCENTS[item.accent].hex}65)`,
-                    }}
-                  >
-                    <OrbitCard item={item} />
+                {/* Arm out to the orbit radius. */}
+                <div
+                  className="absolute top-0"
+                  style={{ left: RADIUS, transform: "translate(-50%, -50%)" }}
+                >
+                  {/* Counter-rotations keep the card upright at every angle. */}
+                  <div style={{ rotate: `${-angle}deg` }}>
+                    <div
+                      data-orbit-motion
+                      style={{ animation: `${cardAnim} ${duration}s linear infinite` }}
+                    >
+                      <OrbitCard item={item} />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 }

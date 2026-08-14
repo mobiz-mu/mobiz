@@ -16,11 +16,16 @@ import { HERO_ORBIT_ITEMS } from "@/lib/orbit-items";
  * document at its final position when the animation is suppressed.
  */
 
+/*
+ * Headline stagger. Kept deliberately tight: these lines are the LCP element,
+ * and `.enter-mask` holds each one out of view for the length of its delay, so
+ * every extra 100ms here is 100ms added to Largest Contentful Paint.
+ */
 const HEADLINE = [
-  { text: "BUILD", delay: "0.28s", brand: false },
-  { text: "MARKET", delay: "0.38s", brand: true },
-  { text: "MANAGE", delay: "0.48s", brand: false },
-  { text: "GROW", delay: "0.58s", brand: true },
+  { text: "BUILD", delay: "0s", brand: false },
+  { text: "MARKET", delay: "0.05s", brand: true },
+  { text: "MANAGE", delay: "0.1s", brand: false },
+  { text: "GROW", delay: "0.15s", brand: true },
 ];
 
 const SERVICE_TAGS = [
@@ -70,14 +75,14 @@ function HeroCopy() {
 
       <p
         className="enter-up mb-8 max-w-[460px] text-lg font-medium leading-relaxed text-text-secondary sm:text-xl"
-        style={{ animationDelay: "0.75s" }}
+        style={{ animationDelay: "0.3s" }}
       >
         We help Mauritian businesses get more clients and run their business better.
       </p>
 
       <div
         className="enter-up mb-9 flex flex-wrap gap-3"
-        style={{ animationDelay: "0.9s" }}
+        style={{ animationDelay: "0.38s" }}
       >
         <ButtonLink href="/services" size="lg" withArrow>
           Explore our solutions
@@ -89,7 +94,7 @@ function HeroCopy() {
 
       <ul
         className="enter-up flex flex-wrap gap-2.5"
-        style={{ animationDelay: "1.05s" }}
+        style={{ animationDelay: "0.46s" }}
       >
         {SERVICE_TAGS.map((tag) => (
           <li key={tag.label}>
@@ -123,7 +128,7 @@ export function Hero() {
           <div className="flex items-center justify-center px-4 pb-14 lg:py-[68px] lg:pr-6">
             <div
               className="enter-scale w-[min(440px,92vw)] lg:w-[min(640px,48vw)]"
-              style={{ animationDelay: "0.85s" }}
+              style={{ animationDelay: "0.5s" }}
             >
               <OrbitScene
                 items={HERO_ORBIT_ITEMS}

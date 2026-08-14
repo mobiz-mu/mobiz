@@ -47,7 +47,7 @@ export function ServiceSpotlight({
     >
       <span
         aria-hidden
-        className="pointer-events-none absolute top-1/2 h-[420px] w-[520px] -translate-y-1/2 blur-3xl"
+        className="pointer-events-none absolute top-1/2 h-[420px] w-[520px] -translate-y-1/2"
         style={{
           [visualFirst ? "left" : "right"]: "-8%",
           background: `radial-gradient(ellipse, ${accent.hex}14, transparent 70%)`,

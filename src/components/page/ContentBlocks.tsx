@@ -195,7 +195,7 @@ export function BenefitList({
     <Section spacing="default" deferPaint className="overflow-hidden bg-ink-900">
       <span
         aria-hidden
-        className="pointer-events-none absolute -right-24 top-1/2 h-[420px] w-[520px] -translate-y-1/2 blur-3xl"
+        className="pointer-events-none absolute -right-24 top-1/2 h-[420px] w-[520px] -translate-y-1/2"
         style={{ background: `radial-gradient(ellipse, ${hex}12, transparent 70%)` }}
       />
       <Container className="relative">

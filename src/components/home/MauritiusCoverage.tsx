@@ -24,7 +24,7 @@ export function MauritiusCoverage() {
       <span aria-hidden className="absolute inset-0 tech-grid" />
       <span
         aria-hidden
-        className="pointer-events-none absolute -right-20 top-1/2 h-[500px] w-[600px] -translate-y-1/2 blur-3xl"
+        className="pointer-events-none absolute -right-20 top-1/2 h-[500px] w-[600px] -translate-y-1/2"
         style={{
           background: "radial-gradient(ellipse, rgba(192,24,34,0.12), transparent 70%)",
         }}

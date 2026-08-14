@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ArrowRight, Check } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
@@ -76,7 +75,6 @@ const DETAIL: Record<string, { highlights: string[]; tags: string[] }> = {
  */
 export function ServicesTabs() {
   const [activeId, setActiveId] = useState(serviceDivisions[0]!.id);
-  const reduced = useReducedMotion();
 
   const active = serviceDivisions.find((d) => d.id === activeId)!;
   const detail = DETAIL[active.id]!;
@@ -175,15 +173,14 @@ export function ServicesTabs() {
         >
           <span aria-hidden className="glow-blob absolute -right-16 -top-24" />
 
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={active.id}
-              initial={reduced ? false : { opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={reduced ? { opacity: 0 } : { opacity: 0, y: -8 }}
-              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="relative grid gap-10 lg:grid-cols-[1.1fr_1fr]"
-            >
+          {/*
+            * `key` remounts on tab change, which restarts the CSS entrance —
+            * the same crossfade AnimatePresence gave us, with no library.
+            */}
+          <div
+            key={active.id}
+            className="tab-swap relative grid gap-10 lg:grid-cols-[1.1fr_1fr]"
+          >
               <div>
                 <span
                   aria-hidden
@@ -239,8 +236,7 @@ export function ServicesTabs() {
                   </li>
                 ))}
               </ul>
-            </motion.div>
-          </AnimatePresence>
+          </div>
         </div>
       </Container>
     </Section>

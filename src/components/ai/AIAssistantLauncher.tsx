@@ -2,7 +2,6 @@
 
 import dynamic from "next/dynamic";
 import { useState } from "react";
-import { AnimatePresence } from "motion/react";
 import { Bot } from "lucide-react";
 
 /**
@@ -57,9 +56,7 @@ export function AIAssistantLauncher({ enabled }: AIAssistantLauncherProps) {
         />
       </button>
 
-      <AnimatePresence>
-        {open ? <AIChatPanel onClose={() => setOpen(false)} /> : null}
-      </AnimatePresence>
+      {open ? <AIChatPanel onClose={() => setOpen(false)} /> : null}
     </>
   );
 }

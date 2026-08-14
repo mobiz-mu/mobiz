@@ -45,7 +45,7 @@ export function TechBackground({ variant = "service", className }: TechBackgroun
       {variant !== "calm" ? (
         <>
           <div
-            className="absolute right-0 top-0 h-[700px] w-[900px] translate-x-[15%] -translate-y-[10%] rounded-full blur-3xl"
+            className="absolute right-0 top-0 h-[700px] w-[900px] translate-x-[15%] -translate-y-[10%] rounded-full"
             style={{
               background:
                 "radial-gradient(ellipse 60% 60% at 70% 30%, rgba(192,24,34,0.18), transparent 70%)",
@@ -55,7 +55,7 @@ export function TechBackground({ variant = "service", className }: TechBackgroun
             <div
               /* Anchored from the TOP: a bottom-anchored layer moves whenever the
                  page grows, and a 500px element shifting scores real CLS. */
-            className="absolute left-0 top-[420px] size-[500px] -translate-x-[15%] rounded-full blur-3xl"
+            className="absolute left-0 top-[420px] size-[500px] -translate-x-[15%] rounded-full"
               style={{
                 background:
                   "radial-gradient(circle, rgba(26,86,219,0.06), transparent 70%)",
