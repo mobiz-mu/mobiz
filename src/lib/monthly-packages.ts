@@ -48,7 +48,6 @@ export const WHATSAPP_DISPLAY = "+230 5506 8119";
 export const WHATSAPP_BASE_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
 export const SITE_URL = "https://mobiz.mu";
 export const PAGE_PATH = "/monthly-packages";
-export const LOGO_SRC = "/documents/logo.png";
 export const CURRENCY = "MUR";
 
 /** Price shown for every add-on until Mobiz.mu confirms a fixed rate. */

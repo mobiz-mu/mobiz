@@ -63,6 +63,21 @@ export const SOCIAL_LINKS = [
   { name: "TikTok", href: "https://www.tiktok.com/@mobiz.mu" },
 ] as const;
 
+/* ── Social share image ───────────────────────────────────────────────────── */
+
+/**
+ * The official Open Graph / Twitter card image.
+ *
+ * Derived from the supplied master `public/documents/og-image.png` (already
+ * 1200x630). Crawlers for WhatsApp, Facebook and LinkedIn require an ABSOLUTE
+ * URL, so this is always emitted against the production origin.
+ */
+export const OG_IMAGE_PATH = "/images/social/og-image.png";
+export const OG_IMAGE_WIDTH = 1200;
+export const OG_IMAGE_HEIGHT = 630;
+export const OG_IMAGE_ALT = "Mobiz.mu — digital business solutions in Mauritius";
+export const OG_IMAGE_URL = `${SITE_URL}${OG_IMAGE_PATH}`;
+
 /* ── Helpers ──────────────────────────────────────────────────────────────── */
 
 /** Absolute URL for canonicals, OG tags and JSON-LD. */

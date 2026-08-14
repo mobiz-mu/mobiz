@@ -129,7 +129,7 @@ export function SiteFooter() {
       <div className="relative mx-auto max-w-[1320px] px-5 py-14 sm:px-8 lg:px-16">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
           <div>
-            <Logo className="mb-5" />
+            <Logo height={48} className="mb-5" />
             <p className="mb-5 max-w-[220px] text-sm leading-relaxed text-text-secondary">
               Digital solutions built for businesses in Mauritius.
             </p>

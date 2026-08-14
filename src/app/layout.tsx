@@ -4,6 +4,10 @@ import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import {
   CONTACT_EMAIL,
   CONTACT_PHONE_DISPLAY,
+  OG_IMAGE_ALT,
+  OG_IMAGE_HEIGHT,
+  OG_IMAGE_URL,
+  OG_IMAGE_WIDTH,
   SITE_NAME,
   SITE_URL,
   SOCIAL_LINKS,
@@ -47,6 +51,8 @@ export const metadata: Metadata = {
 
   alternates: { canonical: SITE_URL },
 
+  manifest: "/site.webmanifest",
+
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
@@ -65,6 +71,14 @@ export const metadata: Metadata = {
       "MoBiz.mu | Premium Website Design, Accounting & Business Solutions in Mauritius",
     description:
       "Premium websites, ecommerce, digital marketing, SEO, accounting, tax support, warehousing and business solutions for ambitious businesses in Mauritius.",
+    images: [
+      {
+        url: OG_IMAGE_URL,
+        width: OG_IMAGE_WIDTH,
+        height: OG_IMAGE_HEIGHT,
+        alt: OG_IMAGE_ALT,
+      },
+    ],
   },
 
   twitter: {
@@ -73,6 +87,7 @@ export const metadata: Metadata = {
       "MoBiz.mu | Website Design, Accounting & Business Solutions in Mauritius",
     description:
       "Premium websites, digital marketing, SEO, accounting, tax support, warehousing and business solutions for Mauritius businesses.",
+    images: [OG_IMAGE_URL],
   },
 
   robots: {
@@ -110,6 +125,7 @@ const structuredData = {
       name: SITE_NAME,
       url: SITE_URL,
       logo: `${SITE_URL}/icon.png`,
+      image: OG_IMAGE_URL,
       email: CONTACT_EMAIL,
       telephone: CONTACT_PHONE_DISPLAY,
       sameAs: SOCIAL_LINKS.map((s) => s.href),

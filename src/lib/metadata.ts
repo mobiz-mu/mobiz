@@ -1,5 +1,12 @@
 import type { Metadata } from "next";
-import { SITE_NAME, SITE_URL } from "@/lib/site";
+import {
+  OG_IMAGE_ALT,
+  OG_IMAGE_HEIGHT,
+  OG_IMAGE_URL,
+  OG_IMAGE_WIDTH,
+  SITE_NAME,
+  SITE_URL,
+} from "@/lib/site";
 
 type BuildMetadataInput = {
   title: string;
@@ -48,12 +55,22 @@ export function buildMetadata({
       title,
       description,
       locale: "en_US",
+      // Absolute URL — WhatsApp/Facebook/LinkedIn crawlers reject relative ones.
+      images: [
+        {
+          url: OG_IMAGE_URL,
+          width: OG_IMAGE_WIDTH,
+          height: OG_IMAGE_HEIGHT,
+          alt: OG_IMAGE_ALT,
+        },
+      ],
       ...(article ?? {}),
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
+      images: [OG_IMAGE_URL],
     },
   };
 }
