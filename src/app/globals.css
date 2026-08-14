@@ -370,40 +370,109 @@ body {
 }
 
 /*
- * Tech Orbit. The pivot rotates and the card counter-rotates at the same rate,
- * so cards travel the ring while staying upright. Both run as pure CSS on the
- * compositor — no per-frame JavaScript, no React re-render.
+ * Tech Orbit.
+ *
+ * Each card is wrapped in a static base rotation (its position on the ring) and
+ * a separate spinning layer. The card then counter-rotates by the same two
+ * amounts, so it travels the ring while staying upright.
+ *
+ * Splitting "where it sits" from "how it spins" means switching the spin off
+ * under reduced motion leaves a correctly distributed, upright ring rather than
+ * collapsing every card onto the same point.
+ *
+ * Both keyframes are compositor-only — no per-frame JavaScript, no re-render.
  */
-@keyframes orbit-pivot-cw {
+@keyframes orbit-spin-cw {
   from {
-    transform: rotate(0deg);
+    rotate: 0deg;
   }
   to {
-    transform: rotate(360deg);
+    rotate: 360deg;
   }
 }
-@keyframes orbit-pivot-ccw {
+@keyframes orbit-spin-ccw {
   from {
-    transform: rotate(0deg);
+    rotate: 0deg;
   }
   to {
-    transform: rotate(-360deg);
+    rotate: -360deg;
   }
 }
-@keyframes orbit-card-cw {
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Above-the-fold entrances — CSS only
+   ═══════════════════════════════════════════════════════════════════════════
+   The hero must never wait for hydration. These run on the first painted frame
+   with no JavaScript, so the H1 is visible and measurable for LCP immediately.
+
+   `.enter-lcp` is the one used on the LCP element itself: opacity stays at 1
+   the whole time and only transform animates, so the pixel that defines LCP is
+   painted at full opacity on frame one.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@keyframes enter-up {
   from {
-    transform: translate(-50%, -50%) rotate(0deg);
+    opacity: 0;
+    transform: translate3d(0, 24px, 0);
   }
   to {
-    transform: translate(-50%, -50%) rotate(-360deg);
+    opacity: 1;
+    transform: none;
   }
 }
-@keyframes orbit-card-ccw {
+
+@keyframes enter-lcp {
   from {
-    transform: translate(-50%, -50%) rotate(0deg);
+    transform: translate3d(0, 14px, 0);
   }
   to {
-    transform: translate(-50%, -50%) rotate(360deg);
+    transform: none;
+  }
+}
+
+@keyframes enter-mask {
+  from {
+    transform: translate3d(0, 105%, 0);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes enter-scale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.enter-up {
+  animation: enter-up 0.7s var(--ease-orbit) both;
+}
+.enter-lcp {
+  animation: enter-lcp 0.7s var(--ease-orbit) both;
+}
+.enter-scale {
+  animation: enter-scale 0.9s var(--ease-orbit) both;
+}
+
+/* Headline mask reveal: the line slides up out of an overflow-hidden wrapper. */
+.enter-mask {
+  animation: enter-mask 0.75s var(--ease-orbit) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enter-up,
+  .enter-lcp,
+  .enter-scale,
+  .enter-mask {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
 
@@ -462,6 +531,16 @@ body {
   *::after {
     transition-duration: 120ms !important;
     animation-iteration-count: 1 !important;
+  }
+
+  /*
+   * The Data Highway animates via SVG SMIL, which CSS animation properties do
+   * not control. Hiding just the travelling packets leaves the lane structure,
+   * nodes and labels intact — the composition still reads as a data network,
+   * it simply has no traffic moving through it.
+   */
+  .dh-packet {
+    visibility: hidden;
   }
 
   /* Scroll-linked and entrance animation is skipped at the source — see
