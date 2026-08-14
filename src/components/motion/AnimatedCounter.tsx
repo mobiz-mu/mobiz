@@ -39,8 +39,10 @@ export function AnimatedCounter({
 
     let frame = 0;
     const start = performance.now();
-    setDisplay(0);
 
+    // The count starts from the first animation frame rather than a synchronous
+    // reset here — that would be a cascading render, and the frame lands within
+    // ~16ms of the element reaching the viewport edge either way.
     const tick = (now: number) => {
       const progress = Math.min((now - start) / durationMs, 1);
       // easeOutExpo — fast start, gentle settle
