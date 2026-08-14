@@ -24,7 +24,8 @@ export function Logo({ className, priority = false }: LogoProps) {
       href="/"
       aria-label="MoBiz.mu — Home"
       className={cn(
-        "flex shrink-0 items-center gap-2.5 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-mid",
+        // min-h-11 gives the 44px touch target; the mark itself stays 32px.
+        "flex min-h-11 shrink-0 items-center gap-2.5 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-mid",
         className,
       )}
     >

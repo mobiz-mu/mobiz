@@ -143,14 +143,14 @@ export function SiteFooter() {
               href={whatsappUrl()}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-sm text-text-body transition-colors hover:text-text-primary"
+              className="flex min-h-11 items-center gap-2 text-sm text-text-body transition-colors hover:text-text-primary"
             >
               <WhatsAppIcon size={13} className="text-[color:var(--color-whatsapp)]" />
               {CONTACT_PHONE_DISPLAY}
             </a>
             <a
               href={`mailto:${CONTACT_EMAIL}`}
-              className="mt-2 block text-sm text-text-body transition-colors hover:text-text-primary"
+              className="flex min-h-11 items-center text-sm text-text-body transition-colors hover:text-text-primary"
             >
               {CONTACT_EMAIL}
             </a>

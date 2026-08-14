@@ -176,14 +176,8 @@ body {
    3D primitives
    ═══════════════════════════════════════════════════════════════════════════ */
 
-.preserve-3d {
-  transform-style: preserve-3d;
-}
 .perspective {
   perspective: 1200px;
-}
-.perspective-sm {
-  perspective: 800px;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -208,12 +202,6 @@ body {
    Glass + glow surfaces
    ═══════════════════════════════════════════════════════════════════════════ */
 
-.glass-dark {
-  background: rgba(10, 10, 11, 0.72);
-  backdrop-filter: blur(16px) saturate(1.4);
-  -webkit-backdrop-filter: blur(16px) saturate(1.4);
-  border: 1px solid var(--color-line);
-}
 
 .glass-card {
   background: rgba(17, 18, 22, 0.9);
@@ -283,12 +271,6 @@ body {
   );
 }
 
-.red-glow {
-  box-shadow: var(--shadow-glow-red);
-}
-.red-glow-sm {
-  box-shadow: var(--shadow-glow-red-sm);
-}
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Ambient motion — transform/opacity only, GPU-composited
@@ -361,19 +343,8 @@ body {
     transform: translate3d(-50%, 0, 0);
   }
 }
-@keyframes marquee-right {
-  from {
-    transform: translate3d(-50%, 0, 0);
-  }
-  to {
-    transform: translate3d(0, 0, 0);
-  }
-}
 .marquee-left {
   animation: marquee-left 28s linear infinite;
-}
-.marquee-right {
-  animation: marquee-right 28s linear infinite;
 }
 
 @keyframes footer-scan {
@@ -702,14 +673,6 @@ body {
   contain-intrinsic-size: auto 600px;
 }
 
-.noise::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
-  pointer-events: none;
-  opacity: 0.4;
-}
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Reduced motion
