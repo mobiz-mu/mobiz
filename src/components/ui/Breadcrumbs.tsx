@@ -27,12 +27,16 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
               {item.href && !isLast ? (
                 <Link
                   href={item.href}
-                  className="rounded-xs transition-colors hover:text-text-primary"
+                  // Comfortable hit area: breadcrumbs are navigation, not inline prose.
+                  className="inline-flex min-h-11 items-center rounded-xs transition-colors hover:text-text-primary"
                 >
                   {item.label}
                 </Link>
               ) : (
-                <span aria-current={isLast ? "page" : undefined} className="text-text-secondary">
+                <span
+                  aria-current={isLast ? "page" : undefined}
+                  className="inline-flex min-h-11 items-center text-text-secondary"
+                >
                   {item.label}
                 </span>
               )}
