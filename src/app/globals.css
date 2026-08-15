@@ -942,6 +942,18 @@ body {
   display: block;
 
   overflow: visible;
+
+  /*
+   * Each row is one word ("BUILD.", "MARKET.", ...) and is designed to be a
+   * single line. Without this it is free to wrap, and it does: the Arial
+   * fallback shown before Space Grotesk arrives is ~18% wider, which pushes
+   * "MARKET." and "MANAGE." onto second lines. That added exactly two line
+   * boxes (+135.8px measured at 1280px) and then collapsed them again on font
+   * swap — the whole of the ~0.21 desktop CLS. Pinning the rows to one line
+   * makes the headline height identical in both fonts. With Space Grotesk the
+   * rows already fit on one line, so this changes nothing visually.
+   */
+  white-space: nowrap;
 }
 
 .hero-headline__word {

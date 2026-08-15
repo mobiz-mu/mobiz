@@ -119,7 +119,15 @@ export default async function BlogArticlePage({
             height={675}
             rounded="lg"
             priority
-            sizes="(min-width: 768px) 720px, 100vw"
+            /*
+             * Must match what `Container size="prose"` actually gives this image,
+             * not its max-width. The container is max-w-[720px] with px-5 / sm:px-8
+             * / lg:px-16 gutters, so the real content box is 592px from 1024px up —
+             * not 720px. Claiming 720px made the browser preload the w=750 variant
+             * and then render the w=1080 one, so the preload was wasted and the
+             * image was downloaded twice ("preloaded but not used" console warning).
+             */
+            sizes="(min-width: 1024px) 592px, (min-width: 784px) 656px, (min-width: 640px) calc(100vw - 64px), calc(100vw - 40px)"
           />
 
           <div className="mt-12 space-y-10">

@@ -61,6 +61,7 @@ function Rating({
   return (
     <div
       className="flex justify-center gap-1"
+      role="img"
       aria-label={`${safeRating} out of 5 stars`}
     >
       {Array.from({
@@ -145,7 +146,7 @@ export function Component({
 
         <div className="relative flex h-full w-full cursor-grab flex-col rounded-xl border border-white/10 bg-[#08090A] p-8 text-white shadow-[0_20px_55px_rgba(0,0,0,0.28)]">
           <div>
-            <p className="font-mono text-[9px] font-black uppercase tracking-[0.22em] text-[#E32B35]">
+            <p className="font-mono text-[9px] font-black uppercase tracking-[0.22em] text-[#FF3344]">
               MOBIZ.MU
             </p>
 

@@ -17,7 +17,7 @@ export const blogPosts: BlogPost[] = [
     href: "/blog/how-mauritian-businesses-can-look-more-premium-online",
     slug: "how-mauritian-businesses-can-look-more-premium-online",
     category: "Premium Presence",
-    imageSrc: "/images/blog/premium-online-presence-mauritius.png",
+    imageSrc: "/images/blog/premium-online-presence-mauritius.webp",
     imageAlt:
       "Premium online presence blog image showing an executive workspace for a Mauritius business",
     updatedAt: "2026-04-01",
@@ -29,7 +29,7 @@ export const blogPosts: BlogPost[] = [
     href: "/blog/why-website-design-in-mauritius-now-needs-a-higher-standard",
     slug: "why-website-design-in-mauritius-now-needs-a-higher-standard",
     category: "Website Design",
-    imageSrc: "/images/blog/website-design-mauritius.png",
+    imageSrc: "/images/blog/website-design-mauritius.webp",
     imageAlt:
       "Website design blog image showing premium business website layouts for the Mauritius market",
     updatedAt: "2026-04-01",
@@ -41,7 +41,7 @@ export const blogPosts: BlogPost[] = [
     href: "/blog/digital-marketing-in-mauritius-what-businesses-should-focus-on-first",
     slug: "digital-marketing-in-mauritius-what-businesses-should-focus-on-first",
     category: "Digital Marketing",
-    imageSrc: "/images/blog/digital-marketing-mauritius.png",
+    imageSrc: "/images/blog/digital-marketing-mauritius.webp",
     imageAlt:
       "Digital marketing blog image showing executive strategy discussion and campaign planning",
     updatedAt: "2026-04-01",
@@ -53,7 +53,7 @@ export const blogPosts: BlogPost[] = [
     href: "/blog/accounting-and-tax-support-that-gives-businesses-more-clarity",
     slug: "accounting-and-tax-support-that-gives-businesses-more-clarity",
     category: "Accounting & Tax",
-    imageSrc: "/images/blog/accounting-tax-mauritius.png",
+    imageSrc: "/images/blog/accounting-tax-mauritius.webp",
     imageAlt:
       "Accounting and tax blog image showing a premium finance and compliance workspace",
     updatedAt: "2026-04-01",
@@ -65,7 +65,7 @@ export const blogPosts: BlogPost[] = [
     href: "/blog/why-logistics-solutions-matter-for-smoother-business-operations",
     slug: "why-logistics-solutions-matter-for-smoother-business-operations",
     category: "Logistics",
-    imageSrc: "/images/blog/logistics-solutions-mauritius.png",
+    imageSrc: "/images/blog/logistics-solutions-mauritius.webp",
     imageAlt:
       "Logistics blog image showing delivery coordination and business operations support",
     updatedAt: "2026-04-01",
@@ -77,7 +77,7 @@ export const blogPosts: BlogPost[] = [
     href: "/blog/branding-and-business-solutions-that-make-companies-look-established",
     slug: "branding-and-business-solutions-that-make-companies-look-established",
     category: "Branding",
-    imageSrc: "/images/blog/branding-business-solutions-mauritius.png",
+    imageSrc: "/images/blog/branding-business-solutions-mauritius.webp",
     imageAlt:
       "Branding and business solutions blog image showing premium planning and consulting materials",
     updatedAt: "2026-04-01",
@@ -89,7 +89,7 @@ export const blogPosts: BlogPost[] = [
     href: "/blog/why-whatsapp-ready-conversion-matters-for-the-mauritius-market",
     slug: "why-whatsapp-ready-conversion-matters-for-the-mauritius-market",
     category: "Conversion",
-    imageSrc: "/images/blog/whatsapp-conversion-mauritius.png",
+    imageSrc: "/images/blog/whatsapp-conversion-mauritius.webp",
     imageAlt:
       "WhatsApp conversion blog image showing mobile-first communication for a Mauritius business",
     updatedAt: "2026-04-01",
@@ -101,7 +101,7 @@ export const blogPosts: BlogPost[] = [
     href: "/blog/business-growth-becomes-easier-when-systems-work-together",
     slug: "business-growth-becomes-easier-when-systems-work-together",
     category: "Business Growth",
-    imageSrc: "/images/blog/business-growth-systems-mauritius.png",
+    imageSrc: "/images/blog/business-growth-systems-mauritius.webp",
     imageAlt:
       "Business growth systems blog image showing reports analytics and executive operations planning",
     updatedAt: "2026-04-01",

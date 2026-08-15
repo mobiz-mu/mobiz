@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Star } from "lucide-react";
 
 import type { Testimonial } from "@/components/ui/3d-book-testimonial";
@@ -14,6 +15,51 @@ const ReviewBook = dynamic(
     ssr: false,
   },
 );
+
+/*
+ * react-pageflip builds and measures a lot of DOM up front. Measured on the
+ * homepage it cost ~2.2s of main-thread time, of which only ~270ms was script
+ * execution — the rest was style and layout. `ssr: false` alone does not avoid
+ * that: the chunk still loads and mounts right after hydration, while the user
+ * is still at the top of the page.
+ *
+ * So the book is held back until its section is near the viewport. This is safe
+ * for layout because `.review-book-stage` is a fixed 450px box and
+ * `.review-book-spread` is absolutely positioned inside it, so the space is
+ * reserved by CSS whether or not the book has mounted — mounting it later
+ * cannot shift anything.
+ */
+function useNearViewport<T extends HTMLElement>(rootMargin = "300px") {
+  const ref = useRef<T | null>(null);
+  const [near, setNear] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || near) return;
+
+    // No IntersectionObserver (or a very old browser): just mount it. Deferred
+    // to a task so this isn't a synchronous setState inside the effect body.
+    if (typeof IntersectionObserver === "undefined") {
+      const timer = setTimeout(() => setNear(true), 0);
+      return () => clearTimeout(timer);
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setNear(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin },
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [near, rootMargin]);
+
+  return { ref, near };
+}
 
 const REVIEW_URL =
   "https://g.page/r/CQN8HIPUVP1DEAI/review";
@@ -73,6 +119,7 @@ function SummaryStars() {
   return (
     <div
       className="flex gap-1"
+      role="img"
       aria-label="5 out of 5 stars"
     >
       {Array.from({ length: 5 }).map((_, index) => (
@@ -87,6 +134,9 @@ function SummaryStars() {
 }
 
 export function MauritiusCoverage() {
+  const { ref: bookStageRef, near: bookNear } =
+    useNearViewport<HTMLDivElement>();
+
   return (
     <section
       aria-labelledby="reviews-heading"
@@ -176,11 +226,13 @@ export function MauritiusCoverage() {
         {/* ============================================================ */}
 
         <div className="min-w-0 overflow-hidden">
-           <div className="review-book-stage">
+           <div ref={bookStageRef} className="review-book-stage">
               <div className="review-book-spread">
-                 <ReviewBook
-                   testimonials={testimonials}             
-        />
+                 {bookNear ? (
+                   <ReviewBook
+                     testimonials={testimonials}
+                   />
+                 ) : null}
             </div>
           </div>
         </div>

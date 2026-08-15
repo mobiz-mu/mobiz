@@ -163,12 +163,15 @@ export function OrbitScene({
              className="orbit-person__image"
              /*
               * Deliberately NOT next/image's `priority`. Measured with Lighthouse: the LCP
-              * element on this page is the H1 text (span.hero-headline__word), not this
-              * image — `lcp-discovery-insight` reports notApplicable, i.e. no LCP image.
-              * `priority` would inject a <link rel="preload"> for a ~654KB decorative
-              * visual into <head>, competing with the CSS/font work the text LCP waits on.
-              * Eager + high fetchPriority still loads it promptly once parsed, without
-              * jumping ahead of the actual LCP path.
+              * element here is the H1 text (span.hero-headline__word), not this image —
+              * `lcp-discovery-insight` reports notApplicable, i.e. there is no LCP image.
+              *
+              * `fetchPriority="high"` was A/B tested against "auto" (3 Lighthouse runs
+              * each): LCP -147ms, FCP +307ms, TBT -366ms — inconsistent in direction and
+              * well inside this host's noise, so neither wins. Note React 19 emits the
+              * <link rel="preload"> for an eager image either way, so the two configs
+              * barely differ. Kept as-is. The source is also now an 82KB WebP delivered
+              * as ~20KB AVIF, so there is no longer a large image to compete with.
               */
              loading={eagerCentreImage ? "eager" : "lazy"}
              fetchPriority={eagerCentreImage ? "high" : "auto"}

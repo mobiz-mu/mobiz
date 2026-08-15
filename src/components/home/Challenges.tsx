@@ -35,7 +35,7 @@ const CHALLENGES: Challenge[] = [
     body: "Get found online, show your services properly, and turn visitors into customers around the clock.",
     accent: "blue",
     icon: Globe2,
-    image: "/images/services/cards/mobiz-websitedesign.jpeg",
+    image: "/images/services/cards/mobiz-websitedesign.webp",
     href: "/services/website-design-development",
   },
   {
@@ -44,7 +44,7 @@ const CHALLENGES: Challenge[] = [
     body: "Reach customers in Mauritius on Facebook, Instagram and Google with campaigns built around real enquiries.",
     accent: "yellow",
     icon: TrendingUp,
-    image: "/images/services/cards/mobiz-digitalmarketing.jpeg",
+    image: "/images/services/cards/mobiz-digitalmarketing.webp",
     href: "/services/digital-marketing",
   },
   {
@@ -53,7 +53,7 @@ const CHALLENGES: Challenge[] = [
     body: "Improve how your business appears in local search so the people already looking for you can find you.",
     accent: "red",
     icon: Search,
-    image: "/images/services/cards/mobiz-seomarketing.jpeg",
+    image: "/images/services/cards/mobiz-seomarketing.webp",
     href: "/seo-services-mauritius",
   },
   {
@@ -62,7 +62,7 @@ const CHALLENGES: Challenge[] = [
     body: "Invoicing, payroll and VAT handled properly, with clear reports so you always know where the business stands.",
     accent: "green",
     icon: ReceiptText,
-    image: "/images/services/cards/mobiz-accounting.jpeg",
+    image: "/images/services/cards/mobiz-accounting.webp",
     href: "/services/accounting-tax-returns",
   },
   {
@@ -71,7 +71,7 @@ const CHALLENGES: Challenge[] = [
     body: "Know what you hold and what is moving, with barcodes, low-stock alerts and organised warehouse processes.",
     accent: "emerald",
     icon: Package,
-    image: "/images/services/cards/mobiz-inventory.jpeg",
+    image: "/images/services/cards/mobiz-inventory.webp",
     href: "/services/warehousing-inventory",
   },
   {
@@ -80,7 +80,7 @@ const CHALLENGES: Challenge[] = [
     body: "Replace repetitive admin with software and automation built around how your business actually runs.",
     accent: "red",
     icon: Cpu,
-    image: "/images/services/cards/mobiz-software.jpeg",
+    image: "/images/services/cards/mobiz-software.webp",
     href: "/services/business-solutions",
   },
 ];

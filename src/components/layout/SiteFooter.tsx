@@ -625,7 +625,7 @@ export function SiteFooter() {
                   font-bold
                   uppercase
                   tracking-[0.18em]
-                  text-[#D12A33]
+                  text-[#FF3344]
                 "
               >
                 {group.heading}
@@ -679,7 +679,7 @@ export function SiteFooter() {
               font-mono
               text-[10px]
               tracking-[0.03em]
-              text-white/45
+              text-white/50
             "
           >
             © {year} Mobiz.mu · All rights reserved · Mauritius
