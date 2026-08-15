@@ -1,22 +1,50 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { ArrowRight, Check } from "lucide-react";
-import { Container } from "@/components/ui/Container";
-import { Section } from "@/components/ui/Section";
-import { ACCENTS } from "@/lib/accents";
-import { serviceDivisions } from "@/lib/navigation";
+import {
+  ArrowRight,
+  Check,
+  Cpu,
+  Globe2,
+  Package,
+  ReceiptText,
+  Search,
+  TrendingUp,
+} from "lucide-react";
+
+import type { LucideIcon } from "lucide-react";
+
+import { ACCENTS, type AccentId } from "@/lib/accents";
 import { cn } from "@/lib/utils";
 
-/**
- * What each division actually delivers.
- *
- * Keyed to `serviceDivisions` so the tab strip, labels, hrefs and accent colours
- * all come from the single navigation source rather than a second copy.
- */
-const DETAIL: Record<string, { highlights: string[]; tags: string[] }> = {
-  "website-design-development": {
+type ServiceTab = {
+  id: string;
+  num: string;
+  shortLabel: string;
+  label: string;
+  description: string;
+  href: string;
+  accent: AccentId;
+  icon: LucideIcon;
+  highlights: string[];
+  tags: string[];
+  image: string;
+  imageAlt: string;
+};
+
+const SERVICES: ServiceTab[] = [
+  {
+    id: "website-design-development",
+    num: "01",
+    shortLabel: "Websites",
+    label: "Website Design & Development",
+    description:
+      "Modern websites built around your business, your customers and the way people search, browse and enquire in Mauritius.",
+    href: "/services/website-design-development",
+    accent: "blue",
+    icon: Globe2,
     highlights: [
       "Custom mobile-first design",
       "Built for speed and Core Web Vitals",
@@ -24,222 +52,545 @@ const DETAIL: Record<string, { highlights: string[]; tags: string[] }> = {
       "SEO structure from day one",
     ],
     tags: ["Next.js", "E-commerce", "Web apps", "SEO-ready"],
+    image: "/images/services/tabs/web-mobiz.webp",
+    imageAlt:
+      "Mobiz website design and development services",
   },
-  "digital-marketing": {
+
+  {
+    id: "digital-marketing",
+    num: "02",
+    shortLabel: "Marketing",
+    label: "Digital Marketing",
+    description:
+      "Reach more of the right customers with structured digital campaigns designed around visibility, enquiries and measurable business growth.",
+    href: "/services/digital-marketing",
+    accent: "yellow",
+    icon: TrendingUp,
     highlights: [
-      "Local and national SEO",
+      "Local and national campaigns",
       "Google Ads management",
       "Social media campaigns",
       "Monthly performance reporting",
     ],
-    tags: ["Google SEO", "Google Ads", "Social media", "Analytics"],
+    tags: [
+      "Google Ads",
+      "Social media",
+      "Lead generation",
+      "Analytics",
+    ],
+    image: "/images/services/tabs/marketing-mobiz.webp",
+    imageAlt:
+      "Mobiz digital marketing and lead generation services",
   },
-  "accounting-tax-returns": {
+
+  {
+    id: "seo-services",
+    num: "03",
+    shortLabel: "SEO",
+    label: "SEO & Search Visibility",
+    description:
+      "Improve how your business appears in local search so people already looking for your products or services can find you more easily.",
+    href: "/seo-services-mauritius",
+    accent: "red",
+    icon: Search,
+    highlights: [
+      "Local Mauritius search optimisation",
+      "Technical SEO foundations",
+      "Keyword and content optimisation",
+      "Organic visibility reporting",
+    ],
+    tags: [
+      "Local SEO",
+      "Technical SEO",
+      "Keywords",
+      "Organic traffic",
+    ],
+    image: "/images/services/tabs/seo-mobiz.webp",
+    imageAlt:
+      "Mobiz SEO and search visibility services",
+  },
+
+  {
+    id: "accounting-tax-returns",
+    num: "04",
+    shortLabel: "Accounting",
+    label: "Accounting & Tax Returns",
+    description:
+      "Stay organised with practical accounting, payroll, VAT and reporting support built around the needs of Mauritian businesses.",
+    href: "/services/accounting-tax-returns",
+    accent: "green",
+    icon: ReceiptText,
     highlights: [
       "VAT registration and filing",
       "Payroll processing",
       "MRA compliance support",
       "Monthly financial reporting",
     ],
-    tags: ["VAT filing", "Payroll", "MRA", "Invoicing"],
+    tags: [
+      "VAT filing",
+      "Payroll",
+      "MRA",
+      "Invoicing",
+    ],
+    image: "/images/services/tabs/accounting-mobiz.webp",
+    imageAlt:
+      "Mobiz accounting VAT payroll and tax services",
   },
-  "warehousing-inventory": {
+
+  {
+    id: "warehousing-inventory",
+    num: "05",
+    shortLabel: "Inventory",
+    label: "Inventory Management",
+    description:
+      "Know what you hold, what is moving and what needs attention with structured stock and warehouse processes.",
+    href: "/services/warehousing-inventory",
+    accent: "emerald",
+    icon: Package,
     highlights: [
       "Barcode and SKU systems",
       "Real-time low-stock alerts",
       "Supplier and purchase tracking",
       "Stock counts and reporting",
     ],
-    tags: ["Stock tracking", "Barcodes", "Warehouse", "Reports"],
-  },
-  "business-solutions": {
-    highlights: [
-      "Company registration support",
-      "Business plans and forecasts",
-      "Pitch decks and brand documents",
-      "AI workflow automation",
+    tags: [
+      "Stock tracking",
+      "Barcodes",
+      "Warehouse",
+      "Reports",
     ],
-    tags: ["Business plans", "Company reg", "AI automation", "Branding"],
+    image: "/images/services/tabs/inventory-mobiz.webp",
+    imageAlt:
+      "Mobiz inventory and warehouse management services",
   },
-};
 
-/**
- * The five divisions as an interactive panel.
- *
- * A proper tablist: roving arrow-key navigation, `aria-selected`, and panels
- * wired with `aria-controls`/`aria-labelledby`, so it is operable without a
- * mouse and announces correctly.
- *
- * Only the panel body swaps — the surrounding layout is fixed height-wise on
- * desktop so switching tabs never shifts the page.
- */
+  {
+    id: "business-solutions",
+    num: "06",
+    shortLabel: "Software & AI",
+    label: "Business Software & AI",
+    description:
+      "Replace repetitive work with practical software, connected workflows and automation designed around how your business actually operates.",
+    href: "/services/business-solutions",
+    accent: "red",
+    icon: Cpu,
+    highlights: [
+      "Custom business software",
+      "Workflow automation",
+      "AI-assisted business processes",
+      "Connected business systems",
+    ],
+    tags: [
+      "Business apps",
+      "CRM",
+      "AI automation",
+      "Workflows",
+    ],
+    image: "/images/services/tabs/software-mobiz.webp",
+    imageAlt:
+      "Mobiz business software and AI automation services",
+  },
+];
+
+/* -------------------------------------------------------------------------- */
+/* 3D ICON                                                                    */
+/* -------------------------------------------------------------------------- */
+
+function ServiceIcon3D({
+  Icon,
+  accent,
+}: {
+  Icon: LucideIcon;
+  accent: AccentId;
+}) {
+  const color = ACCENTS[accent];
+
+  return (
+    <span
+      aria-hidden
+      className="service-tab-icon"
+      style={
+        {
+          "--service-color": color.hex,
+        } as React.CSSProperties
+      }
+    >
+      <span className="service-tab-icon__depth" />
+
+      <span className="service-tab-icon__face">
+        <span className="service-tab-icon__shine" />
+
+        <Icon
+          className="relative z-10 size-6 text-white"
+          strokeWidth={2}
+        />
+      </span>
+    </span>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* WAVES                                                                      */
+/* -------------------------------------------------------------------------- */
+
+function TopWave() {
+  return (
+    <div
+      aria-hidden
+      className="pointer-events-none absolute inset-x-0 top-0 z-[2] h-[70px] -translate-y-[97%] sm:h-[92px] lg:h-[116px]"
+    >
+      <svg
+        viewBox="0 0 1600 140"
+        preserveAspectRatio="none"
+        className="block size-full"
+      >
+        <path
+          d="M0 82 C118 126 180 101 265 113 C350 126 403 149 495 126 C608 98 681 46 794 62 C920 79 968 121 1092 105 C1223 88 1292 31 1394 44 C1484 56 1532 88 1600 73 L1600 140 L0 140 Z"
+          fill="#F8F8F6"
+        />
+      </svg>
+    </div>
+  );
+}
+
+function BottomWave() {
+  return (
+    <div
+      aria-hidden
+      className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[70px] translate-y-[97%] sm:h-[92px] lg:h-[116px]"
+    >
+      <svg
+        viewBox="0 0 1600 140"
+        preserveAspectRatio="none"
+        className="block size-full"
+      >
+        <path
+          d="M0 0 L1600 0 L1600 64 C1515 94 1443 77 1362 89 C1250 106 1194 136 1072 119 C946 101 891 58 758 75 C629 92 586 128 453 112 C332 97 283 55 170 70 C96 81 48 105 0 92 Z"
+          fill="#F8F8F6"
+        />
+      </svg>
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* SERVICES TABS                                                              */
+/* -------------------------------------------------------------------------- */
+
 export function ServicesTabs() {
-  const [activeId, setActiveId] = useState(serviceDivisions[0]!.id);
+  const [activeId, setActiveId] =
+    useState(SERVICES[0]!.id);
 
-  const active = serviceDivisions.find((d) => d.id === activeId)!;
-  const detail = DETAIL[active.id]!;
-  const accent = ACCENTS[active.accent];
+  const active =
+    SERVICES.find(
+      (service) =>
+        service.id === activeId,
+    ) ?? SERVICES[0]!;
 
-  function onTabKeyDown(e: React.KeyboardEvent) {
-    const index = serviceDivisions.findIndex((d) => d.id === activeId);
+  const accent =
+    ACCENTS[active.accent];
+
+  function onTabKeyDown(
+    event: React.KeyboardEvent,
+  ) {
+    const index =
+      SERVICES.findIndex(
+        (service) =>
+          service.id === activeId,
+      );
+
     let next = index;
-    if (e.key === "ArrowRight") next = (index + 1) % serviceDivisions.length;
-    else if (e.key === "ArrowLeft")
-      next = (index - 1 + serviceDivisions.length) % serviceDivisions.length;
-    else if (e.key === "Home") next = 0;
-    else if (e.key === "End") next = serviceDivisions.length - 1;
-    else return;
 
-    e.preventDefault();
-    const target = serviceDivisions[next]!;
+    if (event.key === "ArrowRight") {
+      next =
+        (index + 1) %
+        SERVICES.length;
+    } else if (
+      event.key === "ArrowLeft"
+    ) {
+      next =
+        (index -
+          1 +
+          SERVICES.length) %
+        SERVICES.length;
+    } else if (
+      event.key === "Home"
+    ) {
+      next = 0;
+    } else if (
+      event.key === "End"
+    ) {
+      next =
+        SERVICES.length - 1;
+    } else {
+      return;
+    }
+
+    event.preventDefault();
+
+    const target =
+      SERVICES[next]!;
+
     setActiveId(target.id);
-    document.getElementById(`svc-tab-${target.id}`)?.focus();
+
+    document
+      .getElementById(
+        `svc-tab-${target.id}`,
+      )
+      ?.focus();
   }
 
   return (
-    <Section id="services" spacing="flagship" className="bg-ink-950" aria-labelledby="services-heading">
-      <span aria-hidden className="absolute inset-0 tech-grid" />
+    <section
+      id="services"
+      aria-labelledby="services-heading"
+      className="services-white-break relative isolate bg-[#F8F8F6]"
+    >
+      <TopWave />
+      <BottomWave />
 
-      <Container className="relative">
-        <div className="mb-14">
-          <p className="mb-5 font-mono text-[10px] uppercase tracking-[0.2em] text-brand-bright/90">
-            Five business divisions
-          </p>
+      {/* very subtle texture only — NO section container */}
+      <span
+        aria-hidden
+        className="services-white-grid"
+      />
+
+      <div className="relative z-10 mx-auto w-full max-w-[1600px] px-5 py-14 sm:px-8 sm:py-18 lg:px-12 lg:py-22 xl:px-16">
+        {/* HEADER */}
+        <div className="mb-9 max-w-[950px] sm:mb-11 lg:mb-12">
+          <div className="mb-4 flex items-center gap-3">
+            <span className="h-px w-10 bg-brand" />
+
+            <p className="font-mono text-[10px] font-black uppercase tracking-[0.2em] text-brand">
+              Six business solutions
+            </p>
+          </div>
+
           <h2
             id="services-heading"
-            className="font-bold leading-[0.95] tracking-tight text-text-primary"
-            style={{ fontSize: "clamp(2.25rem,5.5vw,4.5rem)" }}
+            className="font-black leading-[0.94] tracking-[-0.045em] text-[#08090B]"
+            style={{
+              fontSize:
+                "clamp(2.45rem,5vw,4.8rem)",
+            }}
           >
             Everything your business needs,
             <br className="hidden sm:block" />{" "}
-            <span className="text-brand">connected through Mobiz.</span>
+            <span className="text-brand">
+              connected through Mobiz.
+            </span>
           </h2>
+
+          <p className="mt-5 max-w-[690px] text-[15px] font-medium leading-7 text-[#5F6168] sm:text-base">
+            From getting your business
+            online and found, to managing
+            your finances, stock and daily
+            operations — Mobiz brings the
+            essential systems together in
+            one connected business
+            ecosystem.
+          </p>
         </div>
 
-        {/* Tab strip */}
+        {/* TABS */}
         <div
           role="tablist"
-          aria-label="Mobiz service divisions"
+          aria-label="Mobiz business solutions"
           onKeyDown={onTabKeyDown}
-          className="mb-10 flex gap-2 overflow-x-auto pb-1"
+          className="services-tabs-scroll mb-9 flex gap-2 overflow-x-auto pb-2 lg:mb-12"
         >
-          {serviceDivisions.map((division) => {
-            const selected = division.id === activeId;
+          {SERVICES.map((service) => {
+            const selected =
+              service.id === activeId;
+
+            const color =
+              ACCENTS[service.accent];
+
             return (
               <button
-                key={division.id}
-                id={`svc-tab-${division.id}`}
+                key={service.id}
+                id={`svc-tab-${service.id}`}
                 role="tab"
                 type="button"
+                tabIndex={
+                  selected ? 0 : -1
+                }
                 aria-selected={selected}
-                aria-controls={`svc-panel-${division.id}`}
-                tabIndex={selected ? 0 : -1}
-                onClick={() => setActiveId(division.id)}
+                aria-controls={`svc-panel-${service.id}`}
+                onClick={() =>
+                  setActiveId(service.id)
+                }
                 className={cn(
-                  "flex min-h-11 shrink-0 items-center gap-2.5 rounded-xl border px-4 py-2.5 text-sm font-semibold transition-colors",
+                  "group relative flex min-h-12 shrink-0 items-center gap-2.5 overflow-hidden rounded-xl border px-4 py-2.5 text-sm font-bold transition-[transform,border-color,color,background-color,box-shadow] duration-300",
                   selected
-                    ? "text-text-primary"
-                    : "border-line text-text-muted hover:border-line-strong hover:text-text-body",
+                    ? "border-transparent text-white shadow-[0_12px_28px_rgba(0,0,0,0.13)]"
+                    : "border-black/[0.09] bg-white/60 text-[#505158] hover:-translate-y-0.5 hover:border-black/20 hover:bg-white hover:text-black",
                 )}
                 style={
                   selected
                     ? {
-                        borderColor: `${ACCENTS[division.accent].hex}70`,
-                        background: `${ACCENTS[division.accent].hex}18`,
+                        background: `linear-gradient(135deg, ${color.hex}, ${color.hex}D8)`,
                       }
                     : undefined
                 }
               >
                 <span
-                  aria-hidden
-                  className="font-mono text-[10px]"
-                  style={{ color: ACCENTS[division.accent].onDark }}
+                  className={cn(
+                    "font-mono text-[9px] font-black",
+                    selected
+                      ? "text-white/70"
+                      : "text-black/30",
+                  )}
                 >
-                  {division.num}
+                  {service.num}
                 </span>
-                {division.shortLabel}
+
+                {service.shortLabel}
               </button>
             );
           })}
         </div>
 
-        {/* Panel */}
+        {/* ACTIVE SERVICE — NO OUTER CARD */}
         <div
           id={`svc-panel-${active.id}`}
           role="tabpanel"
           aria-labelledby={`svc-tab-${active.id}`}
-          className="glow-card min-h-[420px] p-6 sm:p-10"
-          style={{ ["--glow-hue" as string]: accent.rgb }}
+          className="relative"
         >
-          <span aria-hidden className="glow-blob absolute -right-16 -top-24" />
-
-          {/*
-            * `key` remounts on tab change, which restarts the CSS entrance —
-            * the same crossfade AnimatePresence gave us, with no library.
-            */}
           <div
             key={active.id}
-            className="tab-swap relative grid gap-10 lg:grid-cols-[1.1fr_1fr]"
+            className="service-tab-enter grid items-center gap-9 lg:grid-cols-2 lg:gap-14 xl:gap-20"
           >
-              <div>
-                <span
-                  aria-hidden
-                  className="mb-5 flex size-13 items-center justify-center rounded-md"
-                  style={{
-                    background: `linear-gradient(145deg, ${accent.hex}ee, ${accent.hex}88)`,
-                    boxShadow: `0 10px 28px ${accent.hex}55, inset 0 1px 0 rgba(255,255,255,0.3)`,
-                  }}
-                >
-                  <active.icon className="size-6 text-white" />
-                </span>
+            {/* LEFT — EXACTLY HALF */}
+            <div className="flex min-h-[470px] flex-col justify-center lg:min-h-[560px]">
+              <div className="mb-7 flex items-center gap-4">
+                <ServiceIcon3D
+                  Icon={active.icon}
+                  accent={active.accent}
+                />
 
-                <h3 className="mb-4 text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
-                  {active.label}
-                </h3>
-                <p className="mb-7 max-w-lg text-base leading-relaxed text-text-secondary">
-                  {active.description}
-                </p>
+                <div>
+                  <p
+                    className="font-mono text-[9px] font-black uppercase tracking-[0.18em]"
+                    style={{
+                      color:
+                        accent.hex,
+                    }}
+                  >
+                    Mobiz solution{" "}
+                    {active.num}
+                  </p>
 
-                <div className="mb-8 flex flex-wrap gap-2">
-                  {detail.tags.map((tag) => (
+                  <p className="mt-1 text-xs font-semibold text-black/40">
+                    Built for Mauritius
+                  </p>
+                </div>
+              </div>
+
+              <h3 className="mb-5 max-w-[620px] text-3xl font-black leading-[1.02] tracking-[-0.04em] text-[#090A0C] sm:text-4xl lg:text-[2.8rem] xl:text-[3.2rem]">
+                {active.label}
+              </h3>
+
+              <p className="mb-7 max-w-[590px] text-[15px] font-medium leading-7 text-[#5D5F66] sm:text-base">
+                {active.description}
+              </p>
+
+              <div className="mb-7 flex flex-wrap gap-2">
+                {active.tags.map(
+                  (tag) => (
                     <span
                       key={tag}
-                      className="rounded-md border border-line px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-text-muted"
+                      className="rounded-md border border-black/[0.08] bg-black/[0.025] px-3 py-1.5 font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-black/55"
                     >
                       {tag}
                     </span>
-                  ))}
-                </div>
-
-                <Link
-                  href={active.href}
-                  className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-text-primary underline-offset-4 hover:underline"
-                  style={{ color: accent.onDark }}
-                >
-                  Explore {active.shortLabel}
-                  <ArrowRight aria-hidden className="size-4" />
-                </Link>
+                  ),
+                )}
               </div>
 
-              <ul className="space-y-3 self-center">
-                {detail.highlights.map((highlight) => (
-                  <li
-                    key={highlight}
-                    className="flex items-start gap-3 rounded-lg border border-line bg-surface-0 px-4 py-3.5"
-                  >
-                    <Check
-                      aria-hidden
-                      className="mt-0.5 size-4 shrink-0"
-                      style={{ color: accent.onDark }}
-                    />
-                    <span className="text-sm text-text-body">{highlight}</span>
-                  </li>
-                ))}
+              <ul className="mb-9 grid gap-3 sm:grid-cols-2">
+                {active.highlights.map(
+                  (highlight) => (
+                    <li
+                      key={highlight}
+                      className="flex items-start gap-3"
+                    >
+                      <span
+                        aria-hidden
+                        className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full"
+                        style={{
+                          color:
+                            accent.hex,
+                          background: `${accent.hex}12`,
+                        }}
+                      >
+                        <Check className="size-3" />
+                      </span>
+
+                      <span className="text-sm font-semibold leading-6 text-[#34353A]">
+                        {highlight}
+                      </span>
+                    </li>
+                  ),
+                )}
               </ul>
+
+              <Link
+                href={active.href}
+                className="group inline-flex min-h-12 w-fit items-center gap-2 rounded-xl px-5 py-3 text-sm font-bold text-white shadow-[0_12px_28px_rgba(0,0,0,0.13)] transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-[0_18px_36px_rgba(0,0,0,0.16)]"
+                style={{
+                  background: `linear-gradient(135deg, ${accent.hex}, ${accent.hex}D8)`,
+                }}
+              >
+                Explore{" "}
+                {active.shortLabel}
+
+                <ArrowRight
+                  aria-hidden
+                  className="size-4 transition-transform duration-200 group-hover:translate-x-1"
+                />
+              </Link>
+            </div>
+
+            {/* RIGHT — EXACTLY HALF */}
+            <div className="service-visual-enter relative flex min-h-[470px] items-center justify-center lg:min-h-[560px]">
+              {/* ambient shadow only, not container */}
+              <span
+                aria-hidden
+                className="service-image-ambient"
+                style={
+                  {
+                    "--service-image-accent":
+                      accent.hex,
+                  } as React.CSSProperties
+                }
+              />
+
+              <div className="service-image-shell relative w-full max-w-[590px]">
+                <Image
+                  src={active.image}
+                  alt={active.imageAlt}
+                  width={938}
+                  height={938}
+                  quality={75}
+                  loading="lazy"
+                  sizes="(max-width: 1023px) 92vw, (max-width: 1439px) 46vw, 590px"
+                  className="service-tab-image block aspect-square h-auto w-full rounded-[30px] object-contain"
+                />
+
+                {/* very subtle premium edge */}
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 rounded-[30px] ring-1 ring-black/[0.07]"
+                />
+              </div>
+            </div>
           </div>
         </div>
-      </Container>
-    </Section>
+      </div>
+    </section>
   );
 }
 

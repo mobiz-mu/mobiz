@@ -1,118 +1,153 @@
-import { Bot, MessageCircle } from "lucide-react";
-import { Container } from "@/components/ui/Container";
-import { Section } from "@/components/ui/Section";
-import { SectionHeading } from "@/components/ui/SectionHeading";
-import { ButtonLink } from "@/components/ui/Button";
-import { WhatsAppIcon } from "@/components/ui/icons";
-import { Reveal } from "@/components/motion/Reveal";
-import { SUGGESTED_QUESTIONS } from "@/lib/ai/suggested-questions";
-import { ACCENTS } from "@/lib/accents";
-import { whatsappUrl } from "@/lib/site";
-import { isAiEnabled } from "@/lib/ai/config";
+import Link from "next/link";
+import {
+  ArrowUpRight,
+  MapPin,
+} from "lucide-react";
 
-/**
- * AI + WhatsApp assistance.
- *
- * Mirrors the assistant's real surface — the same quick questions, the same card
- * language — so the section previews the actual product rather than advertising
- * a generic chatbot.
- *
- * The AI half only renders when a provider key is configured; without it the
- * section becomes a clean WhatsApp block instead of pointing at something that
- * isn't there.
- */
+import {
+  FacebookIcon,
+  InstagramIcon,
+  LinkedInIcon,
+  TikTokIcon,
+  WhatsAppBrandIcon,
+} from "@/components/ui/SocialBrandIcons";
+
+const SOCIAL_LINKS = [
+  {
+    label: "Facebook",
+    href: "REPLACE_WITH_OFFICIAL_FACEBOOK_URL",
+    icon: FacebookIcon,
+  },
+  {
+    label: "Instagram",
+    href: "REPLACE_WITH_OFFICIAL_INSTAGRAM_URL",
+    icon: InstagramIcon,
+  },
+  {
+    label: "TikTok",
+    href: "REPLACE_WITH_OFFICIAL_TIKTOK_URL",
+    icon: TikTokIcon,
+  },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/company/mobiz-mu/",
+    icon: LinkedInIcon,
+  },
+  {
+    label: "WhatsApp",
+    href: "https://wa.me/23055068119",
+    icon: WhatsAppBrandIcon,
+  },
+] as const;
+
+const MAP_URL =
+  "https://www.google.com/maps/search/?api=1&query=La+Croisette+Grand+Baie+Mauritius";
+
 export function AssistanceSection() {
-  const aiEnabled = isAiEnabled();
-
   return (
-    <Section deferPaint spacing="default" className="overflow-hidden bg-ink-900" aria-labelledby="assistance-heading">
-      <span aria-hidden className="absolute inset-0 tech-grid" />
+    <section
+      aria-labelledby="connect-heading"
+      className="connect-section relative overflow-hidden bg-[#F8F8F6]"
+    >
+      {/* subtle white technical grid */}
+      <span
+        aria-hidden
+        className="connect-grid pointer-events-none absolute inset-0"
+      />
 
-      <Container className="relative">
-        <Reveal className="mb-12">
-          <SectionHeading
-            id="assistance-heading"
-            eyebrow="Get answers fast"
-            title="Ask a question, get a straight answer."
-            description="Start with our assistant for quick questions about what we do — or go straight to WhatsApp when you want to talk to a person."
-          />
-        </Reveal>
+      {/* restrained red atmosphere */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute -right-20 top-1/2 h-[320px] w-[320px] -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(192,24,34,0.09),transparent_70%)]"
+      />
 
-        <div className="grid gap-5 lg:grid-cols-2">
-          {aiEnabled ? (
-            <Reveal direction="left">
-              <div className="glow-card h-full p-6 sm:p-8">
-                <span aria-hidden className="glow-blob absolute -right-16 -top-24" />
-                <div className="relative">
-                  <span
-                    aria-hidden
-                    className="mb-5 flex size-12 items-center justify-center rounded-lg bg-linear-[135deg,var(--color-brand),var(--color-brand-deep)]"
+      <div className="relative z-10 mx-auto grid w-full max-w-[1600px] items-center gap-8 px-5 py-10 sm:px-8 sm:py-12 lg:grid-cols-[1fr_auto] lg:gap-14 lg:px-12 lg:py-14 xl:px-16">
+        {/* LEFT */}
+        <div className="max-w-[860px]">
+          <div className="mb-3 flex items-center gap-3">
+            <span className="h-px w-10 bg-brand" />
+
+            <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-brand">
+              Stay connected
+            </p>
+          </div>
+
+          <h2
+            id="connect-heading"
+            className="font-black leading-[0.95] tracking-[-0.045em] text-[#0A0A0C]"
+            style={{
+              fontSize: "clamp(2rem,4.3vw,4.2rem)",
+            }}
+          >
+            Connect with{" "}
+            <span className="text-brand">
+              Mobiz.
+            </span>
+          </h2>
+
+          <p className="mt-4 max-w-[680px] text-sm font-medium leading-7 text-[#62636A] sm:text-base">
+            Follow our latest projects, business insights, digital updates and
+            practical ideas for growing and managing your business in Mauritius.
+          </p>
+
+          {/* SOCIAL ICONS */}
+          <ul
+            className="mt-7 flex flex-wrap items-center gap-3 sm:gap-4"
+            aria-label="Mobiz social media"
+          >
+            {SOCIAL_LINKS.map((social) => {
+              const Icon = social.icon;
+
+              return (
+                <li key={social.label}>
+                  <a
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`Follow Mobiz on ${social.label}`}
+                    className="social-orb group relative flex size-12 items-center justify-center rounded-full border border-black/[0.09] bg-white text-[#111216] shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-[transform,border-color,color,box-shadow] duration-200 hover:-translate-y-1 hover:border-brand/30 hover:text-brand hover:shadow-[0_14px_30px_rgba(192,24,34,0.13)] sm:size-13"
                   >
-                    <Bot className="size-5.5 text-white" />
-                  </span>
-                  <h3 className="mb-3 text-xl font-bold text-text-primary">
-                    Mobiz Assistant
-                  </h3>
-                  <p className="mb-6 text-sm leading-relaxed text-text-secondary">
-                    Ask about our services, monthly packages or how we work. It answers
-                    from what Mobiz actually offers — and hands you to a person when a
-                    question needs one.
-                  </p>
+                    {/* tooltip */}
+                    <span className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 translate-y-1 whitespace-nowrap rounded-md bg-[#0A0A0C] px-2.5 py-1 text-[10px] font-bold text-white opacity-0 shadow-lg transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
+                      {social.label}
+                    </span>
 
-                  <p className="mb-3 font-mono text-[9px] uppercase tracking-widest text-text-faint">
-                    Popular questions
-                  </p>
-                  <ul className="flex flex-wrap gap-2">
-                    {SUGGESTED_QUESTIONS.slice(0, 5).map((q) => (
-                      <li
-                        key={q.id}
-                        className="rounded-lg border px-3 py-2 text-xs font-medium text-text-body"
-                        style={{ borderColor: `${ACCENTS[q.accent].hex}55` }}
-                      >
-                        {q.label}
-                      </li>
-                    ))}
-                  </ul>
-
-                  <p className="mt-6 text-xs text-text-muted">
-                    Open it any time from the assistant button in the corner of the screen.
-                  </p>
-                </div>
-              </div>
-            </Reveal>
-          ) : null}
-
-          <Reveal direction={aiEnabled ? "right" : "up"} className={aiEnabled ? "" : "lg:col-span-2"}>
-            <div className="flex h-full flex-col rounded-2xl border border-[rgba(37,211,102,0.22)] bg-[rgba(37,211,102,0.06)] p-6 sm:p-8">
-              <span
-                aria-hidden
-                className="mb-5 flex size-12 items-center justify-center rounded-lg bg-[color:var(--color-whatsapp)]"
-              >
-                <MessageCircle className="size-5.5 text-white" />
-              </span>
-              <h3 className="mb-3 text-xl font-bold text-text-primary">
-                Talk to us on WhatsApp
-              </h3>
-              <p className="mb-7 flex-1 text-sm leading-relaxed text-text-secondary">
-                For quotations, scoping a project, or anything specific about your business —
-                message us directly. You will get a real answer from the team, not an
-                automated reply.
-              </p>
-              <ButtonLink
-                href={whatsappUrl(
-                  "Hello Mobiz, I would like to ask a question about my business.",
-                )}
-                variant="whatsapp"
-                external
-              >
-                <WhatsAppIcon size={18} className="text-[color:var(--color-whatsapp)]" />
-                Message Mobiz on WhatsApp
-              </ButtonLink>
-            </div>
-          </Reveal>
+                    <Icon className="size-5 sm:size-[22px]" />
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
         </div>
-      </Container>
-    </Section>
+
+        {/* RIGHT */}
+        <div className="flex flex-wrap items-center gap-3 lg:flex-col lg:items-stretch">
+          <Link
+            href="/contact"
+            className="group inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-brand px-5 py-2.5 text-sm font-bold text-white shadow-[0_10px_28px_rgba(192,24,34,0.22)] transition-[transform,background-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-[#A3131C] hover:shadow-[0_14px_32px_rgba(192,24,34,0.30)]"
+          >
+            Follow us
+            <ArrowUpRight
+              aria-hidden
+              className="size-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+            />
+          </Link>
+
+          <a
+            href={MAP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-black/[0.10] bg-white px-5 py-2.5 text-sm font-bold text-[#17181B] transition-[transform,border-color,color] duration-200 hover:-translate-y-0.5 hover:border-brand/30 hover:text-brand"
+          >
+            <MapPin
+              aria-hidden
+              className="size-4"
+            />
+            Directions
+          </a>
+        </div>
+      </div>
+    </section>
   );
 }
 

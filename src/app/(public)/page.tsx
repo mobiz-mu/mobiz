@@ -3,6 +3,7 @@ import { Hero } from "@/components/home/Hero";
 import { TrustedBy } from "@/components/home/TrustedBy";
 import { Challenges } from "@/components/home/Challenges";
 import { ServicesTabs } from "@/components/home/ServicesTabs";
+import { WebsiteTemplateCarousel } from "@/components/home/WebsiteTemplateCarousel";
 import { ServiceSpotlight } from "@/components/home/ServiceSpotlight";
 import { PortfolioPreview } from "@/components/home/PortfolioPreview";
 import { PricingPreview } from "@/components/home/PricingPreview";
@@ -43,7 +44,7 @@ export default function HomePage() {
       <TrustedBy />
       <Challenges />
       <ServicesTabs />
-
+      <WebsiteTemplateCarousel />
       <ServiceSpotlight
         division="website-design-development"
         side="right"

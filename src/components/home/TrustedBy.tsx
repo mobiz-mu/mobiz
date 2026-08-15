@@ -1,62 +1,103 @@
-import { portfolioItems } from "@/lib/portfolio";
+const CLIENTS = [
+  "Dan & Shi Pest Control Ltd",
+  "Travel Holiday Mauritius",
+  "Himalay Rental Tours",
+  "Codexia Ltd",
+  "Hero Car Rental",
+  "GPWCCU",
+  "Heaven's Seed School",
+  "KS Contracting Ltd",
+  "Méa Kréation",
+  "Ram Pottery Ltd",
+  "Multimaint Ltd",
+  "Two Souls Boutique",
+  "Anytime Anywhere Tour Operator Ltd",
+  "Samrn Company Ltd",
+] as const;
 
-/**
- * Client marquee.
- *
- * Names come from the real portfolio data, so this is a factual statement of who
- * Mobiz has worked with — no invented logos, no fabricated counts.
- *
- * The strip is duplicated once and translated by exactly -50%, which is what
- * makes the loop seamless. `aria-hidden` on the duplicate stops a screen reader
- * reading the list twice.
- */
+const ROW_ONE = CLIENTS.slice(0, 7);
+const ROW_TWO = CLIENTS.slice(7);
+
+function ClientRow({
+  clients,
+  direction,
+}: {
+  clients: readonly string[];
+  direction: "left" | "right";
+}) {
+  return (
+    <div className="trusted-marquee">
+      <div
+        className={
+          direction === "left"
+            ? "trusted-marquee__track trusted-marquee__track--left"
+            : "trusted-marquee__track trusted-marquee__track--right"
+        }
+      >
+        {[0, 1].map((copy) => (
+          <ul
+            key={copy}
+            className="trusted-marquee__group"
+            aria-hidden={copy === 1 ? true : undefined}
+          >
+            {clients.map((name, index) => (
+              <li key={`${copy}-${name}`} className="trusted-client">
+                <span
+                  aria-hidden
+                  className={`trusted-client__dot trusted-client__dot--${index % 4}`}
+                />
+
+                <span className="trusted-client__name">
+                  {name}
+                </span>
+
+                <span
+                  aria-hidden
+                  className={`trusted-client__line trusted-client__line--${index % 4}`}
+                />
+              </li>
+            ))}
+          </ul>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function TrustedBy() {
-  const clients = portfolioItems.map((item) => item.title);
-
   return (
     <section
       aria-labelledby="trusted-by-heading"
-      className="relative overflow-hidden border-y border-line-faint bg-ink-900 py-14"
+      className="trusted-section"
     >
-      <div className="mx-auto max-w-[1320px] px-5 sm:px-8 lg:px-16">
-        <h2
-          id="trusted-by-heading"
-          className="mb-9 text-center font-mono text-[9px] uppercase tracking-widest text-text-muted"
-        >
-          Trusted by businesses across Mauritius
-        </h2>
+      <div aria-hidden className="trusted-section__grid" />
+      <div aria-hidden className="trusted-section__glow" />
 
-        <div className="relative overflow-hidden">
-          <span
-            aria-hidden
-            className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-linear-to-r from-ink-900 to-transparent sm:w-24"
-          />
-          <span
-            aria-hidden
-            className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-linear-to-l from-ink-900 to-transparent sm:w-24"
-          />
+      <div className="trusted-section__inner">
+        <header className="trusted-section__header">
+          <div className="trusted-section__eyebrow">
+            <span aria-hidden className="trusted-section__eyebrow-line" />
 
-          <div className="marquee-left flex w-max">
-            {[0, 1].map((copy) => (
-              <ul
-                key={copy}
-                className="flex shrink-0"
-                aria-hidden={copy === 1 ? true : undefined}
-              >
-                {clients.map((name) => (
-                  <li key={`${copy}-${name}`} className="mx-8 flex items-center gap-8 sm:mx-10">
-                    <span className="whitespace-nowrap text-sm font-semibold text-text-muted">
-                      {name}
-                    </span>
-                    <span
-                      aria-hidden
-                      className="size-1 shrink-0 rounded-full bg-brand/40"
-                    />
-                  </li>
-                ))}
-              </ul>
-            ))}
+            <span>Trusted across Mauritius</span>
+
+            <span aria-hidden className="trusted-section__eyebrow-line" />
           </div>
+
+          <h2 id="trusted-by-heading" className="trusted-section__title">
+            Businesses that{" "}
+            <span>move forward with Mobiz.</span>
+          </h2>
+
+          <p className="trusted-section__copy">
+            Supporting Mauritian businesses across tourism, retail,
+            professional services, education, e-commerce and digital
+            operations.
+          </p>
+        </header>
+
+        <div className="trusted-section__rows">
+          <ClientRow clients={ROW_ONE} direction="left" />
+          <ClientRow clients={ROW_TWO} direction="right" />
         </div>
       </div>
     </section>

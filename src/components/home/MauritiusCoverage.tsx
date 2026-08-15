@@ -1,97 +1,191 @@
-import Link from "next/link";
-import { MapPin } from "lucide-react";
-import { Container } from "@/components/ui/Container";
-import { Section } from "@/components/ui/Section";
-import { SectionHeading } from "@/components/ui/SectionHeading";
-import { Reveal } from "@/components/motion/Reveal";
-import { cities, serviceTemplates } from "@/lib/cityServicePages";
-import { CONTACT_AREA_SERVED } from "@/lib/site";
+"use client";
 
-/**
- * Local coverage.
- *
- * Links straight into the city × service landing pages, so this section is a
- * real part of the internal linking structure rather than decoration.
- *
- * Wording is careful: Mobiz *works with* businesses in these towns. It does not
- * claim a physical office in any of them, because that would not be true.
- */
-export function MauritiusCoverage() {
-  const websiteService = serviceTemplates["website-design"];
+import dynamic from "next/dynamic";
+import { ArrowUpRight, Star } from "lucide-react";
 
+import type { Testimonial } from "@/components/ui/3d-book-testimonial";
+
+const ReviewBook = dynamic(
+  () =>
+    import("@/components/ui/3d-book-testimonial").then(
+      (mod) => mod.Component,
+    ),
+  {
+    ssr: false,
+  },
+);
+
+const REVIEW_URL =
+  "https://g.page/r/CQN8HIPUVP1DEAI/review";
+
+const testimonials: Testimonial[] = [
+  {
+    name: "Marika Velloo",
+    jobtitle: "Facebook Review",
+    rating: 5,
+    text: "Very good service. Highly recommend. They were very good at giving me the right information and guidance for the creation of my website. Thank you so much!!",
+  },
+  {
+    name: "Nasreen Mustun-Maherally",
+    jobtitle: "Facebook Review",
+    rating: 5,
+    text: "I highly recommend Mobiz. Their customer service is second to none. I was impressed with their professionalism. Mr Vega was very helpful and patient since day one. He was quick to respond to my complex needs. Big thanks to Mobiz.",
+  },
+  {
+    name: "Devysen Chocalingum",
+    jobtitle: "Facebook Review",
+    rating: 5,
+    text: "Mo ti guet Mobiz.mu pu fair mo return MRA et mo bien satisfait. Lekip top, keep it up. A recommender 100%.",
+  },
+  {
+    name: "Naresh Kumarsing Daumoo",
+    jobtitle: "Google Review",
+    rating: 5,
+    text: "Amazing service! Our website was delivered in under a week, and the team has been incredibly attentive throughout the whole process. They listened to our needs, made quick adjustments, and ensured everything was perfect. Truly a reliable and dedicated team!",
+  },
+  {
+    name: "Aurélie Thomas",
+    jobtitle: "Google Review",
+    rating: 5,
+    text: "I had my website built by Mobiz and I'm very satisfied with the service. The web developer was attentive, did a professional job, and offered helpful advice for the site. In the end, I'm very happy with the result and I recommend Mobiz.",
+  },
+  {
+    name: "Guillaume St Hubert",
+    jobtitle: "Google Review",
+    rating: 5,
+    text: "An exceptional team! Thanks to Mobiz.mu, our company finally has a modern, elegant and professional online presence. Very happy with the support and the result.",
+  },
+  {
+    name: "Alex",
+    jobtitle: "Google Review",
+    rating: 5,
+    text: "Excellent accounting service! The Mobiz team is professional, responsive, and always ready to help. I highly recommend their services!",
+  },
+  {
+    name: "Laurent",
+    jobtitle: "Google Review",
+    rating: 5,
+    text: "I had an amazing experience working with Mobiz.mu! From the very first consultation, their team was professional, responsive, and genuinely cared about helping my business grow.",
+  },
+];
+
+function SummaryStars() {
   return (
-    <Section deferPaint spacing="default" className="overflow-hidden bg-ink-900" aria-labelledby="coverage-heading">
-      <span aria-hidden className="absolute inset-0 tech-grid" />
+    <div
+      className="flex gap-1"
+      aria-label="5 out of 5 stars"
+    >
+      {Array.from({ length: 5 }).map((_, index) => (
+        <Star
+          key={index}
+          aria-hidden
+          className="size-5 fill-[#F5B82E] text-[#F5B82E]"
+        />
+      ))}
+    </div>
+  );
+}
+
+export function MauritiusCoverage() {
+  return (
+    <section
+      aria-labelledby="reviews-heading"
+      className="relative overflow-hidden bg-[#F7F7F4]"
+    >
+      {/* subtle technical grid */}
       <span
         aria-hidden
-        className="pointer-events-none absolute -right-20 top-1/2 h-[500px] w-[600px] -translate-y-1/2"
+        className="pointer-events-none absolute inset-0 opacity-[0.11]"
         style={{
-          background: "radial-gradient(ellipse, rgba(192,24,34,0.12), transparent 70%)",
+          backgroundImage:
+            "linear-gradient(rgba(0,0,0,.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,.025) 1px, transparent 1px)",
+          backgroundSize: "64px 64px",
         }}
       />
 
-      <Container className="relative">
-        <div className="grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:gap-16">
-          <Reveal direction="left">
-            <SectionHeading
-              id="coverage-heading"
-              eyebrow="Across Mauritius"
-              title="Working with businesses island-wide."
-              description="From Port Louis to Grand Baie, we work with businesses across Mauritius — and support clients in Rodrigues and Réunion."
+      {/* light Mobiz atmosphere */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute right-[6%] top-1/2 h-[420px] w-[520px] -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(192,24,34,0.055),transparent_68%)]"
+      />
+
+      <div className="relative z-10 mx-auto grid w-full max-w-[1380px] items-center gap-7 px-5 py-7 sm:px-8 sm:py-8 lg:grid-cols-[0.86fr_1.14fr] lg:gap-10 lg:px-12 lg:py-9 xl:px-16">
+        {/* ============================================================ */}
+        {/* LEFT                                                         */}
+        {/* ============================================================ */}
+
+        <div className="mx-auto w-full max-w-[530px] lg:mx-0">
+          <div className="mb-3 flex items-center gap-3">
+            <span className="h-px w-10 bg-[#C01822]" />
+
+            <p className="font-mono text-[9px] font-black uppercase tracking-[0.2em] text-[#C01822]">
+              Customer Feedback
+            </p>
+          </div>
+
+          <h2
+            id="reviews-heading"
+            className="font-black leading-[0.91] tracking-[-0.055em] text-[#070709]"
+            style={{
+              fontSize:
+                "clamp(2.35rem,4.6vw,4.45rem)",
+            }}
+          >
+            What our
+            <br />
+            customers{" "}
+            <span className="text-[#C01822]">
+              think
+            </span>
+            <br />
+            <span className="text-[#C01822]">
+              about us.
+            </span>
+          </h2>
+
+          <p className="mt-4 max-w-[500px] text-sm font-medium leading-6 text-[#62636A] sm:text-[15px]">
+            Real feedback from customers who trusted Mobiz with their websites,
+            business systems, accounting and digital projects.
+          </p>
+
+          <div className="mt-5 flex flex-wrap items-center gap-3">
+            <SummaryStars />
+
+            <span className="text-[11px] font-bold text-black/40">
+              Real customer feedback
+            </span>
+          </div>
+
+          <a
+            href={REVIEW_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group mt-5 inline-flex min-h-11 items-center gap-2 rounded-lg bg-[#C01822] px-5 py-2.5 text-[11px] font-black text-white shadow-[0_12px_30px_rgba(192,24,34,0.22)] transition-[transform,background-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-[#A3121B] hover:shadow-[0_15px_34px_rgba(192,24,34,0.3)]"
+          >
+            Leave us a Google review
+
+            <ArrowUpRight
+              aria-hidden
+              className="size-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
             />
-
-            <ul className="mt-7 flex flex-wrap gap-2">
-              {CONTACT_AREA_SERVED.map((area) => (
-                <li
-                  key={area}
-                  className="inline-flex items-center gap-1.5 rounded-md border border-line px-3 py-1.5 text-xs font-medium text-text-body"
-                >
-                  <MapPin aria-hidden className="size-3 shrink-0 text-brand" />
-                  {area}
-                </li>
-              ))}
-            </ul>
-          </Reveal>
-
-          <Reveal direction="right">
-            <div className="rounded-2xl border border-line bg-surface-0 p-5 sm:p-7">
-              <p className="mb-5 font-mono text-[9px] uppercase tracking-widest text-text-muted">
-                Website design by town
-              </p>
-              <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                {cities.map((city) => (
-                  <li key={city.slug}>
-                    <Link
-                      href={`/${websiteService.key}-${city.slug}`}
-                      className="group flex min-h-11 items-center gap-2.5 rounded-lg border border-transparent px-3 py-2.5 transition-colors hover:border-line hover:bg-surface-1"
-                    >
-                      <span
-                        aria-hidden
-                        className="size-1.5 shrink-0 rounded-full bg-brand/50 transition-colors group-hover:bg-brand"
-                      />
-                      <span className="min-w-0 flex-1 truncate text-sm text-text-body transition-colors group-hover:text-text-primary">
-                        {city.name}
-                      </span>
-                      <span className="shrink-0 font-mono text-[9px] uppercase tracking-wider text-text-faint">
-                        {city.region.split(" ")[0]}
-                      </span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-
-              <p className="mt-5 border-t border-line-faint pt-4 text-xs leading-relaxed text-text-muted">
-                We also cover SEO and accounting services for each of these areas — see{" "}
-                <Link href="/mauritius-services" className="text-brand-mid hover:underline">
-                  all Mauritius services
-                </Link>
-                .
-              </p>
-            </div>
-          </Reveal>
+          </a>
         </div>
-      </Container>
-    </Section>
+
+        {/* ============================================================ */}
+        {/* RIGHT — TWO-PAGE BOOK                                        */}
+        {/* ============================================================ */}
+
+        <div className="min-w-0 overflow-hidden">
+           <div className="review-book-stage">
+              <div className="review-book-spread">
+                 <ReviewBook
+                   testimonials={testimonials}             
+        />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 
