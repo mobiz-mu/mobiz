@@ -161,6 +161,15 @@ export function OrbitScene({
              height={900}
              sizes="(max-width: 639px) 260px, (max-width: 1023px) 360px, 500px"
              className="orbit-person__image"
+             /*
+              * Deliberately NOT next/image's `priority`. Measured with Lighthouse: the LCP
+              * element on this page is the H1 text (span.hero-headline__word), not this
+              * image — `lcp-discovery-insight` reports notApplicable, i.e. no LCP image.
+              * `priority` would inject a <link rel="preload"> for a ~654KB decorative
+              * visual into <head>, competing with the CSS/font work the text LCP waits on.
+              * Eager + high fetchPriority still loads it promptly once parsed, without
+              * jumping ahead of the actual LCP path.
+              */
              loading={eagerCentreImage ? "eager" : "lazy"}
              fetchPriority={eagerCentreImage ? "high" : "auto"}
           />

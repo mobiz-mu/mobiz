@@ -15,11 +15,18 @@ import {
 
 /*
  * Self-hosted through next/font: no render-blocking request to fonts.googleapis.com,
- * and `display: swap` + preloaded subsets keep the hero H1 from shifting.
+ * and `display: swap` keeps text paintable before the face arrives.
+ *
+ * No `weight` array on purpose. Space Grotesk ships a variable `wght` axis (300-700)
+ * covering every weight this site paints (400/500/600/700).
+ *
+ * Measured, so it isn't re-"optimised" later on a false premise: listing static weights
+ * emits the SAME three .woff2 files (one per unicode-range subset) with the same hashes
+ * — it does not download more bytes. The only difference is the CSS, which drops from
+ * 12 @font-face declarations (4 weights x 3 subsets) to 3. Byte cost is identical.
  */
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
   variable: "--font-space-grotesk",
   display: "swap",
 });

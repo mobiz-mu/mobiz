@@ -19,10 +19,12 @@ const nextConfig: NextConfig = {
   },
 
   typescript: {
-    // Type checking runs separately via `npm run typecheck` (tsc --noEmit). Next's
-    // in-build checker duplicates that work in a worker that needs far more memory
-    // than this host has, so it's disabled here to keep `next build` reliable.
-    ignoreBuildErrors: true,
+    // Type errors must fail the build. `npm run typecheck` still runs tsc separately,
+    // but relying on that alone meant a type error could ship if the gate was skipped.
+    // The in-build checker is memory-hungry on this ~8GB host, which is why the build
+    // script raises --max-old-space-size; if it ever OOMs, fix the memory ceiling
+    // rather than turning this back off.
+    ignoreBuildErrors: false,
   },
 
   async headers() {
