@@ -2,10 +2,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
-/** Intrinsic size of the derived lockup (public/images/logos/mobiz-logo.png). */
-const LOCKUP_W = 310;
-const LOCKUP_H = 240;
-const ASPECT = LOCKUP_W / LOCKUP_H; // 1.2917
+/** Intrinsic size of the derived lockup (public/images/logos/mobiz-lockup.png). */
+const LOCKUP_W = 483;
+const LOCKUP_H = 200;
+const ASPECT = LOCKUP_W / LOCKUP_H; // 2.415
 
 type LogoProps = {
   /** Rendered height in px. Width is derived, so the mark is never distorted. */
@@ -18,9 +18,12 @@ type LogoProps = {
 /**
  * The official Mobiz.mu lockup.
  *
- * Source: the supplied master `public/documents/mobiz-logo.png`, trimmed to its
- * ink bounds and keyed to transparency by `scripts/build-brand-assets.mjs`.
- * Nothing is redrawn, recoloured or reproportioned.
+ * Source: the approved master `public/images/brand/mobiznew-logo.png`, trimmed
+ * to its ink bounds and keyed to transparency by
+ * `scripts/migrate-brand-assets.mjs`. The supplied artwork is white-on-solid-
+ * black with no alpha, so the black has to be keyed out — otherwise the header
+ * would show a black rectangle against the page's near-black surface. Nothing
+ * is redrawn, recoloured or reproportioned.
  *
  * The artwork is a LOCKUP — it already contains the "mobiz.mu" wordmark between
  * the M's legs. It therefore replaces the previous [tiny mark + CSS text]
@@ -56,7 +59,7 @@ export function Logo({ height = 40, className, priority = false }: LogoProps) {
       )}
     >
       <Image
-        src="/images/logos/mobiz-logo.png"
+        src="/images/logos/mobiz-lockup.png"
         alt=""
         width={width}
         height={height}
