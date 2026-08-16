@@ -12,6 +12,7 @@ import {
   Search,
   Workflow,
 } from "lucide-react";
+import { WHATSAPP_BASE_URL } from "@/lib/site";
 import type { ServicePageContent } from "./types";
 
 export const businessSolutions: ServicePageContent = {
@@ -43,7 +44,7 @@ export const businessSolutions: ServicePageContent = {
     intro:
       "We create the documents and tools that make a business look serious and work more efficiently — business plans, pitch decks, proposals and company profiles when you need to present well, plus CRM, automation, and custom software when you need to operate better. It's the professional back-office side of growing a business in Mauritius.",
     primaryCta: { label: "Tell Us What You Need", href: "/contact" },
-    secondaryCta: { label: "Chat on WhatsApp", href: "https://wa.me/23055068119" },
+    secondaryCta: { label: "Chat on WhatsApp", href: WHATSAPP_BASE_URL },
     highlights: [
       "Business plans & pitch decks",
       "Proposals & profiles",

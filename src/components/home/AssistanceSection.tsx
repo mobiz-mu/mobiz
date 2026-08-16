@@ -11,6 +11,7 @@ import {
   TikTokIcon,
   WhatsAppBrandIcon,
 } from "@/components/ui/SocialBrandIcons";
+import { WHATSAPP_BASE_URL } from "@/lib/site";
 
 const SOCIAL_LINKS = [
   {
@@ -35,7 +36,7 @@ const SOCIAL_LINKS = [
   },
   {
     label: "WhatsApp",
-    href: "https://wa.me/23055068119",
+    href: WHATSAPP_BASE_URL,
     icon: WhatsAppBrandIcon,
   },
 ] as const;

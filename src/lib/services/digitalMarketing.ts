@@ -12,6 +12,7 @@ import {
   Share2,
   Target,
 } from "lucide-react";
+import { WHATSAPP_BASE_URL } from "@/lib/site";
 import type { ServicePageContent } from "./types";
 
 export const digitalMarketing: ServicePageContent = {
@@ -43,7 +44,7 @@ export const digitalMarketing: ServicePageContent = {
     intro:
       "We handle the marketing side of your business online — showing up on Google when people search, running Facebook and Instagram ads that reach the right audience in Mauritius, keeping your social pages active, and turning attention into WhatsApp enquiries. You get clear monthly reporting, not vanity numbers.",
     primaryCta: { label: "Discuss Your Marketing", href: "/contact" },
-    secondaryCta: { label: "Chat on WhatsApp", href: "https://wa.me/23055068119" },
+    secondaryCta: { label: "Chat on WhatsApp", href: WHATSAPP_BASE_URL },
     highlights: [
       "SEO & Google Ads",
       "Meta Ads",

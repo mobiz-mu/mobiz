@@ -15,6 +15,7 @@ import {
   Sparkles,
   Wrench,
 } from "lucide-react";
+import { WHATSAPP_BASE_URL } from "@/lib/site";
 import type { ServicePageContent } from "./types";
 
 export const websiteDesignDevelopment: ServicePageContent = {
@@ -46,7 +47,7 @@ export const websiteDesignDevelopment: ServicePageContent = {
     intro:
       "We design and build business websites, online stores, booking systems, and custom web applications for companies in Mauritius. Every site is mobile-first, fast to load, structured for search engines, and connected to WhatsApp so enquiries reach you the way your customers actually want to contact you.",
     primaryCta: { label: "Start a Website Project", href: "/contact" },
-    secondaryCta: { label: "Chat on WhatsApp", href: "https://wa.me/23055068119" },
+    secondaryCta: { label: "Chat on WhatsApp", href: WHATSAPP_BASE_URL },
     highlights: [
       "Mobile-first builds",
       "WhatsApp-ready",

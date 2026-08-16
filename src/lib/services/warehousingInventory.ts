@@ -12,6 +12,7 @@ import {
   Users,
   Warehouse,
 } from "lucide-react";
+import { WHATSAPP_BASE_URL } from "@/lib/site";
 import type { ServicePageContent } from "./types";
 
 export const warehousingInventory: ServicePageContent = {
@@ -43,7 +44,7 @@ export const warehousingInventory: ServicePageContent = {
     intro:
       "We help Mauritian businesses get their inventory and warehouse operations under control — counting stock accurately, setting up barcode and inventory systems, organising the warehouse, and fixing the processes that cause stock loss. We're an operations and systems partner: we manage and improve your inventory; we don't rent out warehouse space.",
     primaryCta: { label: "Discuss Your Inventory", href: "/contact" },
-    secondaryCta: { label: "Chat on WhatsApp", href: "https://wa.me/23055068119" },
+    secondaryCta: { label: "Chat on WhatsApp", href: WHATSAPP_BASE_URL },
     highlights: [
       "Physical stock counting",
       "Barcode & inventory systems",

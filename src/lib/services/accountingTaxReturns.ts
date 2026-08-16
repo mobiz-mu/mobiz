@@ -12,6 +12,7 @@ import {
   TrendingUp,
   Users,
 } from "lucide-react";
+import { WHATSAPP_BASE_URL } from "@/lib/site";
 import type { ServicePageContent } from "./types";
 
 export const accountingTaxReturns: ServicePageContent = {
@@ -43,7 +44,7 @@ export const accountingTaxReturns: ServicePageContent = {
     intro:
       "We handle the bookkeeping, VAT, payroll, and tax return support that keeps a Mauritian business organised and compliant — so you spend less time on paperwork and more on running the business. The exact requirements depend on your business structure and applicable Mauritius regulations, and we'll walk you through what applies to you.",
     primaryCta: { label: "Talk to Us About Your Books", href: "/contact" },
-    secondaryCta: { label: "Chat on WhatsApp", href: "https://wa.me/23055068119" },
+    secondaryCta: { label: "Chat on WhatsApp", href: WHATSAPP_BASE_URL },
     highlights: [
       "Bookkeeping & VAT",
       "Payroll & PAYE",
