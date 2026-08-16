@@ -13,7 +13,7 @@ import { ACCENTS, type AccentId } from "@/lib/accents";
 export const metadata: Metadata = buildMetadata({
   title: "FAQ | Common Questions About Working With MoBiz.mu",
   description:
-    "Answers to common questions about MoBiz.mu websites, digital marketing, accounting and tax, warehousing and inventory, business solutions, monthly packages, payments and support.",
+    "Common questions about MoBiz.mu websites, marketing, accounting, inventory, business solutions, monthly packages, payments and support in Mauritius.",
   path: "/faq",
 });
 

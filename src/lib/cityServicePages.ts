@@ -442,7 +442,14 @@ function buildPage(service: ServiceTemplate, city: City): CityServicePageData {
     title,
     subtitle,
     metaTitle: `${service.label} ${city.name}, Mauritius`,
-    metaDescription: `${service.label} in ${city.name}, Mauritius by MoBiz.mu. ${service.priceLabel}. Local support for ${city.region} businesses — WhatsApp us for a fast quote.`,
+    /*
+     * Kept under ~160 characters. The old template inlined `priceLabel`, which
+     * runs to 49 characters for accounting ("Accounting packages tailored to
+     * your business size"), pushing all 27 city pages to 161-197 and cutting
+     * the local relevance off in search results. The price is still stated on
+     * the page itself, where it can be read in full.
+     */
+    metaDescription: `${service.label} in ${city.name}, Mauritius. Local support for ${city.region} businesses — WhatsApp MoBiz.mu for a fast quote.`,
     primaryKeyword: service.primaryKeyword(city),
     secondaryKeywords: service.secondaryKeywords(city),
     priceLabel: service.priceLabel,

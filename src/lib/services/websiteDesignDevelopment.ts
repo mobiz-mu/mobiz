@@ -22,9 +22,9 @@ export const websiteDesignDevelopment: ServicePageContent = {
   path: "/services/website-design-development",
 
   metaTitle:
-    "Website Design & Development Mauritius | Business, E-Commerce & SaaS Websites",
+    "Website Design & Development Mauritius | MoBiz.mu",
   metaDescription:
-    "MoBiz.mu designs and builds business websites, online stores, booking systems, and custom web applications for companies in Mauritius, with WhatsApp integration, technical SEO, and ongoing maintenance included.",
+    "Business websites, online stores, booking systems and custom web apps for Mauritius companies, with WhatsApp integration, technical SEO and maintenance.",
   keywords: [
     "website design Mauritius",
     "website development Mauritius",

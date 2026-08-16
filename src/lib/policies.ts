@@ -225,7 +225,7 @@ export const POLICY_DOCUMENTS: Record<string, PolicyDocument> = {
   "terms-of-service": {
     "slug": "terms-of-service",
     "title": "Terms of Service",
-    "metaDescription": "Read the Terms of Service for MoBiz.mu, including service engagement conditions, client responsibilities, project scope standards, payment principles, and general business relationship terms.",
+    "metaDescription": "MoBiz.mu Terms of Service: engagement conditions, client responsibilities, project scope standards, payment principles and business relationship terms.",
     "intro": "The terms that apply when engaging MoBiz.mu for business, digital or operational support.",
     "effectiveDate": "April 6, 2026",
     "sections": [

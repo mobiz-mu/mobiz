@@ -27,7 +27,7 @@ import {
 
 export const metadata: Metadata = buildMetadata({
   title:
-    "Contact MoBiz.mu | Website, Marketing, Accounting & Business Support in Mauritius",
+    "Contact MoBiz.mu | Mauritius Business Support",
   description:
     "Contact MoBiz.mu for website design, digital marketing, accounting and tax, warehousing and inventory, and business solutions in Mauritius. WhatsApp us for a fast reply.",
   path: "/contact",

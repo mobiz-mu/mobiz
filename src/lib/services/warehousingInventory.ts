@@ -19,9 +19,9 @@ export const warehousingInventory: ServicePageContent = {
   path: "/services/warehousing-inventory",
 
   metaTitle:
-    "Warehousing & Inventory Services Mauritius | Stock Counting, Systems & Audits",
+    "Warehousing & Inventory Mauritius | Stock Control",
   metaDescription:
-    "MoBiz.mu provides inventory and warehouse operations services in Mauritius — physical stock counting, stock reconciliation, barcode and inventory systems, warehouse organisation, and process audits. We manage and improve your operation; we do not rent out warehouse space.",
+    "Stock counting, reconciliation, barcode and inventory systems, warehouse organisation and process audits in Mauritius. We improve your operation, not rent space.",
   keywords: [
     "inventory management Mauritius",
     "stock counting Mauritius",

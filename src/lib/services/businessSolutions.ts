@@ -19,9 +19,9 @@ export const businessSolutions: ServicePageContent = {
   path: "/services/business-solutions",
 
   metaTitle:
-    "Business Solutions Mauritius | Business Plans, Pitch Decks, Proposals & Software",
+    "Business Solutions Mauritius | Plans & Software",
   metaDescription:
-    "MoBiz.mu creates business plans, pitch decks, proposals, company profiles, and business documents, plus CRM, automation and custom software for businesses in Mauritius that want to look established and run more efficiently.",
+    "Business plans, pitch decks, proposals and company profiles, plus CRM, automation and custom software for Mauritius businesses that want to look established.",
   keywords: [
     "business plan Mauritius",
     "pitch deck Mauritius",
@@ -234,6 +234,12 @@ export const businessSolutions: ServicePageContent = {
         description:
           "When a business tool needs to be a proper web application or client portal, our development team builds it.",
         href: "/services/website-design-development",
+      },
+      {
+        label: "Free Business Consultation",
+        description:
+          "Not sure which of these you actually need first? Talk it through with us before committing to anything.",
+        href: "/free-business-consultation",
       },
       {
         label: "Accounting & Tax Returns",

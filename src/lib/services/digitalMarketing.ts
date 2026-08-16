@@ -19,9 +19,9 @@ export const digitalMarketing: ServicePageContent = {
   path: "/services/digital-marketing",
 
   metaTitle:
-    "Digital Marketing Mauritius | SEO, Google Ads, Meta Ads & Social Media",
+    "Digital Marketing Mauritius | SEO, Ads & Social",
   metaDescription:
-    "MoBiz.mu runs SEO, Google Ads, Meta Ads, Google Business Profile, social media and WhatsApp marketing for businesses in Mauritius, with clear monthly reporting and no invented promises.",
+    "SEO, Google Ads, Meta Ads, Google Business Profile and social media for Mauritius businesses, with clear monthly reporting and no invented promises.",
   keywords: [
     "digital marketing Mauritius",
     "SEO Mauritius",
@@ -234,6 +234,12 @@ export const digitalMarketing: ServicePageContent = {
         description:
           "A fast, clear website gives your ads and SEO somewhere worth sending people. We build the destination, not just the traffic.",
         href: "/services/website-design-development",
+      },
+      {
+        label: "Free SEO Audit",
+        description:
+          "Not sure where your site currently stands? We will review its search visibility and tell you what is actually holding it back.",
+        href: "/free-seo-audit",
       },
       {
         label: "SEO Services Mauritius",

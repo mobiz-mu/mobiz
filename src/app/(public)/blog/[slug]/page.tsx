@@ -32,7 +32,13 @@ export async function generateMetadata({
   if (!post) notFound();
 
   return buildMetadata({
-    title: `${post.title} | MoBiz.mu`,
+    /*
+     * No " | MoBiz.mu" suffix here. Article headlines are full sentences, and
+     * the brand pushed every one of the eight past the ~60 characters Google
+     * renders, truncating the part that actually describes the article. The
+     * brand is still carried by og:siteName and the Organization publisher.
+     */
+    title: post.title,
     description: post.excerpt,
     path: `/blog/${post.slug}`,
     article: { modifiedTime: post.updatedAt },

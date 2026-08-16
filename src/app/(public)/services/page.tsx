@@ -3,9 +3,9 @@ import { ServicesHubPage } from "@/components/templates/ServicesHubPage";
 import { buildMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Services | Websites, Marketing, Accounting & Business Systems in Mauritius | MoBiz.mu",
+  title: "Services in Mauritius | Web, Marketing & Accounting",
   description:
-    "Explore MoBiz.mu's five service divisions: website design and development, digital marketing and SEO, accounting and tax returns, warehousing and inventory, and business solutions.",
+    "Five divisions, one team: website design, digital marketing and SEO, accounting and tax, warehousing and inventory, and business solutions in Mauritius.",
   path: "/services",
 });
 

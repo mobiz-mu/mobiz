@@ -19,9 +19,9 @@ export const accountingTaxReturns: ServicePageContent = {
   path: "/services/accounting-tax-returns",
 
   metaTitle:
-    "Accounting & Tax Returns Mauritius | Bookkeeping, VAT & MRA Compliance",
+    "Accounting & Tax Returns Mauritius | VAT & MRA",
   metaDescription:
-    "MoBiz.mu provides bookkeeping, VAT returns, payroll, individual and company tax return support, and financial reporting for businesses in Mauritius. Requirements depend on your business structure and applicable Mauritius regulations.",
+    "Bookkeeping, VAT returns, payroll, company and individual tax returns, and financial reporting for businesses in Mauritius.",
   keywords: [
     "accounting services Mauritius",
     "tax returns Mauritius",

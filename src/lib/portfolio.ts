@@ -39,9 +39,9 @@ export const portfolioItems: PortfolioProject[] = [
     outcome:
       "The final website supports stronger credibility, better local SEO foundations, easier mobile browsing, and a more confident first impression for homes and businesses seeking pest control in Mauritius.",
     seoTitle:
-      "Dan & Shi Pest Control Ltd Portfolio | Pest Control Website Mauritius | MoBiz.mu",
+      "Dan & Shi Pest Control | Pest Control Website Mauritius",
     seoDescription:
-      "See how MoBiz.mu built a premium bilingual pest control website for Dan & Shi Pest Control Ltd in Mauritius with stronger trust, mobile usability, and local visibility.",
+      "How MoBiz.mu built a bilingual pest control website for Dan & Shi in Mauritius, with stronger trust signals, mobile usability and local visibility.",
     updatedAt: "2026-04-01",
   },
   {
@@ -65,9 +65,9 @@ export const portfolioItems: PortfolioProject[] = [
     outcome:
       "The project created a stronger digital image, clearer service presentation, and a more conversion-friendly structure for Mauritius travellers and holiday bookings.",
     seoTitle:
-      "Himalay Rental Tours Portfolio | Tourism Website Mauritius | MoBiz.mu",
+      "Himalay Rental Tours | Tourism Website Mauritius",
     seoDescription:
-      "Discover how MoBiz.mu designed a tourism website for Himalay Rental Tours in Mauritius with stronger booking flow, mobile usability, and premium service presentation.",
+      "How MoBiz.mu designed a tourism website for Himalay Rental Tours in Mauritius, with a stronger booking flow and premium service presentation.",
     updatedAt: "2026-04-01",
   },
   {
@@ -91,9 +91,9 @@ export const portfolioItems: PortfolioProject[] = [
     outcome:
       "The result is a more elegant e-commerce experience that improves product presentation, supports stronger brand storytelling, and helps the business look more premium online.",
     seoTitle:
-      "Atelier de Mea Portfolio | Handmade Fashion E-Commerce Mauritius | MoBiz.mu",
+      "Atelier de Mea | Handmade Fashion E-Commerce Mauritius",
     seoDescription:
-      "See how MoBiz.mu created a premium e-commerce website for Atelier de Mea in Mauritius with stronger handmade brand presentation, mobile shopping, and product discovery.",
+      "How MoBiz.mu created a premium e-commerce site for Atelier de Mea in Mauritius, with stronger handmade brand presentation and mobile shopping.",
     updatedAt: "2026-04-01",
   },
   {
@@ -117,7 +117,7 @@ export const portfolioItems: PortfolioProject[] = [
     outcome:
       "The result supports a more confident digital presence and helps the company present itself in a way that aligns better with serious business expectations.",
     seoTitle:
-      "Multiimaint Ltd Portfolio | Corporate Service Website Mauritius | MoBiz.mu",
+      "Multiimaint Ltd | Corporate Website Mauritius",
     seoDescription:
       "Explore how MoBiz.mu created a premium corporate website direction for Multiimaint Ltd with stronger business presentation and cleaner executive structure.",
     updatedAt: "2026-04-01",
@@ -143,7 +143,7 @@ export const portfolioItems: PortfolioProject[] = [
     outcome:
       "The final result supports a better first impression, stronger travel credibility, and more efficient visitor flow from browsing to booking.",
     seoTitle:
-      "Travel Holiday Mauritius Portfolio | Tourism Website Mauritius | MoBiz.mu",
+      "Travel Holiday Mauritius | Tourism Website Case Study",
     seoDescription:
       "See how MoBiz.mu built a premium tourism website for Travel Holiday Mauritius with stronger trust, mobile booking flow, and local travel presentation.",
     updatedAt: "2026-04-01",
@@ -167,9 +167,9 @@ export const portfolioItems: PortfolioProject[] = [
     outcome:
       "The platform demonstrates a more executive operational environment with stronger usability, cleaner document handling, and more professional digital workflow presentation.",
     seoTitle:
-      "KS Contracting Ltd SaaS Portfolio | Custom Accounting Software | MoBiz.mu",
+      "KS Contracting | Custom Accounting Software Mauritius",
     seoDescription:
-      "Explore how MoBiz.mu built a premium custom accounting SaaS environment for KS Contracting Ltd with stronger document workflows and executive dashboard structure.",
+      "How MoBiz.mu built a custom accounting SaaS for KS Contracting Ltd, with stronger document workflows and an executive dashboard structure.",
     updatedAt: "2026-04-01",
   },
   {
@@ -191,7 +191,7 @@ export const portfolioItems: PortfolioProject[] = [
     outcome:
       "The result supports a stronger internal digital experience and demonstrates MoBiz.mu capability in premium custom SaaS interface execution.",
     seoTitle:
-      "Ram Pottery Hub SaaS Portfolio | Custom Software Interface | MoBiz.mu",
+      "Ram Pottery Hub | Custom Software Interface",
     seoDescription:
       "See how MoBiz.mu developed a premium SaaS-style software interface for Ram Pottery Hub with structured workflows and cleaner admin control.",
     updatedAt: "2026-04-01",
@@ -217,7 +217,7 @@ export const portfolioItems: PortfolioProject[] = [
     outcome:
       "The final website helps the brand present handcrafted products more professionally and supports a smoother customer-facing online shopping experience.",
     seoTitle:
-      "Ram Pottery Ltd Portfolio | Pottery E-Commerce Website Mauritius | MoBiz.mu",
+      "Ram Pottery Ltd | Pottery E-Commerce Mauritius",
     seoDescription:
       "Discover how MoBiz.mu built a premium pottery e-commerce website for Ram Pottery Ltd with stronger product presentation, mobile shopping, and brand consistency.",
     updatedAt: "2026-04-01",

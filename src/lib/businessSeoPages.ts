@@ -99,17 +99,6 @@ const LINK_TITLES: Record<string, string> = {
   "/invoice-software-mauritius": "Invoice Software",
 };
 
-/*
- * The four national pages. Still used by the handful of pages that already
- * carry their own specific sibling links and append these underneath.
- */
-const commonRelatedLinks = [
-  { title: "Website Design Mauritius", href: "/website-design-mauritius" },
-  { title: "Ecommerce Website Mauritius", href: "/ecommerce-website-mauritius" },
-  { title: "SEO Services Mauritius", href: "/seo-services-mauritius" },
-  { title: "Digital Marketing Mauritius", href: "/digital-marketing-mauritius" },
-];
-
 /* Topical clusters. Each page links to its siblings, so every page has inbound links. */
 const CLUSTERS: string[][] = [
   // Travel and booking
@@ -190,7 +179,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
     subtitle:
       "MoBiz.mu builds premium car rental websites with vehicle listings, booking enquiry forms, airport transfer options, WhatsApp integration and mobile-first design.",
     metaTitle:
-      "Car Rental Website Mauritius | Online Booking & WhatsApp Integration",
+      "Car Rental Website Mauritius | Online Booking",
     metaDescription:
       "MoBiz.mu builds car rental websites in Mauritius with vehicle listings, booking forms, airport transfer pages, WhatsApp enquiries and SEO-ready design.",
     primaryKeyword: "car rental website Mauritius",
@@ -432,7 +421,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
     subtitle:
       "Promote tours, excursions, packages and travel experiences with a premium website built for Mauritius tourism businesses.",
     metaTitle:
-      "Tour Operator Website Mauritius | Tours, Packages & Booking Websites",
+      "Tour Operator Website Mauritius | Tours & Booking",
     metaDescription:
       "MoBiz.mu builds tour operator websites in Mauritius with tour pages, package listings, booking enquiry forms, WhatsApp integration and SEO structure.",
     primaryKeyword: "tour operator website Mauritius",
@@ -748,7 +737,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
     subtitle:
       "MoBiz.mu builds restaurant websites with menus, food galleries, booking enquiries, location details, WhatsApp contact and mobile-friendly design.",
     metaTitle:
-      "Restaurant Website Mauritius | Menu, Reservations & Food Business Websites",
+      "Restaurant Website Mauritius | Menus & Reservations",
     metaDescription:
       "MoBiz.mu creates restaurant websites in Mauritius with menus, galleries, reservation enquiries, WhatsApp contact, location maps and SEO-ready structure.",
     primaryKeyword: "restaurant website Mauritius",
@@ -813,7 +802,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
     subtitle:
       "MoBiz.mu creates premium salon websites with treatment menus, appointment enquiries, WhatsApp booking, galleries, prices and beauty service pages.",
     metaTitle:
-      "Salon Website Mauritius | Beauty, Spa & Appointment Website Design",
+      "Salon Website Mauritius | Beauty & Appointments",
     metaDescription:
       "MoBiz.mu builds salon and beauty websites in Mauritius with services, prices, galleries, appointment enquiries, WhatsApp booking and SEO-ready structure.",
     primaryKeyword: "salon website Mauritius",
@@ -1132,7 +1121,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
       { title: "Accounting Services Mauritius", href: "/accounting-services-mauritius" },
       { title: "VAT Filing Mauritius", href: "/vat-filing-mauritius" },
       { title: "Company Registration Mauritius", href: "/company-registration-mauritius" },
-      ...commonRelatedLinks,
+      ...relatedLinksFor("accounting-firm-website-mauritius"),
     ],
   },
 
@@ -1208,7 +1197,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
     subtitle:
       "MoBiz.mu builds ecommerce stores for Mauritius brands with product catalogues, online store structure, WhatsApp ordering and SEO-ready product pages.",
     metaTitle:
-      "Ecommerce Store Mauritius | Online Store Development for Local Brands",
+      "Ecommerce Store Mauritius | Online Store Builds",
     metaDescription:
       "MoBiz.mu develops ecommerce stores in Mauritius with product catalogues, online ordering, WhatsApp enquiry flow, mobile design and SEO-ready structure.",
     primaryKeyword: "ecommerce store Mauritius",
@@ -1273,7 +1262,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
     subtitle:
       "MoBiz.mu builds custom websites for businesses that need more than a basic template, with tailored design, features, SEO structure and premium presentation.",
     metaTitle:
-      "Custom Website Mauritius | Tailored Website Development for Businesses",
+      "Custom Website Mauritius | Tailored Development",
     metaDescription:
       "MoBiz.mu builds custom websites in Mauritius with premium design, tailored features, SEO structure, mobile responsiveness and lead generation sections.",
     primaryKeyword: "custom website Mauritius",
@@ -1403,7 +1392,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
     subtitle:
       "MoBiz.mu develops custom accounting software interfaces, invoicing systems, quotation systems, customer records, payment tracking and finance dashboards.",
     metaTitle:
-      "Accounting Software Mauritius | Invoicing, Finance & Dashboard Systems",
+      "Accounting Software Mauritius | Invoicing & Finance",
     metaDescription:
       "MoBiz.mu builds accounting software systems in Mauritius with invoices, quotations, payments, customers, VAT tracking, dashboards and PDF exports.",
     primaryKeyword: "accounting software Mauritius",
@@ -1462,7 +1451,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
       { title: "Invoice Software Mauritius", href: "/invoice-software-mauritius" },
       { title: "Accounting Services Mauritius", href: "/accounting-services-mauritius" },
       { title: "Web Application Development Mauritius", href: "/web-application-development-mauritius" },
-      ...commonRelatedLinks,
+      ...relatedLinksFor("accounting-software-mauritius"),
     ],
   },
 
@@ -1473,7 +1462,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
     subtitle:
       "MoBiz.mu builds inventory management systems for product tracking, warehouse movements, stock levels, suppliers, reports and business operations.",
     metaTitle:
-      "Inventory Management System Mauritius | Stock & Warehouse Tracking",
+      "Inventory Management System Mauritius | Stock Control",
     metaDescription:
       "MoBiz.mu builds inventory management systems in Mauritius with product tracking, stock movements, suppliers, warehouses, reports and dashboards.",
     primaryKeyword: "inventory management system Mauritius",
@@ -1531,7 +1520,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
     relatedLinks: [
       { title: "Stock Management System Mauritius", href: "/stock-management-system-mauritius" },
       { title: "Web Application Development Mauritius", href: "/web-application-development-mauritius" },
-      ...commonRelatedLinks,
+      ...relatedLinksFor("inventory-management-system-mauritius"),
     ],
   },
 
@@ -1542,7 +1531,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
     subtitle:
       "MoBiz.mu builds stock management systems to help Mauritius businesses track products, quantities, stock movements, alerts and reports.",
     metaTitle:
-      "Stock Management System Mauritius | Inventory & Warehouse Software",
+      "Stock Management System Mauritius | Warehouse Software",
     metaDescription:
       "MoBiz.mu builds stock management systems in Mauritius with product tracking, stock movements, low stock alerts, warehouse records and dashboards.",
     primaryKeyword: "stock management system Mauritius",
@@ -1600,7 +1589,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
     relatedLinks: [
       { title: "Inventory Management System Mauritius", href: "/inventory-management-system-mauritius" },
       { title: "Web Application Development Mauritius", href: "/web-application-development-mauritius" },
-      ...commonRelatedLinks,
+      ...relatedLinksFor("stock-management-system-mauritius"),
     ],
   },
 
@@ -1668,7 +1657,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
     ],
     relatedLinks: [
       { title: "Web Application Development Mauritius", href: "/web-application-development-mauritius" },
-      ...commonRelatedLinks,
+      ...relatedLinksFor("crm-software-mauritius"),
     ],
   },
 
@@ -1679,7 +1668,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
     subtitle:
       "MoBiz.mu builds custom booking systems for rentals, appointments, services, tours, clinics, salons and reservation-based businesses.",
     metaTitle:
-      "Booking System Mauritius | Custom Reservation & Appointment Software",
+      "Booking System Mauritius | Reservations & Appointments",
     metaDescription:
       "MoBiz.mu develops booking systems in Mauritius for appointments, rentals, reservations, tours and service businesses with admin dashboards and enquiry flow.",
     primaryKeyword: "booking system Mauritius",
@@ -1737,7 +1726,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
     relatedLinks: [
       { title: "Booking Website Mauritius", href: "/booking-website-mauritius" },
       { title: "Web Application Development Mauritius", href: "/web-application-development-mauritius" },
-      ...commonRelatedLinks,
+      ...relatedLinksFor("booking-system-mauritius"),
     ],
   },
 
@@ -1806,7 +1795,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
     relatedLinks: [
       { title: "Accounting Software Mauritius", href: "/accounting-software-mauritius" },
       { title: "Web Application Development Mauritius", href: "/web-application-development-mauritius" },
-      ...commonRelatedLinks,
+      ...relatedLinksFor("invoice-software-mauritius"),
     ],
   },
 };
