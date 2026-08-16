@@ -137,12 +137,17 @@ const CLUSTERS: string[][] = [
   ],
 ];
 
-/* The national page each cluster sits under. */
+/*
+ * The page each cluster sits under. Industry website pages point up at the
+ * national website-design page; the business-software pages point at the
+ * web-application umbrella instead, because their intent is operational
+ * software, not a marketing website.
+ */
 const CLUSTER_PARENT = [
   "/website-design-mauritius",
   "/website-design-mauritius",
   "/ecommerce-website-mauritius",
-  "/website-design-mauritius",
+  "/web-application-development-mauritius",
 ];
 
 function relatedLinksFor(slug: string) {
@@ -296,11 +301,11 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
   "booking-website-mauritius": {
     slug: "booking-website-mauritius",
     eyebrow: "Booking Website Mauritius",
-    title: "Booking Website Development in Mauritius",
+    title: "Booking Website Design in Mauritius",
     subtitle:
       "MoBiz.mu creates booking websites for service businesses, rentals, tours, hotels, salons, clinics and appointment-based companies in Mauritius.",
     metaTitle:
-      "Booking Website Mauritius | Online Booking Systems for Businesses",
+      "Booking Website Mauritius | Reservations & Enquiries",
     metaDescription:
       "MoBiz.mu builds booking websites in Mauritius for car rentals, tours, hotels, villas, salons, clinics and service businesses with enquiry forms and WhatsApp integration.",
     primaryKeyword: "booking website Mauritius",
@@ -1258,7 +1263,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
   "custom-website-mauritius": {
     slug: "custom-website-mauritius",
     eyebrow: "Custom Website Mauritius",
-    title: "Custom Website Development in Mauritius",
+    title: "Custom Website Design in Mauritius",
     subtitle:
       "MoBiz.mu builds custom websites for businesses that need more than a basic template, with tailored design, features, SEO structure and premium presentation.",
     metaTitle:
@@ -1462,7 +1467,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
     subtitle:
       "MoBiz.mu builds inventory management systems for product tracking, warehouse movements, stock levels, suppliers, reports and business operations.",
     metaTitle:
-      "Inventory Management System Mauritius | Stock Control",
+      "Inventory Management System Mauritius | Warehouse Ops",
     metaDescription:
       "MoBiz.mu builds inventory management systems in Mauritius with product tracking, stock movements, suppliers, warehouses, reports and dashboards.",
     primaryKeyword: "inventory management system Mauritius",
@@ -1527,11 +1532,11 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
   "stock-management-system-mauritius": {
     slug: "stock-management-system-mauritius",
     eyebrow: "Stock Management System Mauritius",
-    title: "Stock Management System Development in Mauritius",
+    title: "Stock Control System for Mauritius Businesses",
     subtitle:
       "MoBiz.mu builds stock management systems to help Mauritius businesses track products, quantities, stock movements, alerts and reports.",
     metaTitle:
-      "Stock Management System Mauritius | Warehouse Software",
+      "Stock Management System Mauritius | Stock Control",
     metaDescription:
       "MoBiz.mu builds stock management systems in Mauritius with product tracking, stock movements, low stock alerts, warehouse records and dashboards.",
     primaryKeyword: "stock management system Mauritius",

@@ -306,7 +306,7 @@ export const seoLandingPages: Record<SeoLandingPageKey, SeoLandingPageData> = {
     subtitle:
       "Grow your business online with social media, Google visibility, SEO, content creation and digital campaigns designed for Mauritius audiences.",
     metaTitle:
-      "Digital Marketing Mauritius | SEO, Social Media & Google Ads",
+      "Digital Marketing Mauritius | Ads, Social & Lead Generation",
     metaDescription:
       "Digital marketing services in Mauritius by MoBiz.mu. Social media management, SEO, Google Ads, content creation, branding and online growth strategies.",
     primaryKeyword: "digital marketing Mauritius",
@@ -433,7 +433,7 @@ export const seoLandingPages: Record<SeoLandingPageKey, SeoLandingPageData> = {
     subtitle:
       "MoBiz.mu supports Mauritius businesses with bookkeeping, VAT filing, tax returns, payroll, statutory filing and financial administration.",
     metaTitle:
-      "Accounting Services Mauritius | Bookkeeping, VAT & Tax Filing",
+      "Accounting Services Mauritius | Bookkeeping & Reporting",
     metaDescription:
       "Accounting services in Mauritius by MoBiz.mu. Bookkeeping, VAT filing, payroll, tax returns, statutory filing and financial statements for businesses.",
     primaryKeyword: "accounting services Mauritius",
