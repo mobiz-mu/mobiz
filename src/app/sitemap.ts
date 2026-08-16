@@ -14,115 +14,110 @@ import { SITE_URL } from "@/lib/site";
  * Deliberately excluded: /api/*, and anything not a real indexable page.
  */
 
-type StaticRoute = {
-  path: string;
-  priority: number;
-  changeFrequency: "daily" | "weekly" | "monthly" | "yearly";
-};
+type StaticRoute = { path: string };
 
-function lastModified(value?: string | Date): Date {
-  if (!value) return new Date();
+/*
+ * Returns a real modification date, or undefined when we genuinely do not know
+ * one. It never falls back to "now".
+ *
+ * Google ignores <changefreq> and <priority> outright, and it discounts
+ * <lastmod> for the whole site once it catches the values being wrong. This
+ * sitemap used to stamp `new Date()` on all 54 static routes plus the 27
+ * city-service routes, so 81 of 97 URLs claimed to have changed on every
+ * single build. Omitting the field is the honest signal: only the blog and
+ * portfolio entries carry a real `updatedAt`, so only they state a date.
+ */
+function lastModified(value?: string | Date): Date | undefined {
+  if (!value) return undefined;
   const date = value instanceof Date ? value : new Date(value);
-  return Number.isNaN(date.getTime()) ? new Date() : date;
+  return Number.isNaN(date.getTime()) ? undefined : date;
 }
 
 const STATIC_ROUTES: StaticRoute[] = [
-  { path: "", priority: 1, changeFrequency: "daily" },
+  { path: "" },
 
   // Service pillars
-  { path: "/services", priority: 0.98, changeFrequency: "weekly" },
-  { path: "/services/website-design-development", priority: 0.96, changeFrequency: "weekly" },
-  { path: "/services/digital-marketing", priority: 0.95, changeFrequency: "weekly" },
-  { path: "/services/accounting-tax-returns", priority: 0.95, changeFrequency: "weekly" },
-  { path: "/services/warehousing-inventory", priority: 0.9, changeFrequency: "weekly" },
-  { path: "/services/business-solutions", priority: 0.9, changeFrequency: "weekly" },
+  { path: "/services" },
+  { path: "/services/website-design-development" },
+  { path: "/services/digital-marketing" },
+  { path: "/services/accounting-tax-returns" },
+  { path: "/services/warehousing-inventory" },
+  { path: "/services/business-solutions" },
 
   // National SEO landing pages
-  { path: "/website-design-mauritius", priority: 0.97, changeFrequency: "weekly" },
-  { path: "/ecommerce-website-mauritius", priority: 0.96, changeFrequency: "weekly" },
-  { path: "/digital-marketing-mauritius", priority: 0.96, changeFrequency: "weekly" },
-  { path: "/accounting-services-mauritius", priority: 0.96, changeFrequency: "weekly" },
-  { path: "/company-registration-mauritius", priority: 0.95, changeFrequency: "weekly" },
-  { path: "/vat-filing-mauritius", priority: 0.95, changeFrequency: "weekly" },
-  { path: "/seo-services-mauritius", priority: 0.95, changeFrequency: "weekly" },
+  { path: "/website-design-mauritius" },
+  { path: "/ecommerce-website-mauritius" },
+  { path: "/digital-marketing-mauritius" },
+  { path: "/accounting-services-mauritius" },
+  { path: "/company-registration-mauritius" },
+  { path: "/vat-filing-mauritius" },
+  { path: "/seo-services-mauritius" },
 
   // Industry and software SEO pages
-  { path: "/car-rental-website-mauritius", priority: 0.94, changeFrequency: "weekly" },
-  { path: "/booking-website-mauritius", priority: 0.94, changeFrequency: "weekly" },
-  { path: "/ecommerce-store-mauritius", priority: 0.94, changeFrequency: "weekly" },
-  { path: "/custom-website-mauritius", priority: 0.94, changeFrequency: "weekly" },
-  { path: "/tour-operator-website-mauritius", priority: 0.93, changeFrequency: "weekly" },
-  { path: "/real-estate-website-mauritius", priority: 0.93, changeFrequency: "weekly" },
-  { path: "/web-application-development-mauritius", priority: 0.93, changeFrequency: "weekly" },
-  { path: "/restaurant-website-mauritius", priority: 0.92, changeFrequency: "weekly" },
-  { path: "/salon-website-mauritius", priority: 0.92, changeFrequency: "weekly" },
-  { path: "/accounting-software-mauritius", priority: 0.92, changeFrequency: "weekly" },
-  { path: "/inventory-management-system-mauritius", priority: 0.92, changeFrequency: "weekly" },
-  { path: "/stock-management-system-mauritius", priority: 0.92, changeFrequency: "weekly" },
-  { path: "/hotel-website-mauritius", priority: 0.91, changeFrequency: "weekly" },
-  { path: "/villa-booking-website-mauritius", priority: 0.91, changeFrequency: "weekly" },
-  { path: "/booking-system-mauritius", priority: 0.91, changeFrequency: "weekly" },
-  { path: "/doctor-clinic-website-mauritius", priority: 0.9, changeFrequency: "weekly" },
-  { path: "/school-website-mauritius", priority: 0.9, changeFrequency: "weekly" },
-  { path: "/construction-website-mauritius", priority: 0.9, changeFrequency: "weekly" },
-  { path: "/accounting-firm-website-mauritius", priority: 0.9, changeFrequency: "weekly" },
-  { path: "/crm-software-mauritius", priority: 0.9, changeFrequency: "weekly" },
-  { path: "/invoice-software-mauritius", priority: 0.9, changeFrequency: "weekly" },
-  { path: "/law-firm-website-mauritius", priority: 0.89, changeFrequency: "weekly" },
+  { path: "/car-rental-website-mauritius" },
+  { path: "/booking-website-mauritius" },
+  { path: "/ecommerce-store-mauritius" },
+  { path: "/custom-website-mauritius" },
+  { path: "/tour-operator-website-mauritius" },
+  { path: "/real-estate-website-mauritius" },
+  { path: "/web-application-development-mauritius" },
+  { path: "/restaurant-website-mauritius" },
+  { path: "/salon-website-mauritius" },
+  { path: "/accounting-software-mauritius" },
+  { path: "/inventory-management-system-mauritius" },
+  { path: "/stock-management-system-mauritius" },
+  { path: "/hotel-website-mauritius" },
+  { path: "/villa-booking-website-mauritius" },
+  { path: "/booking-system-mauritius" },
+  { path: "/doctor-clinic-website-mauritius" },
+  { path: "/school-website-mauritius" },
+  { path: "/construction-website-mauritius" },
+  { path: "/accounting-firm-website-mauritius" },
+  { path: "/crm-software-mauritius" },
+  { path: "/invoice-software-mauritius" },
+  { path: "/law-firm-website-mauritius" },
 
   // Commercial and conversion pages
-  { path: "/monthly-packages", priority: 0.9, changeFrequency: "monthly" },
-  { path: "/free-seo-audit", priority: 0.9, changeFrequency: "monthly" },
-  { path: "/free-website-review", priority: 0.9, changeFrequency: "monthly" },
-  { path: "/free-business-consultation", priority: 0.9, changeFrequency: "monthly" },
-  { path: "/portfolio", priority: 0.88, changeFrequency: "weekly" },
-  { path: "/testimonials", priority: 0.86, changeFrequency: "weekly" },
-  { path: "/why-us", priority: 0.86, changeFrequency: "weekly" },
-  { path: "/mauritius-services", priority: 0.86, changeFrequency: "weekly" },
-  { path: "/contact", priority: 0.85, changeFrequency: "weekly" },
-  { path: "/blog", priority: 0.84, changeFrequency: "weekly" },
-  { path: "/faq", priority: 0.82, changeFrequency: "weekly" },
-  { path: "/about", priority: 0.8, changeFrequency: "monthly" },
-  { path: "/careers", priority: 0.72, changeFrequency: "monthly" },
+  { path: "/monthly-packages" },
+  { path: "/free-seo-audit" },
+  { path: "/free-website-review" },
+  { path: "/free-business-consultation" },
+  { path: "/portfolio" },
+  { path: "/testimonials" },
+  { path: "/why-us" },
+  { path: "/mauritius-services" },
+  { path: "/contact" },
+  { path: "/blog" },
+  { path: "/faq" },
+  { path: "/about" },
+  { path: "/careers" },
 
   // Policy pages
-  { path: "/privacy-policy", priority: 0.35, changeFrequency: "yearly" },
-  { path: "/terms-of-use", priority: 0.35, changeFrequency: "yearly" },
-  { path: "/terms-of-service", priority: 0.35, changeFrequency: "yearly" },
-  { path: "/security-policy", priority: 0.35, changeFrequency: "yearly" },
-  { path: "/policies", priority: 0.32, changeFrequency: "yearly" },
+  { path: "/privacy-policy" },
+  { path: "/terms-of-use" },
+  { path: "/terms-of-service" },
+  { path: "/security-policy" },
+  { path: "/policies" },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date();
-
   return [
-    ...STATIC_ROUTES.map(({ path, priority, changeFrequency }) => ({
+    ...STATIC_ROUTES.map(({ path }) => ({
       url: `${SITE_URL}${path}`,
-      lastModified: now,
-      changeFrequency,
-      priority,
     })),
 
     ...cityServiceSitemapEntries.map((entry) => ({
       url: `${SITE_URL}${entry.path ?? ""}`,
-      lastModified: now,
-      changeFrequency: "weekly" as const,
-      priority: entry.priority ?? 0.8,
     })),
 
     ...blogPosts.map((post) => ({
       url: `${SITE_URL}/blog/${post.slug}`,
       lastModified: lastModified(post.updatedAt),
-      changeFrequency: "monthly" as const,
-      priority: 0.78,
     })),
 
     ...portfolioItems.map((item) => ({
       url: `${SITE_URL}/portfolio/${item.slug}`,
       lastModified: lastModified(item.updatedAt),
-      changeFrequency: "monthly" as const,
-      priority: 0.76,
     })),
   ];
 }

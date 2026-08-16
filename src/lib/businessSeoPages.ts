@@ -57,12 +57,130 @@ export type BusinessSeoPageData = {
   }[];
 };
 
+/*
+ * Related links.
+ *
+ * Every business page used to share one array pointing at the same four
+ * national pages. That meant all 15 industry pages linked outwards and nothing
+ * linked back, so a crawl found them only through the sitemap — 15 orphans with
+ * no internal link equity, while the four national pages absorbed all of it.
+ *
+ * Instead each page now surfaces its nearest topical siblings plus the national
+ * page it actually belongs under. Same component, same four links per page, so
+ * nothing changes visually — but every page is now reachable by crawling, and
+ * the links are genuinely related rather than a repeated block.
+ */
+const LINK_TITLES: Record<string, string> = {
+  "/website-design-mauritius": "Website Design Mauritius",
+  "/ecommerce-website-mauritius": "Ecommerce Website Mauritius",
+  "/seo-services-mauritius": "SEO Services Mauritius",
+  "/digital-marketing-mauritius": "Digital Marketing Mauritius",
+  "/car-rental-website-mauritius": "Car Rental Websites",
+  "/tour-operator-website-mauritius": "Tour Operator Websites",
+  "/hotel-website-mauritius": "Hotel Websites",
+  "/villa-booking-website-mauritius": "Villa Booking Websites",
+  "/booking-website-mauritius": "Booking Websites",
+  "/booking-system-mauritius": "Booking Systems",
+  "/restaurant-website-mauritius": "Restaurant Websites",
+  "/salon-website-mauritius": "Salon Websites",
+  "/doctor-clinic-website-mauritius": "Clinic Websites",
+  "/school-website-mauritius": "School Websites",
+  "/construction-website-mauritius": "Construction Websites",
+  "/law-firm-website-mauritius": "Law Firm Websites",
+  "/accounting-firm-website-mauritius": "Accounting Firm Websites",
+  "/real-estate-website-mauritius": "Real Estate Websites",
+  "/ecommerce-store-mauritius": "Ecommerce Stores",
+  "/custom-website-mauritius": "Custom Websites",
+  "/web-application-development-mauritius": "Web Application Development",
+  "/accounting-software-mauritius": "Accounting Software",
+  "/inventory-management-system-mauritius": "Inventory Management Systems",
+  "/stock-management-system-mauritius": "Stock Management Systems",
+  "/crm-software-mauritius": "CRM Software",
+  "/invoice-software-mauritius": "Invoice Software",
+};
+
+/*
+ * The four national pages. Still used by the handful of pages that already
+ * carry their own specific sibling links and append these underneath.
+ */
 const commonRelatedLinks = [
   { title: "Website Design Mauritius", href: "/website-design-mauritius" },
   { title: "Ecommerce Website Mauritius", href: "/ecommerce-website-mauritius" },
   { title: "SEO Services Mauritius", href: "/seo-services-mauritius" },
   { title: "Digital Marketing Mauritius", href: "/digital-marketing-mauritius" },
 ];
+
+/* Topical clusters. Each page links to its siblings, so every page has inbound links. */
+const CLUSTERS: string[][] = [
+  // Travel and booking
+  [
+    "/car-rental-website-mauritius",
+    "/tour-operator-website-mauritius",
+    "/hotel-website-mauritius",
+    "/villa-booking-website-mauritius",
+    "/booking-website-mauritius",
+    "/booking-system-mauritius",
+  ],
+  // Local service businesses
+  [
+    "/restaurant-website-mauritius",
+    "/salon-website-mauritius",
+    "/doctor-clinic-website-mauritius",
+    "/school-website-mauritius",
+    "/construction-website-mauritius",
+    "/law-firm-website-mauritius",
+    "/accounting-firm-website-mauritius",
+    "/real-estate-website-mauritius",
+  ],
+  // Ecommerce and custom builds
+  [
+    "/ecommerce-store-mauritius",
+    "/custom-website-mauritius",
+    "/web-application-development-mauritius",
+  ],
+  // Business software
+  [
+    "/accounting-software-mauritius",
+    "/inventory-management-system-mauritius",
+    "/stock-management-system-mauritius",
+    "/crm-software-mauritius",
+    "/invoice-software-mauritius",
+  ],
+];
+
+/* The national page each cluster sits under. */
+const CLUSTER_PARENT = [
+  "/website-design-mauritius",
+  "/website-design-mauritius",
+  "/ecommerce-website-mauritius",
+  "/website-design-mauritius",
+];
+
+function relatedLinksFor(slug: string) {
+  const self = `/${slug}`;
+  const index = CLUSTERS.findIndex((c) => c.includes(self));
+
+  if (index === -1) {
+    return [
+      { href: "/website-design-mauritius" },
+      { href: "/ecommerce-website-mauritius" },
+      { href: "/seo-services-mauritius" },
+      { href: "/digital-marketing-mauritius" },
+    ].map((l) => ({ title: LINK_TITLES[l.href] ?? l.href, href: l.href }));
+  }
+
+  const cluster = CLUSTERS[index] ?? [];
+  const siblings = cluster.filter((h) => h !== self);
+  // rotate so each page shows a different slice, spreading links across the cluster
+  const start = cluster.indexOf(self);
+  const rotated = [...siblings.slice(start), ...siblings.slice(0, start)];
+
+  const parent = CLUSTER_PARENT[index] ?? "/website-design-mauritius";
+  const hrefs = [...rotated.slice(0, 3), parent];
+  return [...new Set(hrefs)]
+    .slice(0, 4)
+    .map((href) => ({ title: LINK_TITLES[href] ?? href, href }));
+}
 
 export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> = {
   "car-rental-website-mauritius": {
@@ -183,7 +301,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
           "Yes. Airport transfer and pickup/drop-off services can be promoted on the website.",
       },
     ],
-    relatedLinks: commonRelatedLinks,
+    relatedLinks: relatedLinksFor("car-rental-website-mauritius"),
   },
 
   "booking-website-mauritius": {
@@ -304,7 +422,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
           "Yes. Booking websites are useful for small and growing businesses that want more organized enquiries.",
       },
     ],
-    relatedLinks: commonRelatedLinks,
+    relatedLinks: relatedLinksFor("booking-website-mauritius"),
   },
 
   "tour-operator-website-mauritius": {
@@ -425,7 +543,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
           "A structured website with strong content and SEO pages can improve your visibility over time.",
       },
     ],
-    relatedLinks: commonRelatedLinks,
+    relatedLinks: relatedLinksFor("tour-operator-website-mauritius"),
   },
 
   "hotel-website-mauritius": {
@@ -490,7 +608,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
       { question: "Can I show rooms and packages?", answer: "Yes. Room pages, package sections and offer blocks can be included." },
       { question: "Is the website mobile-friendly?", answer: "Yes. The website will be built for mobile, tablet and desktop screens." },
     ],
-    relatedLinks: commonRelatedLinks,
+    relatedLinks: relatedLinksFor("hotel-website-mauritius"),
   },
 
   "villa-booking-website-mauritius": {
@@ -555,7 +673,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
       { question: "Can I show property photos?", answer: "Yes. Gallery sections are an important part of the website." },
       { question: "Can the website work like Airbnb?", answer: "We can create an Airbnb-style property presentation and enquiry flow depending on your needs." },
     ],
-    relatedLinks: commonRelatedLinks,
+    relatedLinks: relatedLinksFor("villa-booking-website-mauritius"),
   },
 
   "real-estate-website-mauritius": {
@@ -620,7 +738,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
       { question: "Can clients contact through WhatsApp?", answer: "Yes. WhatsApp enquiry buttons can be included on property pages." },
       { question: "Can the website support SEO?", answer: "Yes. The site can be structured for property-related Mauritius searches." },
     ],
-    relatedLinks: commonRelatedLinks,
+    relatedLinks: relatedLinksFor("real-estate-website-mauritius"),
   },
 
   "restaurant-website-mauritius": {
@@ -685,7 +803,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
       { question: "Can customers reserve tables?", answer: "Yes. We can add reservation enquiry forms or WhatsApp booking links." },
       { question: "Is the website mobile-friendly?", answer: "Yes. Restaurant websites are designed to work smoothly on mobile." },
     ],
-    relatedLinks: commonRelatedLinks,
+    relatedLinks: relatedLinksFor("restaurant-website-mauritius"),
   },
 
   "salon-website-mauritius": {
@@ -750,7 +868,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
       { question: "Can I show prices and treatments?", answer: "Yes. Service menus and price lists can be included." },
       { question: "Can I add gallery photos?", answer: "Yes. Gallery sections are ideal for salon and beauty websites." },
     ],
-    relatedLinks: commonRelatedLinks,
+    relatedLinks: relatedLinksFor("salon-website-mauritius"),
   },
 
   "doctor-clinic-website-mauritius": {
@@ -815,7 +933,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
       { question: "Can doctor profiles be added?", answer: "Yes. Practitioner profiles can be included." },
       { question: "Is the design professional?", answer: "Yes. Healthcare websites are built with a clean and trust-focused presentation." },
     ],
-    relatedLinks: commonRelatedLinks,
+    relatedLinks: relatedLinksFor("doctor-clinic-website-mauritius"),
   },
 
   "school-website-mauritius": {
@@ -880,7 +998,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
       { question: "Can we show activities and photos?", answer: "Yes. Gallery and activity sections can be added." },
       { question: "Can announcements be included?", answer: "Yes. News and announcement sections can be added depending on your needs." },
     ],
-    relatedLinks: commonRelatedLinks,
+    relatedLinks: relatedLinksFor("school-website-mauritius"),
   },
 
   "construction-website-mauritius": {
@@ -945,7 +1063,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
       { question: "Can clients request quotes?", answer: "Yes. Quote enquiry forms and WhatsApp contact can be added." },
       { question: "Can this improve credibility?", answer: "Yes. A professional construction website helps clients trust your company faster." },
     ],
-    relatedLinks: commonRelatedLinks,
+    relatedLinks: relatedLinksFor("construction-website-mauritius"),
   },
 
   "accounting-firm-website-mauritius": {
@@ -1080,7 +1198,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
       { question: "Can clients request consultation?", answer: "Yes. Consultation enquiry forms or contact links can be added." },
       { question: "Will the design look professional?", answer: "Yes. We use a clean and premium design suitable for legal services." },
     ],
-    relatedLinks: commonRelatedLinks,
+    relatedLinks: relatedLinksFor("law-firm-website-mauritius"),
   },
 
   "ecommerce-store-mauritius": {
@@ -1145,7 +1263,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
       { question: "Can I show product categories?", answer: "Yes. Category and product pages can be created." },
       { question: "Can the store support SEO?", answer: "Yes. Product and category pages can be structured for SEO." },
     ],
-    relatedLinks: commonRelatedLinks,
+    relatedLinks: relatedLinksFor("ecommerce-store-mauritius"),
   },
 
   "custom-website-mauritius": {
@@ -1210,7 +1328,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
       { question: "Can the website include special features?", answer: "Yes. Booking forms, product sections, dashboards and integrations can be planned." },
       { question: "Will it be SEO-ready?", answer: "Yes. We build custom websites with SEO structure in mind." },
     ],
-    relatedLinks: commonRelatedLinks,
+    relatedLinks: relatedLinksFor("custom-website-mauritius"),
   },
 
   "web-application-development-mauritius": {
@@ -1275,7 +1393,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
       { question: "Can the system include users and roles?", answer: "Yes. Role-based access can be planned depending on requirements." },
       { question: "Is pricing fixed?", answer: "Web application pricing depends on features, complexity and development scope." },
     ],
-    relatedLinks: commonRelatedLinks,
+    relatedLinks: relatedLinksFor("web-application-development-mauritius"),
   },
 
   "accounting-software-mauritius": {

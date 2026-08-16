@@ -46,7 +46,15 @@ export type PackageAddOn = {
 export const WHATSAPP_NUMBER = "23055068119";
 export const WHATSAPP_DISPLAY = "+230 5506 8119";
 export const WHATSAPP_BASE_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
-export const SITE_URL = "https://mobiz.mu";
+
+/*
+ * Re-exported from lib/site so the canonical hostname has exactly one source of
+ * truth. This file used to declare its own copy, which would have silently
+ * diverged from metadataBase/canonical/sitemap/robots the moment the domain
+ * changed.
+ */
+export { SITE_URL } from "@/lib/site";
+
 export const PAGE_PATH = "/monthly-packages";
 export const CURRENCY = "MUR";
 
