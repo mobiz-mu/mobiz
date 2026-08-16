@@ -5,8 +5,6 @@ import { OrbitScene } from "@/components/visual/OrbitScene";
 import { TechBackground } from "@/components/visual/TechBackground";
 import { HERO_ORBIT_ITEMS } from "@/lib/orbit-items";
 
-import "@/components/visual/orbit-scene.css";
-
 const HEADLINE = [
   { text: "BUILD", delay: "0s", brand: false },
   { text: "MARKET", delay: "0.055s", brand: true },

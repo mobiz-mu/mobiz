@@ -1,6 +1,16 @@
 import Image from "next/image";
 import type { CSSProperties } from "react";
 
+/*
+ * The stylesheet belongs to this component, not to whoever renders it. It used
+ * to be imported by Hero alone, so /services — which renders OrbitScene through
+ * ServicesHubPage without Hero — got a completely unstyled orbit: no
+ * object-fit, so the card art was stretched, and cards laid out at ~302px
+ * instead of ~140px, which is what Lighthouse was reporting as
+ * image-aspect-ratio + image-size-responsive failures on that route.
+ */
+import "./orbit-scene.css";
+
 const ACCENTS = {
   red: {
     border: "rgba(192,24,34,.62)",
