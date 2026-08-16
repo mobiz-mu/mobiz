@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PageHero } from "@/components/page/PageHero";
+import { AboutHero } from "@/components/about/AboutHero";
 import { ProcessSteps } from "@/components/page/ContentBlocks";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
@@ -8,12 +8,10 @@ import { CTASection } from "@/components/ui/CTASection";
 import { InternalLinks } from "@/components/ui/InternalLinks";
 import { Reveal } from "@/components/motion/Reveal";
 import { StaggerGroup, StaggerItem } from "@/components/motion/Stagger";
-import { OrbitScene } from "@/components/visual/OrbitScene";
 import { buildMetadata } from "@/lib/metadata";
 import { buildBreadcrumbSchema } from "@/lib/breadcrumbs";
 import { JsonLd } from "@/lib/services/schema";
 import { ABOUT_COMBINE, ABOUT_PROBLEMS, ABOUT_STEPS } from "@/lib/company";
-import { HERO_ORBIT_ITEMS } from "@/lib/orbit-items";
 import { ACCENTS, type AccentId } from "@/lib/accents";
 import { CONTACT_AREA_SERVED } from "@/lib/site";
 
@@ -31,7 +29,7 @@ const COMBINE_ACCENTS: AccentId[] = ["blue", "green", "emerald", "red"];
 /**
  * About.
  *
- * Editorial rather than card-heavy: an orbit hero, a three-part problem
+ * Editorial rather than card-heavy: an ecosystem hero, a three-part problem
  * statement set as large type, a four-area capability band, then the engagement
  * process as a timeline.
  *
@@ -42,16 +40,7 @@ const COMBINE_ACCENTS: AccentId[] = ["blue", "green", "emerald", "red"];
 export default function AboutPage() {
   return (
     <>
-      <PageHero
-        eyebrow="About Mobiz"
-        title="One team for the things a business actually needs"
-        subtitle="Most businesses in Mauritius end up juggling separate suppliers for their website, their marketing, their books and their stock. Mobiz exists to put those in one place."
-        breadcrumbs={breadcrumbs}
-        background="full"
-        primaryCta={{ label: "Talk to Mobiz", href: "/contact" }}
-        whatsappMessage="Hello Mobiz, I would like to know more about how you work."
-        visual={<OrbitScene items={HERO_ORBIT_ITEMS} duration={44} compact />}
-      />
+      <AboutHero breadcrumbs={breadcrumbs} />
 
       {/* The problem, set as editorial type rather than three cards. */}
       <Section spacing="default" className="bg-ink-900">

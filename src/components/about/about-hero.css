@@ -1,0 +1,316 @@
+/*
+ * About hero — Mobiz business ecosystem.
+ *
+ * Purpose-built for /about. It deliberately does NOT reuse OrbitScene: the
+ * orbit is a homepage composition and, scaled into this column, it cropped its
+ * own cards and left a large empty centre. This is an architecture diagram
+ * instead — one company, four capabilities, one connected system.
+ *
+ * Pure CSS. No JS, no canvas, no animation library: the component stays a
+ * server component and ships zero client bytes.
+ */
+
+.about-eco {
+  position: relative;
+
+  /* The diagram is laid out against a fixed aspect so the connector geometry
+     stays correct at every width, rather than being pinned to a viewport
+     height that changes between laptops and tall monitors. */
+  width: 100%;
+  max-width: 520px;
+  margin-inline: auto;
+}
+
+/* ── connector layer ─────────────────────────────────────────────────────── */
+
+.about-eco__wires {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  pointer-events: none;
+}
+
+/*
+ * `vector-effect: non-scaling-stroke` is required, not cosmetic. The SVG uses
+ * preserveAspectRatio="none" so the four endpoints land exactly on the panel
+ * corners at any box ratio — but that also scales x and y independently, which
+ * smears a 1px stroke into a thick wedge on a wide, short box. This keeps the
+ * geometry stretched and the stroke hairline.
+ */
+.about-eco__wire {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.13);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.about-eco__pulse {
+  fill: none;
+  stroke: #c01822;
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+
+  /* Dash travels the wire once per cycle: reads as data moving between the
+     centre and each division without animating layout or filters. */
+  stroke-dasharray: 26 210;
+  stroke-dashoffset: 236;
+
+  animation: about-eco-travel 4.8s linear infinite;
+}
+
+.about-eco__pulse--2 { animation-delay: 1.2s; }
+.about-eco__pulse--3 { animation-delay: 2.4s; }
+.about-eco__pulse--4 { animation-delay: 3.6s; }
+
+@keyframes about-eco-travel {
+  to { stroke-dashoffset: 0; }
+}
+
+/* ── grid ────────────────────────────────────────────────────────────────── */
+
+.about-eco__grid {
+  position: relative;
+
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(64px, 13vw, 104px) clamp(12px, 3.5vw, 26px);
+}
+
+/* ── division panel ──────────────────────────────────────────────────────── */
+
+.about-eco__node {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  min-width: 0;
+  padding: 14px 14px 15px;
+
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 14px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.045) 0%,
+      rgba(255, 255, 255, 0.014) 100%
+    ),
+    #0b0c0e;
+
+  transition:
+    transform 320ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 320ms ease;
+}
+
+.about-eco__node:hover {
+  transform: translateY(-3px);
+  border-color: rgba(192, 24, 34, 0.42);
+}
+
+.about-eco__index {
+  font-family: var(--font-space-grotesk), ui-monospace, monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+
+  color: #c01822;
+}
+
+.about-eco__name {
+  font-size: clamp(0.82rem, 1.5vw, 0.95rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+
+  color: #f5f5f5;
+}
+
+.about-eco__desc {
+  font-size: clamp(0.66rem, 1.15vw, 0.74rem);
+  line-height: 1.35;
+
+  color: rgba(255, 255, 255, 0.5);
+
+  text-wrap: pretty;
+}
+
+/* Red node dot on the panel edge facing the centre. */
+.about-eco__dot {
+  position: absolute;
+
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+  background: #c01822;
+  box-shadow: 0 0 0 3px rgba(192, 24, 34, 0.16);
+
+  animation: about-eco-blink 3.2s ease-in-out infinite;
+}
+
+.about-eco__node:nth-child(1) .about-eco__dot { right: -3.5px; bottom: -3.5px; }
+.about-eco__node:nth-child(2) .about-eco__dot { left: -3.5px;  bottom: -3.5px; animation-delay: 0.8s; }
+.about-eco__node:nth-child(3) .about-eco__dot { right: -3.5px; top: -3.5px;    animation-delay: 1.6s; }
+.about-eco__node:nth-child(4) .about-eco__dot { left: -3.5px;  top: -3.5px;    animation-delay: 2.4s; }
+
+@keyframes about-eco-blink {
+  0%, 100% { opacity: 0.45; }
+  50%      { opacity: 1; }
+}
+
+/* ── centre ──────────────────────────────────────────────────────────────── */
+
+.about-eco__core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+
+  padding: 15px 22px 16px;
+
+  transform: translate(-50%, -50%);
+
+  border: 1px solid rgba(192, 24, 34, 0.4);
+  border-radius: 16px;
+
+  background: #08090a;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.6),
+    0 18px 50px rgba(0, 0, 0, 0.55),
+    0 0 42px rgba(192, 24, 34, 0.16);
+}
+
+.about-eco__core-mark {
+  font-size: clamp(0.95rem, 2vw, 1.12rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+
+  color: #f5f5f5;
+
+  white-space: nowrap;
+}
+
+.about-eco__core-sub {
+  font-family: var(--font-space-grotesk), ui-monospace, monospace;
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.19em;
+  text-transform: uppercase;
+
+  /*
+   * 0.48, not 0.42. At 8.5px this is small text, so it needs 4.5:1 — the
+   * original composited to #707071 on #08090a, which is 4.03 and failed the
+   * Lighthouse contrast audit. 0.48 gives 4.98 with no perceptible change to
+   * the muted look.
+   */
+  color: rgba(255, 255, 255, 0.48);
+
+  white-space: nowrap;
+}
+
+/* Slow breathing ring behind the core. Opacity only — no filter, no layout. */
+.about-eco__core::before {
+  content: "";
+
+  position: absolute;
+  inset: -14px;
+  z-index: -1;
+
+  border: 1px solid rgba(192, 24, 34, 0.16);
+  border-radius: 22px;
+
+  animation: about-eco-breathe 5.5s ease-in-out infinite;
+}
+
+@keyframes about-eco-breathe {
+  0%, 100% { opacity: 0.35; }
+  50%      { opacity: 0.9; }
+}
+
+/* ── mobile ──────────────────────────────────────────────────────────────── */
+
+/*
+ * Below 768 the diagram stops pretending to be a diagram: the core sits above a
+ * plain 2x2 grid, and the wires are removed rather than scaled down into
+ * something illegible. The absolute centre is what would overlap at this size,
+ * so it becomes a normal block.
+ */
+@media (max-width: 767px) {
+  .about-eco {
+    max-width: 100%;
+  }
+
+  .about-eco__wires {
+    display: none;
+  }
+
+  .about-eco__core {
+    position: static;
+
+    width: fit-content;
+    margin: 0 auto 22px;
+    padding: 13px 20px 14px;
+
+    transform: none;
+  }
+
+  .about-eco__grid {
+    gap: 10px;
+  }
+
+  .about-eco__node {
+    padding: 12px 12px 13px;
+  }
+
+  /* Dots would sit on nothing once the wires are gone. */
+  .about-eco__dot {
+    display: none;
+  }
+}
+
+@media (max-width: 359px) {
+  .about-eco__grid {
+    gap: 8px;
+  }
+
+  .about-eco__node {
+    padding: 10px 10px 11px;
+  }
+}
+
+/* ── reduced motion ──────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .about-eco__pulse,
+  .about-eco__dot,
+  .about-eco__core::before {
+    animation: none;
+  }
+
+  .about-eco__pulse {
+    opacity: 0.5;
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+  }
+
+  .about-eco__node {
+    transition: none;
+  }
+
+  .about-eco__node:hover {
+    transform: none;
+  }
+}
