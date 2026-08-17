@@ -1,0 +1,280 @@
+/*
+ * 404 — one-viewport error experience.
+ *
+ * The whole page is exactly `100dvh` with `overflow: hidden`, and the header is
+ * `fixed` so it costs no layout height. There is no footer, so the document can
+ * never exceed one screen and the CTA can never fall below the fold.
+ *
+ * Everything scales from `min(vw, vh)` rather than `vw` alone. That is what
+ * makes the composition survive short landscape phones: on a 360x640 or a
+ * 720-tall laptop the limiting dimension drives the type and the visual, so
+ * nothing has to be clipped.
+ *
+ * Motion is transform/opacity only — two rotating groups and one pulse — so it
+ * composites and costs no layout.
+ */
+
+.nf {
+  position: relative;
+  isolation: isolate;
+
+  /* dvh, not vh: mobile browser chrome must not push the CTA off-screen. */
+  height: 100dvh;
+  min-height: 100dvh;
+  overflow: hidden;
+
+  display: grid;
+  grid-template-rows: 1fr auto;
+
+  /* Clears the fixed header. */
+  padding: calc(68px + clamp(8px, 2vh, 28px)) 20px clamp(20px, 4vh, 46px);
+
+  background: #050505;
+}
+
+/* Ambient: red only as atmosphere, black stays dominant. */
+.nf__ambient {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      ellipse 42% 38% at 78% 8%,
+      rgba(192, 24, 34, 0.16),
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 46% 40% at 50% 46%,
+      rgba(192, 24, 34, 0.13),
+      transparent 72%
+    ),
+    linear-gradient(180deg, #050505 0%, #08080a 55%, #0b0b0d 100%);
+}
+
+/* ── oversized decorative digits ─────────────────────────────────────────── */
+
+/*
+ * Sized by `min(44vw, 58vh)` so the digits fill the screen on a wide monitor and
+ * shrink on a short one. This is deliberately CSS-only: the reference measures
+ * the rendered height with a ref and recomputes a scale on every resize, which
+ * on this stack would mean a client component, a hydration boundary and a
+ * resize listener to do what one clamp already does — and the project's rule is
+ * no client JS for decorative visuals.
+ */
+.nf__digits {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  z-index: 1;
+
+  transform: translate(-50%, -50%);
+
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+
+  font-family: var(--font-space-grotesk), system-ui, sans-serif;
+  font-size: clamp(190px, min(44vw, 58vh), 760px);
+  font-weight: 700;
+  line-height: 0.82;
+  letter-spacing: -0.055em;
+
+  color: rgba(255, 255, 255, 0.07);
+
+  /* Embeds the digits into the background instead of ending them abruptly. */
+  mask-image: linear-gradient(to bottom, #000 22%, #000 58%, transparent 96%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 22%, #000 58%, transparent 96%);
+}
+
+/* ── centre visual ───────────────────────────────────────────────────────── */
+
+.nf__stage {
+  position: relative;
+  z-index: 2;
+
+  display: grid;
+  place-items: center;
+
+  min-height: 0;
+}
+
+.nf__core {
+  width: clamp(180px, min(34vw, 38vh), 380px);
+  aspect-ratio: 1 / 1;
+
+  overflow: visible;
+}
+
+/* Dark portal behind the core — the "spotlight", not a white oval. */
+.nf__portal {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: -1;
+
+  width: clamp(280px, min(52vw, 56vh), 620px);
+  aspect-ratio: 1 / 1;
+
+  transform: translate(-50%, -50%);
+
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      circle,
+      rgba(192, 24, 34, 0.22) 0%,
+      rgba(120, 14, 22, 0.10) 42%,
+      transparent 70%
+    );
+}
+
+.nf-spin-slow {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: nf-spin 46s linear infinite;
+}
+
+.nf-spin-rev {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: nf-spin 34s linear infinite reverse;
+}
+
+@keyframes nf-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* The severed route's end point — the only thing that pulses. */
+.nf-pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: nf-pulse 2.8s ease-in-out infinite;
+}
+
+@keyframes nf-pulse {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 1; }
+}
+
+/* ── copy ────────────────────────────────────────────────────────────────── */
+
+.nf__copy {
+  position: relative;
+  z-index: 3;
+
+  width: min(660px, 100%);
+  margin: 0 auto;
+
+  text-align: center;
+}
+
+.nf__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  margin-bottom: clamp(8px, 1.4vh, 14px);
+
+  color: #ef2b33;
+
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.nf__eyebrow::before,
+.nf__eyebrow::after {
+  content: "";
+
+  width: 20px;
+  height: 1px;
+
+  background: rgba(239, 43, 51, 0.6);
+}
+
+.nf__title {
+  margin: 0 0 clamp(8px, 1.4vh, 14px);
+
+  color: #ffffff;
+
+  font-size: clamp(1.35rem, min(3.4vw, 3.6vh), 2.5rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+}
+
+.nf__lead {
+  max-width: 520px;
+  margin: 0 auto clamp(16px, 2.6vh, 28px);
+
+  color: rgba(255, 255, 255, 0.72);
+
+  font-size: clamp(12.5px, min(1.1vw, 1.9vh), 15px);
+  line-height: 1.6;
+}
+
+.nf__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  gap: 10px;
+}
+
+/* Secondary action is desktop-only, so short phones keep one clear way out. */
+.nf__actions--secondary {
+  display: none;
+}
+
+@media (min-width: 768px) and (min-height: 640px) {
+  .nf__actions--secondary {
+    display: inline-flex;
+  }
+}
+
+/* ── short viewports ─────────────────────────────────────────────────────── */
+
+/*
+ * Below 700px tall the visual yields first, then the spacing — the CTA never
+ * does. 360x640 and 375x667 are the binding cases.
+ */
+@media (max-height: 700px) {
+  .nf__core {
+    width: clamp(140px, min(30vw, 30vh), 240px);
+  }
+
+  .nf__digits {
+    font-size: clamp(160px, min(40vw, 52vh), 420px);
+  }
+}
+
+@media (max-height: 560px) {
+  .nf__core {
+    width: clamp(110px, 24vh, 180px);
+  }
+
+  .nf__digits {
+    font-size: clamp(130px, 46vh, 320px);
+  }
+}
+
+/* ── reduced motion ──────────────────────────────────────────────────────── */
+
+/*
+ * Frozen, not emptied: the rings, nodes and severed route all stay exactly
+ * where they are, at full opacity, so the composition still reads.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .nf-spin-slow,
+  .nf-spin-rev,
+  .nf-pulse {
+    animation: none;
+  }
+
+  .nf-pulse {
+    opacity: 1;
+  }
+}

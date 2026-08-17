@@ -1,14 +1,10 @@
-import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+
 import { SiteHeader } from "@/components/layout/SiteHeader";
-import { SiteFooter } from "@/components/layout/SiteFooter";
-import { Container } from "@/components/ui/Container";
 import { ButtonLink } from "@/components/ui/Button";
-import { WhatsAppIcon } from "@/components/ui/icons";
-import { serviceDivisions } from "@/lib/navigation";
-import { ACCENTS } from "@/lib/accents";
-import { whatsappUrl } from "@/lib/site";
+
+import "./not-found.css";
 
 export const metadata: Metadata = {
   title: { absolute: "Page not found | MoBiz.mu" },
@@ -16,11 +12,17 @@ export const metadata: Metadata = {
 };
 
 /**
- * 404.
+ * 404 — a single-viewport recovery screen.
  *
- * Deliberately light — a broken orbit rendered as static SVG, no Data Highway,
- * no scroll animation. Someone who has hit a dead end needs a route out, not a
- * showcase.
+ * Reuses `SiteHeader` (and with it the existing mobile menu) rather than
+ * building a second navigation: the header is `fixed`, so it costs no layout
+ * height and the page can still be exactly one screen tall. There is
+ * deliberately no footer — a footer is what would make this scroll.
+ *
+ * Server component, zero client JavaScript of its own. The decorative visual is
+ * inline SVG animated with CSS transforms; the digits scale through `clamp()`
+ * against `min(vw, vh)` rather than a measured ref, so there is no resize
+ * listener and no hydration boundary.
  *
  * This also catches every unknown root URL, because `[cityServiceSlug]` sets
  * `dynamicParams = false`. An invalid SEO slug lands here rather than rendering
@@ -30,108 +32,131 @@ export default function NotFound() {
   return (
     <>
       <SiteHeader />
-      <main id="main-content" className="relative flex min-h-[80vh] items-center bg-ink-950">
-        <span aria-hidden className="absolute inset-0 tech-grid" />
-        <span
-          aria-hidden
-          className="pointer-events-none absolute left-1/2 top-1/3 h-[420px] w-[620px] -translate-x-1/2"
-          style={{
-            background: "radial-gradient(ellipse, rgba(192,24,34,0.16), transparent 70%)",
-          }}
-        />
 
-        <Container className="relative py-20">
-          <div className="mx-auto max-w-2xl text-center">
-            {/* Broken orbit — the ring is dashed and one node has come loose. */}
-            <svg
-              viewBox="0 0 200 200"
-              className="mx-auto mb-9 h-36 w-36"
-              aria-hidden
-              role="presentation"
+      <main id="main-content" className="nf">
+        <span aria-hidden className="nf__ambient" />
+
+        {/*
+          Decorative only. The accessible heading is the <h1> below — a screen
+          reader should hear the sentence, not the digits.
+        */}
+        <span aria-hidden className="nf__digits">
+          404
+        </span>
+
+        <div className="nf__stage">
+          <span aria-hidden className="nf__portal" />
+
+          {/*
+            A Mobiz core with its orbit broken: two rings still turning, and one
+            route that runs in from the edge and stops short of the centre. Same
+            visual language as the homepage globe, deliberately much simpler.
+          */}
+          <svg
+            aria-hidden
+            className="nf__core"
+            viewBox="0 0 240 240"
+            fill="none"
+            focusable="false"
+          >
+            <defs>
+              <radialGradient id="nf-core" cx="38%" cy="32%" r="72%">
+                <stop offset="0%" stopColor="#5c0f19" />
+                <stop offset="58%" stopColor="#26070c" />
+                <stop offset="100%" stopColor="#0a0305" />
+              </radialGradient>
+              <linearGradient id="nf-route" x1="0" y1="1" x2="1" y2="0">
+                <stop offset="0%" stopColor="#ef2b33" stopOpacity="0" />
+                <stop offset="55%" stopColor="#ef2b33" stopOpacity="0.75" />
+                <stop offset="100%" stopColor="#ff6b74" stopOpacity="0.95" />
+              </linearGradient>
+            </defs>
+
+            {/* outer ring + its nodes, turning slowly */}
+            <g className="nf-spin-slow">
+              <circle
+                cx="120"
+                cy="120"
+                r="104"
+                stroke="rgba(255,255,255,0.09)"
+                strokeWidth="1"
+                strokeDasharray="3 11"
+              />
+              <circle cx="224" cy="120" r="3.5" fill="#ef2b33" opacity="0.85" />
+              <circle cx="120" cy="16" r="2.5" fill="rgba(255,255,255,0.35)" />
+              <circle cx="47" cy="193" r="2.5" fill="rgba(255,255,255,0.22)" />
+            </g>
+
+            {/* inner ring, counter-turning so the two never sync */}
+            <g className="nf-spin-rev">
+              <circle
+                cx="120"
+                cy="120"
+                r="74"
+                stroke="rgba(226,40,52,0.28)"
+                strokeWidth="1"
+                strokeDasharray="6 10"
+              />
+              <circle cx="120" cy="46" r="3" fill="#ff6b74" opacity="0.8" />
+              <circle cx="46" cy="120" r="2.2" fill="rgba(255,255,255,0.28)" />
+            </g>
+
+            {/* the severed route: comes in, then stops */}
+            <path
+              d="M6 214 L54 166 L84 166"
+              stroke="url(#nf-route)"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+            />
+            <circle className="nf-pulse" cx="88" cy="166" r="3.2" fill="#ff6b74" />
+
+            {/* core */}
+            <circle cx="120" cy="120" r="42" fill="url(#nf-core)" />
+            <circle
+              cx="120"
+              cy="120"
+              r="42"
+              stroke="rgba(255,106,116,0.5)"
+              strokeWidth="1.25"
+            />
+            <circle
+              cx="120"
+              cy="120"
+              r="42"
+              stroke="rgba(255,106,116,0.14)"
+              strokeWidth="10"
+            />
+          </svg>
+        </div>
+
+        <div className="nf__copy">
+          <p className="nf__eyebrow">Route not found</p>
+
+          <h1 className="nf__title">Oops — this page went off route.</h1>
+
+          <p className="nf__lead">
+            The page you&apos;re looking for may have moved, changed or no longer
+            exists.
+          </p>
+
+          <div className="nf__actions">
+            <ButtonLink href="/" size="lg">
+              <ArrowLeft aria-hidden className="size-4 shrink-0" />
+              Back to Home
+            </ButtonLink>
+
+            <ButtonLink
+              href="/services"
+              variant="secondary"
+              size="lg"
+              className="nf__actions--secondary"
             >
-              <circle
-                cx="100"
-                cy="100"
-                r="70"
-                fill="none"
-                stroke="rgba(255,255,255,0.1)"
-                strokeWidth="1"
-                strokeDasharray="10 14"
-              />
-              <circle
-                cx="100"
-                cy="100"
-                r="46"
-                fill="none"
-                stroke="rgba(192,24,34,0.3)"
-                strokeWidth="1"
-                strokeDasharray="4 10"
-              />
-              <circle cx="170" cy="100" r="4" fill={ACCENTS.red.hex} />
-              <circle cx="100" cy="30" r="3" fill="rgba(255,255,255,0.25)" />
-              {/* the detached one */}
-              <circle cx="46" cy="152" r="3.5" fill={ACCENTS.blue.hex} opacity="0.7" />
-              <text
-                x="100"
-                y="108"
-                textAnchor="middle"
-                fill="rgba(255,255,255,0.9)"
-                fontSize="30"
-                fontWeight="700"
-                fontFamily="var(--font-sans), sans-serif"
-              >
-                404
-              </text>
-            </svg>
-
-            <h1 className="mb-5 text-[clamp(1.875rem,4vw,3rem)] font-bold leading-tight tracking-tight text-text-primary">
-              This page has drifted out of orbit.
-            </h1>
-            <p className="mx-auto mb-9 max-w-lg text-base leading-relaxed text-text-secondary">
-              The page you were looking for doesn&apos;t exist or has moved. Here is the
-              way back.
-            </p>
-
-            <div className="flex flex-wrap justify-center gap-3">
-              <ButtonLink href="/" size="lg" withArrow>
-                Back to home
-              </ButtonLink>
-              <ButtonLink href="/services" variant="secondary" size="lg" withArrow>
-                Browse services
-              </ButtonLink>
-              <ButtonLink
-                href={whatsappUrl("Hello Mobiz, I could not find what I was looking for on your website.")}
-                variant="whatsapp"
-                size="lg"
-                external
-              >
-                <WhatsAppIcon size={18} className="text-[color:var(--color-whatsapp)]" />
-                Ask on WhatsApp
-              </ButtonLink>
-            </div>
-
-            <ul className="mt-12 flex flex-wrap justify-center gap-2">
-              {serviceDivisions.map((division) => (
-                <li key={division.id}>
-                  <Link
-                    href={division.href}
-                    className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-line px-4 py-2.5 text-xs font-medium text-text-body transition-colors hover:border-line-strong hover:text-text-primary"
-                  >
-                    <span
-                      aria-hidden
-                      className="size-1.5 shrink-0 rounded-full"
-                      style={{ background: ACCENTS[division.accent].hex }}
-                    />
-                    {division.shortLabel}
-                    <ArrowRight aria-hidden className="size-3 text-text-faint" />
-                  </Link>
-                </li>
-              ))}
-            </ul>
+              Explore our solutions
+              <ArrowRight aria-hidden className="size-4 shrink-0" />
+            </ButtonLink>
           </div>
-        </Container>
+        </div>
       </main>
-      <SiteFooter />
     </>
   );
 }
