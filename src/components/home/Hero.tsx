@@ -1,15 +1,21 @@
 import type { CSSProperties } from "react";
+import { Boxes, MapPin, TrendingUp } from "lucide-react";
 
 import { ButtonLink } from "@/components/ui/Button";
-import { OrbitScene } from "@/components/visual/OrbitScene";
+import { HeroStage } from "@/components/home/HeroStage";
 import { TechBackground } from "@/components/visual/TechBackground";
-import { HERO_ORBIT_ITEMS } from "@/lib/orbit-items";
 
 const HEADLINE = [
   { text: "BUILD", delay: "0s", brand: false },
   { text: "MARKET", delay: "0.055s", brand: true },
   { text: "MANAGE", delay: "0.11s", brand: false },
   { text: "GROW", delay: "0.165s", brand: true },
+] as const;
+
+const HERO_PROOF = [
+  { label: "All-in-one ecosystem", Icon: Boxes },
+  { label: "Local expertise", Icon: MapPin },
+  { label: "Results that grow", Icon: TrendingUp },
 ] as const;
 
 const SERVICE_TAGS = [
@@ -20,35 +26,13 @@ const SERVICE_TAGS = [
   { label: "AI SOLUTIONS", color: "#ef2b33" },
 ] as const;
 
-function MauritiusFlag() {
-  return (
-    <span className="hero-mu-flag" aria-hidden="true">
-      <span className="hero-mu-flag__stripe hero-mu-flag__stripe--red" />
-      <span className="hero-mu-flag__stripe hero-mu-flag__stripe--blue" />
-      <span className="hero-mu-flag__stripe hero-mu-flag__stripe--yellow" />
-      <span className="hero-mu-flag__stripe hero-mu-flag__stripe--green" />
-    </span>
-  );
-}
-
 function HeroCopy() {
   return (
-    <div className="hero-copy mx-auto w-full max-w-[590px] lg:mx-0">
-      {/* Mauritius identity — no pill/container */}
-      <div className="hero-kicker">
-        <MauritiusFlag />
-
-        <span className="hero-kicker__text">
-          Mauritius Business Solutions
-        </span>
-
-        <span aria-hidden className="hero-kicker__line" />
-      </div>
-
+    <div className="hero-copy mx-auto w-full max-w-[560px] lg:mx-0">
       {/* Aggressive headline */}
       <h1
         className="hero-headline"
-        aria-label="Build. Market. Manage. Grow."
+        aria-label="Build Market Manage Grow"
       >
         {HEADLINE.map((line) => (
           <span key={line.text} className="hero-headline__row">
@@ -66,25 +50,25 @@ function HeroCopy() {
               }
             >
               {line.text}
-              <span aria-hidden className="hero-headline__dot">
-                .
-              </span>
             </span>
           </span>
         ))}
       </h1>
 
-      {/* Reworked supporting copy */}
+      {/*
+        One paragraph, not two. The previous lead/body split repeated the same
+        idea twice; this states the offer once and keeps the strong opening
+        clause carrying the emphasis.
+      */}
       <div className="hero-support">
-        <p className="hero-support__lead">
-          Build a stronger business presence. Reach more customers.
-          Run your operations with smarter digital systems.
-        </p>
-
         <p className="hero-support__body">
-          Mobiz brings websites, digital marketing, accounting support,
-          business software and AI automation into one connected ecosystem
-          built for Mauritian businesses.
+          <strong className="hero-support__strong">
+            Build a stronger business presence and reach more customers.
+          </strong>{" "}
+          Mobiz brings websites, digital marketing, accounting support, business
+          software and AI automation into one connected ecosystem built for
+          Mauritian businesses — helping you streamline operations, strengthen
+          your brand and scale with confidence.
         </p>
       </div>
 
@@ -99,10 +83,29 @@ function HeroCopy() {
           variant="secondary"
           size="lg"
           withArrow
+          className="hero-cta--secondary"
         >
           Talk to Mobiz
         </ButtonLink>
       </div>
+
+      {/*
+        Three positioning statements, not claims. Nothing here asserts a client
+        count, a rating or a result — none of that is established anywhere in the
+        source material.
+      */}
+      <ul className="hero-proof" aria-label="How Mobiz works">
+        {HERO_PROOF.map((item, index) => (
+          <li
+            key={item.label}
+            className="hero-proof__item"
+            style={{ "--proof-delay": `${0.36 + index * 0.06}s` } as CSSProperties}
+          >
+            <item.Icon aria-hidden size={14} className="hero-proof__icon" />
+            <span>{item.label}</span>
+          </li>
+        ))}
+      </ul>
 
       {/* Service labels — NO cards / NO pills */}
       <ul
@@ -218,15 +221,7 @@ export function Hero() {
               "
               style={{ animationDelay: "0.25s" }}
             >
-              <OrbitScene
-                items={HERO_ORBIT_ITEMS}
-                centreImage="/images/hero/orbit-lady.webp"
-                centreAlt=""
-                duration={38}
-                compact
-                animate
-                eagerCentreImage
-              />
+              <HeroStage />
             </div>
           </div>
         </div>

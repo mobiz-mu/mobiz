@@ -1,0 +1,728 @@
+/*
+ * Homepage hero stage — one centred system.
+ *
+ * Homepage-only on purpose. The shared OrbitScene is still used by /services,
+ * so this is a separate component rather than a mutation of that one.
+ *
+ * GEOMETRY. Every layer is placed from the same point — `left: 50%; top: 50%`
+ * plus `translate(-50%, -50%)` — and sized from variables declared once on the
+ * stage. Nothing uses an independent top/left offset, so the globe, the figure
+ * and the orbit cannot drift apart at any width.
+ *
+ * The stage is a size container, so `cqmin` resolves against the stage box.
+ * That is what lets ONE `--orbit-r` scale correctly from 320px to 1920px
+ * instead of a fixed pixel radius per breakpoint.
+ *
+ * Everything animates with transform and opacity only, so it is GPU-composited
+ * and never triggers layout. No JS, no canvas, no library: the component stays
+ * a server component and ships zero client bytes.
+ *
+ * z-order: halo (0) -> orbit guide (1) -> globe (1) -> figure (2) -> cards (3).
+ */
+
+.hero-stage {
+  position: relative;
+
+  width: 100%;
+  aspect-ratio: 1 / 1;
+
+  container-type: size;
+
+  /* One source of truth for the whole composition. */
+  --globe-d: 62cqmin;
+  --orbit-r: 38cqmin;
+  --figure-w: 37cqmin;
+
+  --hero-card-w: 154px;
+  --hero-card-h: 74px;
+
+  /* How far a card recedes at the back of its travel. Subtle on desktop. */
+  --depth-o: 0.72;
+  --depth-mid: 0.85;
+  --depth-hi: 1;
+  --depth-s: 0.94;
+}
+
+/* The orbital path, drawn faintly so the ring reads as one system. */
+.hero-orbit-guide {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+
+  width: calc(var(--orbit-r) * 2);
+  aspect-ratio: 1 / 1;
+
+  transform: translate(-50%, -50%);
+
+  border: 1px solid rgba(255, 92, 102, 0.2);
+  border-radius: 50%;
+}
+
+.hero-orbit-nodes {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/*
+ * Placed with the same polar transform as the card slots, offset half a step so
+ * a node never hides behind a card. Static and unanimated — they read as marks
+ * on the path rather than more things in motion.
+ */
+.hero-orbit-node {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+
+  width: 4px;
+  height: 4px;
+
+  transform-origin: 0 0;
+  transform:
+    rotate(var(--a))
+    translateY(calc(var(--orbit-r) * -1))
+    translate(-50%, -50%);
+
+  border-radius: 50%;
+  background: rgba(255, 108, 118, 0.42);
+  box-shadow: 0 0 6px rgba(226, 40, 52, 0.35);
+}
+
+/* ── globe ───────────────────────────────────────────────────────────────── */
+
+/*
+ * A real sphere. Every dot is placed with
+ * `rotateY(lon) rotateX(lat) translateZ(radius)` — the spherical-to-cartesian
+ * mapping written as CSS 3D — so the field foreshortens at the limb, converges
+ * at the poles, and hides its own far side via `backface-visibility`.
+ *
+ * `container-type: size` is what makes this scale: the radius and dot size are
+ * expressed in cqmin against this box, so one rule covers every breakpoint
+ * instead of a px radius per media query that would drift out of sync with the
+ * globe's own width.
+ */
+.hero-globe {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+
+  width: var(--globe-d);
+  aspect-ratio: 1 / 1;
+
+  transform: translate(-50%, -50%);
+
+  /*
+   * Its own size container for the dot field. An element never queries itself,
+   * so `--globe-d`'s cqmin above still resolves against the stage while the
+   * dots inside resolve against the globe.
+   */
+  container-type: size;
+
+  /* Mild, not dramatic: a real globe is viewed close to orthographically. */
+  perspective: 260cqmin;
+}
+
+/*
+ * Sphere body — the ocean side, a disc behind the near-side dots.
+ *
+ * Kept dark on purpose. An opaque maroon fill reads as a flat disc and swallows
+ * the dot field; the sphere has to be defined by the dots and the lit rim, with
+ * the body only supplying depth behind them. The outermost stop fades to zero so
+ * there is no hard circular seam — the rim ring draws the edge instead.
+ */
+.hero-globe__body {
+  position: absolute;
+  inset: 0;
+
+  border-radius: 50%;
+
+  background:
+    /* Centre illumination — reads as a lit sphere rather than a flat disc. */
+    radial-gradient(circle at 38% 30%, rgba(255, 96, 106, 0.22) 0%, transparent 52%),
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(34, 8, 13, 0.97) 40%,
+      rgba(66, 12, 20, 0.95) 74%,
+      rgba(112, 18, 30, 0.66) 94%,
+      rgba(134, 22, 35, 0) 100%
+    );
+
+  /*
+   * The outer dark ring is what separates the sphere from the red ambient
+   * background behind it; without it the globe's edge dissolves into the glow.
+   */
+  box-shadow:
+    inset 0 0 58px rgba(0, 0, 0, 0.62),
+    0 0 0 1px rgba(0, 0, 0, 0.55),
+    0 0 46px 6px rgba(0, 0, 0, 0.5),
+    0 0 140px rgba(192, 24, 34, 0.26);
+}
+
+/* Axial tilt. Static, so the animated child stays a single transform. */
+.hero-globe__sphere {
+  position: absolute;
+  inset: 0;
+
+  transform-style: preserve-3d;
+  transform: rotateZ(-14deg) rotateX(6deg);
+}
+
+.hero-globe__spin {
+  position: absolute;
+  inset: 0;
+
+  transform-style: preserve-3d;
+
+  /*
+   * 360deg of longitude is the entire sphere, so the loop closes on itself
+   * exactly — no seam, no crossfade, no accumulating drift.
+   */
+  animation: hero-globe-spin var(--globe-spin, 58s) linear infinite;
+}
+
+@keyframes hero-globe-spin {
+  to { transform: rotateY(360deg); }
+}
+
+.hero-globe__dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+
+  width: 2.15cqmin;
+  height: 2.15cqmin;
+
+  border-radius: 50%;
+  background: #ff7b85;
+
+  /* The dot faces outward, so the far hemisphere culls itself. */
+  backface-visibility: hidden;
+
+  transform:
+    translate(-50%, -50%)
+    rotateY(var(--o))
+    rotateX(var(--a))
+    translateZ(50cqmin);
+}
+
+/* Terminator: darkens the lower-right limb so it looks lit from upper-left. */
+.hero-globe__shade {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+
+  border-radius: 50%;
+
+  /*
+   * The front face is left completely clear and only the outer quarter darkens,
+   * so the near-side geography stays legible at a glance while the limbs still
+   * fall away. Anything heavier here erased the dot field that carries the
+   * curvature read.
+   */
+  background: radial-gradient(
+    circle at 36% 29%,
+    transparent 46%,
+    rgba(0, 0, 0, 0.10) 68%,
+    rgba(0, 0, 0, 0.30) 88%,
+    rgba(0, 0, 0, 0.50) 100%
+  );
+}
+
+/* Thin lit rim. */
+.hero-globe__rim {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 0 1.5px rgba(255, 106, 116, 0.52),
+    inset 0 0 30px rgba(255, 80, 92, 0.12),
+    0 0 22px rgba(226, 40, 52, 0.18);
+}
+
+/* Soft outer halo, top-anchored so it can never track page height. */
+.hero-stage__halo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 0;
+
+  width: 86%;
+  aspect-ratio: 1 / 1;
+
+  transform: translate(-50%, -50%);
+
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(192, 24, 34, 0.16), transparent 66%);
+}
+
+/*
+ * Warm backlight behind the figure.
+ *
+ * Sits at the globe's z-index but later in the DOM, so it paints above the
+ * sphere and below her. Purely a background wash — no outline, no drop shadow on
+ * the subject — which lifts her off the dark globe without touching the asset.
+ */
+.hero-stage__backlight {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+
+  width: calc(var(--figure-w) * 1.5);
+  aspect-ratio: 3 / 4;
+
+  transform: translate(-50%, -50%);
+
+  background:
+    radial-gradient(
+      ellipse 52% 46% at 50% 42%,
+      rgba(255, 138, 96, 0.20) 0%,
+      rgba(226, 52, 62, 0.13) 44%,
+      transparent 74%
+    );
+}
+
+/* ── centre figure ───────────────────────────────────────────────────────── */
+
+/*
+ * Centred in the globe, not anchored to its bottom edge.
+ *
+ * Width is set so her rendered height stays inside the globe diameter:
+ * 37cqmin at the asset's 760x900 ratio is ~44cqmin tall against a 62cqmin
+ * sphere, so head, hair, pointing hand and upper body all sit within the
+ * circle with room to spare. `--figure-shift` is the single lever for optical
+ * centring — her visual mass sits slightly above her geometric centre.
+ */
+.hero-stage__figure {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+
+  width: var(--figure-w);
+
+  transform: translate(-50%, calc(-50% + var(--figure-shift, 2%)));
+}
+
+.hero-stage__figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ── clockwise card ring ─────────────────────────────────────────────────── */
+
+.hero-ring {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+
+  animation: hero-ring-spin var(--ring-dur, 42s) linear infinite;
+}
+
+@keyframes hero-ring-spin {
+  to { transform: rotate(360deg); }
+}
+
+/*
+ * Slot placement — pure polar geometry.
+ *
+ * The slot is a zero-size point AT THE STAGE CENTRE. It rotates to its own
+ * angle and steps outward by the shared `--orbit-r`, so all eight sit on one
+ * circle at exactly `index * 45deg`.
+ *
+ * `--orbit-r` must stay a LENGTH. The earlier version used a percentage, which
+ * silently collapsed every card onto the centre: a percentage translate
+ * resolves against the element's own box, and this box is 0x0.
+ */
+.hero-ring__slot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+
+  width: 0;
+  height: 0;
+
+  transform: rotate(var(--a)) translateY(calc(var(--orbit-r) * -1));
+}
+
+/*
+ * Counter-rotation keeps the card upright. It cancels its own slot angle once,
+ * then keeps cancelling the ring's rotation for as long as the ring turns — so
+ * the text never tips, let alone inverts.
+ */
+.hero-ring__upright {
+  position: absolute;
+  left: 0;
+  top: 0;
+
+  /*
+   * Zero-size, so its transform-origin sits exactly on the slot point. Sized to
+   * the card instead, the counter-rotation pivots about the CARD's centre and
+   * displaces it by an angle-dependent amount — measured as eight different
+   * orbit radii and angles that were not multiples of 45deg.
+   */
+  width: 0;
+  height: 0;
+
+  transform: rotate(calc(var(--a) * -1));
+
+  animation: hero-ring-counter var(--ring-dur, 42s) linear infinite;
+}
+
+@keyframes hero-ring-counter {
+  to { transform: rotate(calc((var(--a) * -1) - 360deg)); }
+}
+
+/* ── card ────────────────────────────────────────────────────────────────── */
+
+.hero-card {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  /*
+   * Equal box for every card. A longer title wraps inside a fixed width and the
+   * min-height keeps the ring symmetric, so "Business Software" cannot render a
+   * taller card than "Branding".
+   */
+  width: var(--hero-card-w);
+  min-height: var(--hero-card-h);
+  padding: 10px 12px 11px;
+
+  /*
+   * Order matters: scale FIRST, then centre. The reverse — translate then scale
+   * — shifts the card's centre by (s-1) x size/2, so the eight cards would sit
+   * on eight slightly different radii instead of one shared circle.
+   */
+  /*
+   * Origin at the slot point, not the card's centre. Transforms pivot about
+   * transform-origin, so with the default 50% 50% the depth scale displaced the
+   * card by (1-s) x size/2 — measured as a 6px spread in what must be one
+   * shared radius. At 0 0 the centring translate and the scale share the same
+   * pivot and the radius is exactly equal for every card at every phase.
+   */
+  transform-origin: 0 0;
+  transform: scale(1) translate(-50%, -50%);
+
+  /*
+   * Depth. The negative delay is `-duration * index / 8`, which puts each card
+   * at the phase matching where it actually is on the circle, so it recedes at
+   * the back of its own travel and comes forward at the front. Transform and
+   * opacity only.
+   */
+  animation: hero-card-depth var(--ring-dur, 42s) linear infinite;
+  animation-delay: calc(var(--ring-dur, 42s) / -8 * var(--i, 0));
+
+  border: 1px solid rgba(255, 255, 255, 0.17);
+  border-radius: 14px;
+
+  /*
+   * Nearly opaque on purpose: these pass in front of the lit globe, and at 0.94
+   * the sphere showed through enough to fight the label.
+   */
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.02)),
+    rgba(11, 12, 15, 0.985);
+
+  box-shadow:
+    0 18px 44px rgba(0, 0, 0, 0.62),
+    0 0 0 1px rgba(0, 0, 0, 0.5);
+}
+
+/*
+ * The 25%/75% stops set how much of a revolution a card spends prominent, and
+ * with eight evenly phased cards that fraction IS the on-screen count. A plain
+ * two-stop ramp left ~6 cards above half opacity on mobile; holding them dimmer
+ * until later brings that to the 3-4 the mobile composition wants, while desktop
+ * (--depth-mid 0.85) keeps all eight readable.
+ */
+/*
+ * A continuous cycle, not an appear/disappear.
+ *
+ * The rear stop never reaches zero — a card at the back stays faintly legible so
+ * the ring always reads as one closed circle — and the extra 15%/30%/70%/85%
+ * stops stretch the ramp either side of it, which removes the hard kink a plain
+ * three-stop curve produced. The 30%/70% pair is what sets how many cards read
+ * as prominent: with eight evenly phased cards, the share of the cycle spent
+ * above ~0.5 opacity IS the on-screen count.
+ *
+ * `--depth-hi` caps the front phase. On mobile it sits just under 1 so the
+ * nearest card never competes with the figure for attention.
+ */
+@keyframes hero-card-depth {
+  0%,
+  100% {
+    opacity: var(--depth-o, 0.72);
+    transform: scale(var(--depth-s, 0.94)) translate(-50%, -50%);
+  }
+
+  15% {
+    opacity: var(--depth-o, 0.72);
+  }
+
+  30% {
+    opacity: var(--depth-mid, 0.85);
+  }
+
+  50% {
+    opacity: var(--depth-hi, 1);
+    transform: scale(1) translate(-50%, -50%);
+  }
+
+  70% {
+    opacity: var(--depth-mid, 0.85);
+  }
+
+  85% {
+    opacity: var(--depth-o, 0.72);
+  }
+}
+
+.hero-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+
+  margin-bottom: 5px;
+}
+
+.hero-card__index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 22px;
+  height: 22px;
+
+  border: 1px solid rgba(226, 42, 54, 0.72);
+  border-radius: 7px;
+
+  background: rgba(192, 24, 34, 0.14);
+
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+
+  color: #ff7b84;
+}
+
+.hero-card__icon {
+  color: #ff7b84;
+  opacity: 1;
+}
+
+.hero-card__label {
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+
+  /*
+   * Two label lines are reserved on every card whether or not the title needs
+   * them, so a wrapping title cannot make its card taller than the others.
+   */
+  min-height: calc(2 * 1.15em);
+
+  /* Controlled wrap: long names use two lines rather than widening the card. */
+  overflow-wrap: break-word;
+
+  color: #ffffff;
+}
+
+.hero-card__sub {
+  font-size: 10.5px;
+  line-height: 1.3;
+
+  /* Raised from 0.62: measured 8.0:1 on the card surface at this size. */
+  color: rgba(255, 255, 255, 0.80);
+}
+
+/* ── responsive ──────────────────────────────────────────────────────────── */
+
+/*
+ * Only the shared variables change per breakpoint. The geometry rules above are
+ * written once, so the ring stays mathematically even at every width and the
+ * radius always scales with the stage rather than a fixed pixel guess.
+ *
+ * `--orbit-r` is the lever that keeps the ring clear of the copy column: at
+ * 1024-1279 the two-column grid is active but the right column is still narrow,
+ * so the radius pulls in.
+ */
+@media (max-width: 1439px) {
+  .hero-stage {
+    --orbit-r: 37cqmin;
+    --hero-card-w: 146px;
+  }
+}
+
+/*
+ * 1024-1279 is the tightest desktop tier: the two-column grid is active but the
+ * right column is narrow AND sits against the viewport edge, so the ring is
+ * squeezed from both sides. Measured at 33cqmin/128px the right-hand card ran
+ * 13px past the viewport. Adjacent slots are 0.765R apart, which caps the plate.
+ */
+@media (max-width: 1279px) {
+  .hero-stage {
+    --orbit-r: 29cqmin;
+    --hero-card-w: 110px;
+    --hero-card-h: 66px;
+
+    /*
+     * Slightly smaller figure at this tier only. The radius has to stay tight
+     * here to keep the ring inside the viewport, which brought the 45deg cards
+     * within 4px of her upper body; narrowing her restores the safe zone
+     * without pushing the ring back out.
+     */
+    --figure-w: 32cqmin;
+  }
+
+  /* 110px wraps "Business Identity" but not "Automation" — reserve the line so
+     every card stays the same height. */
+  .hero-card__sub {
+    min-height: calc(2 * 1.3em);
+  }
+
+  .hero-card { padding: 8px 10px 9px; }
+  .hero-card__label { font-size: 11.5px; }
+  .hero-card__sub { font-size: 9.5px; }
+}
+
+@media (max-width: 1023px) {
+  /* Single column below lg: the stage owns the full width, so the ring opens up. */
+  .hero-stage {
+    --orbit-r: 39cqmin;
+    --globe-d: 64cqmin;
+    --figure-w: 38cqmin;
+    --hero-card-w: 132px;
+    --hero-card-h: 66px;
+  }
+
+  .hero-card {
+    padding: 9px 11px 10px;
+  }
+
+  .hero-card__label { font-size: 12.5px; }
+  .hero-card__sub { font-size: 10px; }
+}
+
+/*
+ * Mobile keeps the SAME orbit — same eight slots, same shared radius — and
+ * leans harder on depth instead of shrinking everything: cards at the back drop
+ * to 30% opacity and 0.86 scale, so roughly three or four read as prominent at
+ * any moment while every service still comes around. No carousel, no hiding.
+ */
+@media (max-width: 767px) {
+  .hero-stage {
+    --orbit-r: 38cqmin;
+    --globe-d: 66cqmin;
+    --figure-w: 40cqmin;
+    --hero-card-w: 118px;
+    --hero-card-h: 58px;
+
+    /*
+     * Rear stays visible at 0.32 rather than fading toward nothing, so the back
+     * of the orbit still reads as part of the ecosystem; the front is held at
+     * 0.92 so the woman remains the focal point.
+     */
+    --depth-o: 0.32;
+    --depth-mid: 0.45;
+    --depth-hi: 0.92;
+    --depth-s: 0.88;
+  }
+
+  .hero-card {
+    padding: 7px 8px 8px;
+    border-radius: 10px;
+  }
+
+  .hero-card__top { margin-bottom: 2px; }
+  .hero-card__index { width: 16px; height: 16px; font-size: 7.5px; }
+  .hero-card__icon { width: 13px; height: 13px; }
+  .hero-card__label { font-size: 10.5px; }
+  .hero-card__sub { font-size: 8.5px; }
+}
+
+/*
+ * Radius and plate are traded off against two hard limits: adjacent slots are
+ * 2R.sin(22.5deg) = 0.765R apart, so the plate must be narrower than that, and
+ * R + plate/2 must leave real margin inside the viewport. At 40cqmin/96px the
+ * side cards landed 4px from the screen edge and read as clipped.
+ */
+@media (max-width: 479px) {
+  .hero-stage {
+    --orbit-r: 35cqmin;
+    --hero-card-w: 88px;
+    --hero-card-h: 54px;
+  }
+
+  .hero-card {
+    padding: 6px 7px 7px;
+  }
+
+  .hero-card__index { width: 14px; height: 14px; font-size: 7px; }
+  .hero-card__icon { width: 12px; height: 12px; }
+  .hero-card__label { font-size: 9.5px; }
+  .hero-card__sub { font-size: 8px; }
+}
+
+/*
+ * Narrowest phones. Adjacent slots are 2R.sin(22.5deg) apart, so at R=112px the
+ * 96px plate overlapped its neighbour; 82px clears it with margin.
+ */
+@media (max-width: 359px) {
+  .hero-stage {
+    --orbit-r: 38cqmin;
+    --hero-card-w: 76px;
+    --hero-card-h: 50px;
+  }
+
+  /*
+   * At this width some subtitles wrap and others do not ("Business Identity"
+   * versus "Automation"), which measured as unequal card heights. Reserving the
+   * second line here — and only here — keeps all eight boxes identical.
+   */
+  .hero-card__sub {
+    min-height: calc(2 * 1.3em);
+  }
+
+  .hero-card {
+    padding: 6px 7px 7px;
+  }
+
+  .hero-card__index { width: 14px; height: 14px; font-size: 7px; }
+  .hero-card__icon { width: 12px; height: 12px; }
+  .hero-card__label { font-size: 9.5px; }
+  .hero-card__sub { font-size: 8px; }
+}
+
+/* ── reduced motion ──────────────────────────────────────────────────────── */
+
+/* ── reduced motion ──────────────────────────────────────────────────────── */
+
+/*
+ * Everything stops, nothing disappears. The slots are already at their eight
+ * even angles without the ring turning, so what remains is the finished
+ * composition: centred globe, centred figure, all eight cards evenly placed and
+ * fully opaque.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .hero-globe__spin,
+  .hero-ring,
+  .hero-ring__upright,
+  .hero-card {
+    animation: none;
+  }
+
+  .hero-card {
+    opacity: 1;
+    transform: scale(1) translate(-50%, -50%);
+  }
+}

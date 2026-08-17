@@ -171,7 +171,7 @@ export function SiteHeader() {
                     `,
                     active
                       ? "text-white"
-                      : "text-white/60 hover:text-white",
+                      : "text-white/[0.78] hover:text-white",
                   )}
                 >
                   {link.title}

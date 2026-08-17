@@ -61,14 +61,16 @@ export function ServicesMenu({ activePath }: { activePath: string }) {
         onClick={() => setOpen((o) => !o)}
         className={cn(
           "flex min-h-11 items-center gap-1 rounded-lg px-3 text-sm font-medium transition-colors duration-200",
-          isActive || open ? "text-brand-mid" : "text-text-secondary hover:text-text-primary",
+          isActive || open
+            ? "text-brand-mid"
+            : "text-white/[0.78] hover:text-white",
         )}
       >
         Services
         <ChevronDown
           aria-hidden
           className={cn(
-            "size-3 transition-transform duration-200",
+            "size-3.5 opacity-80 transition-transform duration-200",
             open && "rotate-180",
           )}
         />

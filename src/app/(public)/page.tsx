@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Hero } from "@/components/home/Hero";
 import { TrustedBy } from "@/components/home/TrustedBy";
+import { anton } from "@/components/home/fonts";
 import { Challenges } from "@/components/home/Challenges";
 import { ServicesTabs } from "@/components/home/ServicesTabs";
 import { WebsiteTemplateCarousel } from "@/components/home/WebsiteTemplateCarousel";
@@ -40,8 +41,14 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <>
-      <Hero />
-      <TrustedBy />
+      {/*
+        Anton's CSS variable is scoped to the two sections that use it, so the
+        font is preloaded on this route only — see src/components/home/fonts.ts.
+      */}
+      <div className={anton.variable}>
+        <Hero />
+        <TrustedBy />
+      </div>
       <Challenges />
       <ServicesTabs />
       <WebsiteTemplateCarousel />

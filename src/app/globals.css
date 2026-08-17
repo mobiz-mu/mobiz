@@ -750,186 +750,40 @@ body {
    Mauritius identity
    --------------------------------------------------------- */
 
-.hero-kicker {
-  position: relative;
-
-  display: inline-flex;
-  align-items: center;
-
-  gap: 12px;
-
-  margin-bottom: clamp(20px, 2.4vh, 30px);
-
-  padding-bottom: 10px;
-
-  width: fit-content;
-}
-
-.hero-kicker__text {
-  color: rgba(255, 255, 255, 0.72);
-
-  font-family: var(--font-mono), monospace;
-
-  font-size: clamp(10px, 0.72vw, 12px);
-  font-weight: 700;
-
-  line-height: 1;
-
-  letter-spacing: 0.19em;
-
-  text-transform: uppercase;
-}
-
-.hero-kicker__line {
-  position: absolute;
-
-  left: 0;
-  right: 0;
-  bottom: 0;
-
-  height: 2px;
-
-  overflow: hidden;
-
-  background:
-    linear-gradient(
-      90deg,
-      #c01822 0%,
-      #ef2b33 56%,
-      rgba(239, 43, 51, 0.16) 100%
-    );
-
-  transform-origin: left center;
-
-  animation:
-    hero-kicker-line-enter
-    800ms
-    cubic-bezier(0.16, 1, 0.3, 1)
-    both;
-
-  box-shadow:
-    0 0 10px rgba(239, 43, 51, 0.45);
-}
-
-.hero-kicker__line::after {
-  content: "";
-
-  position: absolute;
-
-  top: -3px;
-  bottom: -3px;
-
-  width: 42px;
-
-  background:
-    linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.95),
-      transparent
-    );
-
-  filter: blur(1px);
-
-  animation:
-    hero-kicker-scan
-    3.3s
-    ease-in-out
-    infinite;
-}
-
 /* ---------------------------------------------------------
    Mauritius flag — lightweight 3D CSS
    --------------------------------------------------------- */
-
-.hero-mu-flag {
-  position: relative;
-
-  display: grid;
-
-  width: 34px;
-  height: 23px;
-
-  overflow: hidden;
-
-  flex: 0 0 auto;
-
-  border-radius: 3px;
-
-  transform:
-    perspective(90px)
-    rotateY(-11deg)
-    rotateX(5deg);
-
-  transform-origin: left center;
-
-  box-shadow:
-    0 5px 12px rgba(0, 0, 0, 0.48),
-    0 0 12px rgba(255, 255, 255, 0.06);
-
-  animation:
-    hero-flag-float
-    4.5s
-    ease-in-out
-    infinite;
-}
-
-.hero-mu-flag::after {
-  content: "";
-
-  position: absolute;
-  inset: 0;
-
-  background:
-    linear-gradient(
-      112deg,
-      rgba(255, 255, 255, 0.26),
-      transparent 38%,
-      rgba(0, 0, 0, 0.18)
-    );
-
-  pointer-events: none;
-}
-
-.hero-mu-flag__stripe {
-  display: block;
-}
-
-.hero-mu-flag__stripe--red {
-  background: #ea2839;
-}
-
-.hero-mu-flag__stripe--blue {
-  background: #1a4fa3;
-}
-
-.hero-mu-flag__stripe--yellow {
-  background: #f4d124;
-}
-
-.hero-mu-flag__stripe--green {
-  background: #159447;
-}
 
 /* =========================================================
    HEADLINE
    ========================================================= */
 
 .hero-headline {
-  margin: 0 0 clamp(22px, 2.8vh, 34px);
+  /*
+   * Anton for the display line only — a true condensed poster face. The
+   * previous look was Space Grotesk at weight 950, which the variable axis
+   * clamped to 700 anyway and which is a text face, not a display one.
+   *
+   * The Mauritius eyebrow above this was removed, so the reclaimed vertical
+   * space goes straight into type size.
+   */
+  font-family: var(--font-anton), var(--font-space-grotesk), system-ui, sans-serif;
+
+  margin: 0 0 clamp(16px, 2.1vh, 24px);
 
   font-size:
     clamp(
-      3.55rem,
-      min(8.15vw, 11.5vh),
-      7.85rem
+      4.1rem,
+      min(10.4vw, 15.2vh),
+      9.4rem
     );
 
-  font-weight: 950;
+  /* Anton is a single 400 weight; asking for more only invites faux-bold. */
+  font-weight: 400;
 
-  line-height: 0.82;
+  line-height: 0.86;
 
-  letter-spacing: -0.065em;
+  letter-spacing: -0.018em;
 
   text-transform: uppercase;
 
@@ -999,18 +853,6 @@ body {
   }
 }
 
-.hero-headline__dot {
-  display: inline-block;
-
-  margin-left: 0.025em;
-
-  color: currentColor;
-
-  transform: scale(0.82);
-
-  transform-origin: bottom left;
-}
-
 /* fast horizontal energy line */
 .hero-headline__row::after {
   content: "";
@@ -1048,9 +890,9 @@ body {
    ========================================================= */
 
 .hero-support {
-  max-width: 540px;
+  max-width: 520px;
 
-  margin-bottom: clamp(25px, 3.3vh, 36px);
+  margin-bottom: clamp(19px, 2.5vh, 27px);
 }
 
 .hero-support__lead {
@@ -1069,24 +911,43 @@ body {
 }
 
 .hero-support__body {
-  max-width: 520px;
+  max-width: 500px;
 
-  margin:
-    clamp(8px, 1.1vh, 13px)
-    0
-    0;
+  /*
+   * No top margin: the headline's own bottom margin owns that gap, so the
+   * column has one rhythm instead of two stacked ones.
+   */
+  margin: 0;
 
-  color: rgba(255, 255, 255, 0.49);
+  /* Raised from 0.49, which measured 4.9:1 and read as dimmed rather than
+     secondary. 0.76 is 10.3:1 and still sits below the lead clause. */
+  color: rgba(255, 255, 255, 0.76);
 
   font-size: clamp(13px, 0.92vw, 15px);
   font-weight: 450;
 
-  line-height: 1.72;
+  line-height: 1.64;
 }
 
 /* =========================================================
    ACTIONS
    ========================================================= */
+
+/*
+ * Hero-only lift for the outline CTA.
+ *
+ * Scoped rather than changing the shared `secondary` Button variant, which every
+ * other page uses — this pass is the homepage hero, so the change stays here.
+ */
+.hero-cta--secondary {
+  border-color: rgba(255, 255, 255, 0.26);
+  color: rgba(255, 255, 255, 0.94);
+}
+
+.hero-cta--secondary:hover {
+  border-color: rgba(255, 255, 255, 0.42);
+  color: #ffffff;
+}
 
 .hero-actions {
   display: flex;
@@ -1094,7 +955,7 @@ body {
 
   gap: 12px;
 
-  margin-bottom: clamp(26px, 3.5vh, 38px);
+  margin-bottom: clamp(20px, 2.7vh, 28px);
 
   animation:
     hero-content-rise
@@ -1108,6 +969,103 @@ body {
    SERVICE LABELS — NOT BADGES
    ========================================================= */
 
+/*
+ * Positioning chips under the hero CTAs. Deliberately statements about how
+ * Mobiz works, not metrics — there is no verified client count, rating or
+ * result figure anywhere in the source material to display here.
+ */
+.hero-proof {
+  display: flex;
+  /* One line, as specified. Chips shrink their padding before they ever wrap. */
+  flex-wrap: nowrap;
+  align-items: center;
+
+  gap: 8px;
+  margin: clamp(14px, 1.9vh, 20px) 0 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.hero-proof__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  /* Never wrap the label itself — the row stays a single line. */
+  white-space: nowrap;
+
+  padding: 7px 11px;
+
+  border: 1px solid rgba(255, 255, 255, 0.19);
+  border-radius: 9px;
+
+  background: rgba(255, 255, 255, 0.06);
+
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+
+  /* Raised from 0.72 — the chip surface and border came up with it, so the
+     whole component reads as present rather than ghosted. */
+  color: rgba(255, 255, 255, 0.92);
+
+  animation: hero-rise 620ms cubic-bezier(0.16, 1, 0.3, 1) var(--proof-delay, 0s) both;
+}
+
+.hero-proof__icon {
+  flex-shrink: 0;
+  color: #ff7b84;
+}
+
+/* Opening clause of the merged hero paragraph. */
+.hero-support__strong {
+  font-weight: 700;
+  color: #f2f2f3;
+}
+
+/* Narrow phones: shrink the chips rather than break the single row. */
+@media (max-width: 479px) {
+  .hero-proof { gap: 6px; }
+
+  .hero-proof__item {
+    gap: 4px;
+    padding: 6px 7px;
+    font-size: 10px;
+  }
+}
+
+/*
+ * At 360 and below the three labels plus their icons cannot fit one line, and
+ * the row is specified as a single line. The icons are decorative and
+ * aria-hidden, so they go rather than the layout.
+ */
+/*
+ * Three labels on one line inside a 280px column is the binding constraint at
+ * 320px. Measured: at 9.5px/6px padding the row is 297px and spills 17px past
+ * the text column, so the decorative icons drop and the chips tighten to fit.
+ */
+@media (max-width: 389px) {
+  .hero-proof { gap: 4px; }
+
+  .hero-proof__item {
+    padding: 5px 5px;
+    font-size: 9px;
+    letter-spacing: -0.012em;
+  }
+
+  .hero-proof__icon { display: none; }
+}
+
+@keyframes hero-rise {
+  from { opacity: 0; transform: translateY(9px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-proof__item { animation: none; }
+}
+
 .hero-service-list {
   display: flex;
   flex-wrap: wrap;
@@ -1118,7 +1076,8 @@ body {
     13px
     clamp(17px, 2vw, 30px);
 
-  margin: 0;
+  /* Clears the proof chips above; without it the two rows collided. */
+  margin: clamp(13px, 1.8vh, 18px) 0 0;
   padding: 0;
 
   list-style: none;
@@ -1390,27 +1349,6 @@ body {
   }
 }
 
-@keyframes hero-kicker-line-enter {
-  from {
-    transform: scaleX(0);
-  }
-
-  to {
-    transform: scaleX(1);
-  }
-}
-
-@keyframes hero-kicker-scan {
-  0% {
-    left: -42px;
-  }
-
-  58%,
-  100% {
-    left: calc(100% + 42px);
-  }
-}
-
 @keyframes hero-flag-float {
   0%,
   100% {
@@ -1523,22 +1461,7 @@ body {
     min-height: auto;
   }
 
-  .hero-kicker {
-    margin-bottom: 22px;
-  }
-
-  .hero-mu-flag {
-    width: 29px;
-    height: 20px;
-  }
-
-  .hero-kicker__text {
-    font-size: 9px;
-
-    letter-spacing: 0.14em;
-  }
-
-  .hero-headline {
+        .hero-headline {
     margin-bottom: 30px;
 
     font-size:
@@ -1620,11 +1543,7 @@ body {
       );
   }
 
-  .hero-kicker__text {
-    max-width: 220px;
-  }
-
-  .hero-actions {
+    .hero-actions {
     flex-direction: column;
     align-items: stretch;
   }
@@ -1662,9 +1581,6 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .hero-headline__word,
   .hero-headline__row::after,
-  .hero-kicker__line,
-  .hero-kicker__line::after,
-  .hero-mu-flag,
   .hero-service-item,
   .hero-service-item__line::after,
   .hero-data-streak,
@@ -1679,11 +1595,7 @@ body {
     transform: none !important;
   }
 
-  .hero-kicker__line {
-    transform: scaleX(1) !important;
-  }
-
-  .hero-data-streak {
+    .hero-data-streak {
     opacity: 0.15 !important;
   }
 }
@@ -1751,10 +1663,14 @@ body {
 
   background: #070707;
 
+  /*
+   * Trust BAND, not a second hero. Measured target was 30-40% less vertical
+   * height than the first build; every gap below the header came down with it.
+   */
   padding:
-    clamp(54px, 6vw, 82px)
+    clamp(30px, 3.1vw, 44px)
     0
-    clamp(54px, 6vw, 82px);
+    clamp(30px, 3.1vw, 44px);
 }
 
 /* subtle continuation of hero grid */
@@ -1824,7 +1740,7 @@ body {
   margin:
     0
     auto
-    clamp(36px, 4vw, 50px);
+    clamp(16px, 1.7vw, 22px);
 
   text-align: center;
 }
@@ -1834,9 +1750,9 @@ body {
   align-items: center;
   justify-content: center;
 
-  gap: 14px;
+  gap: 10px;
 
-  margin-bottom: 18px;
+  margin-bottom: 9px;
 
   color: #ef2b33;
 
@@ -1850,7 +1766,7 @@ body {
 }
 
 .trusted-section__eyebrow-line {
-  width: 52px;
+  width: 26px;
   height: 1px;
 
   background:
@@ -1870,52 +1786,76 @@ body {
 
   color: #ffffff;
 
+  /* Deliberately below the hero H1 — this must not compete with it. */
   font-size:
     clamp(
-      2rem,
-      4vw,
-      4.1rem
+      1.6rem,
+      2.7vw,
+      2.5rem
     );
 
-  font-weight: 850;
+  font-weight: 800;
 
-  line-height: 1.02;
+  line-height: 1.0;
 
-  letter-spacing: -0.045em;
+  letter-spacing: -0.035em;
 }
 
 .trusted-section__title span {
-  color: #c01822;
+  color: #d5232d;
 }
 
 .trusted-section__copy {
-  max-width: 660px;
+  max-width: 560px;
 
   margin:
-    18px
+    8px
     auto
     0;
 
-  color: rgba(255, 255, 255, 0.58);
+  color: rgba(255, 255, 255, 0.66);
 
   font-size:
     clamp(
-      14px,
-      1vw,
-      16px
+      12.5px,
+      0.85vw,
+      13.5px
     );
 
-  line-height: 1.7;
+  line-height: 1.5;
 }
 
 /* =========================================================
-   MARQUEE
+   MARQUEE — 3D STAGE
    ========================================================= */
 
-.trusted-section__rows {
-  display: grid;
+/*
+ * The stage is what makes this read as 3D: one perspective, one statically
+ * tilted plane, and the two name rows pushed to different depths. The rows then
+ * only animate translateX, so the entire effect costs two composited transforms
+ * — no per-plate 3D layer, no JS.
+ */
+.trusted-stage {
+  perspective: 1000px;
+  perspective-origin: 50% 46%;
+}
 
-  gap: 16px;
+.trusted-stage__plane {
+  display: grid;
+  gap: 12px;
+
+  transform-style: preserve-3d;
+  transform: rotateX(9deg);
+}
+
+/* Near row leans toward the viewer, far row sits back behind it. */
+.trusted-marquee--near {
+  transform: translateZ(30px);
+}
+
+.trusted-marquee--far {
+  transform: translateZ(-46px);
+  opacity: 0.76;
 }
 
 .trusted-marquee {
@@ -1929,8 +1869,8 @@ body {
     linear-gradient(
       90deg,
       transparent 0%,
-      black 7%,
-      black 93%,
+      black 5%,
+      black 95%,
       transparent 100%
     );
 }
@@ -1969,12 +1909,12 @@ body {
 
   align-items: center;
 
-  gap: 18px;
+  gap: 12px;
 
   margin: 0;
   padding:
-    5px
-    9px;
+    3px
+    6px;
 
   list-style: none;
 }
@@ -1989,16 +1929,16 @@ body {
   display: flex;
   align-items: center;
 
-  gap: 11px;
+  gap: 8px;
 
-  min-height: 56px;
+  min-height: 38px;
 
   padding:
     0
-    clamp(20px, 2vw, 30px);
+    clamp(11px, 1vw, 15px);
 
-  border: 1px solid rgba(255, 255, 255, 0.075);
-  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 7px;
 
   background:
     linear-gradient(
@@ -2029,24 +1969,24 @@ body {
 .trusted-client__name {
   white-space: nowrap;
 
-  color: rgba(255, 255, 255, 0.88);
+  color: rgba(255, 255, 255, 0.94);
 
   font-size:
     clamp(
-      13px,
-      1vw,
-      16px
+      11.5px,
+      0.8vw,
+      13px
     );
 
-  font-weight: 680;
+  font-weight: 600;
 
-  letter-spacing: -0.015em;
+  letter-spacing: -0.008em;
 }
 
 /* colored dot */
 .trusted-client__dot {
-  width: 5px;
-  height: 5px;
+  width: 4px;
+  height: 4px;
 
   flex: 0 0 auto;
 
@@ -2154,6 +2094,177 @@ body {
 }
 
 /* =========================================================
+   TRUST COUNTERS
+   ========================================================= */
+
+/*
+ * Counting up in pure CSS.
+ *
+ * `--trust-n` is a registered <integer>, so it INTERPOLATES rather than flipping
+ * discretely, and a CSS counter turns it into visible digits. That is what lets
+ * the count-up run with no client JavaScript at all.
+ *
+ * The viewport trigger is the site's existing single IntersectionObserver: it
+ * stamps `data-visible="true"`, which is the only thing that starts the
+ * animation. `inherits: true` matters — the animation runs on the element and
+ * the digits are drawn by its ::after, which would otherwise fall back to the
+ * initial value.
+ *
+ * Fallback order is deliberate. Unarmed (no JS, JS failed, or
+ * prefers-reduced-motion, where the observer never arms) the figure renders at
+ * its final value immediately; it is only reset to 0 once something exists to
+ * count it back up.
+ */
+@property --trust-n {
+  syntax: "<integer>";
+  inherits: true;
+  initial-value: 0;
+}
+
+.trust-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+
+  gap: clamp(9px, 1.1vw, 14px);
+
+  width: min(1000px, calc(100% - 40px));
+  margin: clamp(18px, 2vw, 26px) auto 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.trust-stat {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 3px;
+
+  padding: clamp(11px, 1.1vw, 15px) clamp(8px, 1vw, 13px);
+
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 11px;
+
+  /* Thin border, faint dark gradient, one small red ambient — no glow. */
+  background:
+    radial-gradient(ellipse 70% 100% at 50% 118%, rgba(192, 24, 34, 0.13), transparent 70%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.008)),
+    rgba(9, 9, 11, 0.72);
+
+  text-align: center;
+}
+
+/*
+ * Desktop-only hover. Capped at a 3px lift with no scale and no bounce; the
+ * border and the red ambient do the rest.
+ */
+@media (hover: hover) and (min-width: 768px) {
+  .trust-stat {
+    transition:
+      transform 240ms cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 240ms ease,
+      box-shadow 240ms ease;
+  }
+
+  .trust-stat:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255, 255, 255, 0.17);
+
+    box-shadow:
+      0 10px 26px rgba(0, 0, 0, 0.42),
+      inset 0 0 22px rgba(192, 24, 34, 0.10);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trust-stat {
+    transition: none;
+  }
+
+  .trust-stat:hover {
+    transform: none;
+  }
+}
+
+.trust-stat__value {
+  display: inline-flex;
+  align-items: baseline;
+
+  font-family: var(--font-anton), var(--font-space-grotesk), system-ui, sans-serif;
+  font-size: clamp(1.7rem, 2.9vw, 2.45rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.01em;
+
+  /* Off-white: the red is reserved for the + and % accents. */
+  color: #f2f2f4;
+}
+
+/*
+ * The digit box is width-reserved. Every target here is two digits, so counting
+ * 0 -> 68 would otherwise widen the box mid-animation and register as layout
+ * shift in a section the user is looking at.
+ *
+ * 2.3ch, not 2ch. Anton has proportional figures and ignores tabular-nums, so
+ * `ch` (the advance of "0") under-reserves: measured, "68" rendered 55px inside
+ * a 53px 2ch box and grew the row by 2px mid-count.
+ */
+.trust-stat__num {
+  display: inline-block;
+  min-width: 2.3ch;
+
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.trust-stat__num::after {
+  counter-reset: trust-n var(--trust-n);
+  content: counter(trust-n);
+}
+
+.trust-stat__unit {
+  margin-left: 0.04em;
+
+  color: #ef2b33;
+  font-size: 0.56em;
+}
+
+.trust-stat__label {
+  color: rgba(255, 255, 255, 0.7);
+
+  font-size: clamp(10.5px, 0.78vw, 12px);
+  font-weight: 500;
+  letter-spacing: 0.015em;
+  line-height: 1.3;
+}
+
+/* Static final value unless something is actually going to animate it. */
+.trust-stat__num {
+  --trust-n: var(--trust-to);
+}
+
+[data-reveal-armed] .trust-stat__num {
+  --trust-n: 0;
+}
+
+[data-reveal-armed] [data-visible="true"] .trust-stat__num {
+  animation:
+    trust-count
+    1.7s
+    cubic-bezier(0.22, 1, 0.36, 1)
+    var(--trust-delay, 0s)
+    both;
+}
+
+@keyframes trust-count {
+  from { --trust-n: 0; }
+  to { --trust-n: var(--trust-to); }
+}
+
+/* =========================================================
    ANIMATION
    ========================================================= */
 
@@ -2227,9 +2338,39 @@ body {
     line-height: 1.65;
   }
 
-  .trusted-section__rows {
+  .trusted-stage__plane {
     gap: 12px;
+
+    /*
+     * Flat below this width. A tilted plane keystones the rows in from both
+     * sides, and at narrow widths that eats the names rather than adding depth.
+     */
+    transform: none;
   }
+
+  .trusted-marquee--near,
+  .trusted-marquee--far {
+    transform: none;
+  }
+
+  .trusted-marquee--far {
+    opacity: 0.86;
+  }
+
+  .trust-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    width: calc(100% - 28px);
+    margin-top: 16px;
+  }
+
+  .trust-stat {
+    gap: 2px;
+    padding: 10px 8px;
+    border-radius: 10px;
+  }
+
+
 
   .trusted-marquee {
     mask-image:
@@ -2247,13 +2388,15 @@ body {
   }
 
   .trusted-client {
-    min-height: 48px;
+    min-height: 34px;
 
     padding:
       0
-      17px;
+      10px;
 
-    border-radius: 8px;
+    gap: 7px;
+
+    border-radius: 7px;
   }
 
   .trusted-client__name {
@@ -2279,6 +2422,25 @@ body {
    ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
+  /*
+   * The rows fall back to a static, centred, wrapped list, so the tilted plane
+   * has nothing left to give depth to — flatten it rather than keystone a
+   * stationary block.
+   */
+  .trusted-stage {
+    perspective: none;
+  }
+
+  .trusted-stage__plane,
+  .trusted-marquee--near,
+  .trusted-marquee--far {
+    transform: none;
+  }
+
+  .trusted-marquee--far {
+    opacity: 1;
+  }
+
   .trusted-marquee {
     overflow: visible;
 

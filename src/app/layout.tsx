@@ -149,7 +149,7 @@ export default function RootLayout({
       lang="en"
       data-scroll-behavior="smooth"
       suppressHydrationWarning
-      className={`${spaceGrotesk.variable}`}
+      className={spaceGrotesk.variable}
     >
       <body>
         {children}
