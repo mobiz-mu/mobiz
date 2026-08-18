@@ -37,7 +37,7 @@ export const metadata: Metadata = {
 
   title: {
     default:
-      "MoBiz.mu | Website Design, Accounting & Business Solutions in Mauritius",
+      "Website Design, Marketing & Accounting Mauritius | MoBiz.mu",
     template: "%s | MoBiz.mu",
   },
 

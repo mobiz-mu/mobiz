@@ -98,7 +98,7 @@ export const portfolioItems: PortfolioProject[] = [
   },
   {
     slug: "multiimaint-ltd",
-    title: "Multiimaint Ltd",
+    title: "MultiiMaint Ltd",
     category: "Corporate Website",
     shortDescription:
       "A cleaner corporate service website built to support a more polished and trustworthy business image.",
@@ -109,7 +109,7 @@ export const portfolioItems: PortfolioProject[] = [
     previewLabel: "Visit Website",
     showVisitWebsite: true,
     overview:
-      "Multiimaint Ltd needed a stronger business-facing website presentation to communicate professionalism, service capability, and trust more clearly online.",
+      "MultiiMaint Ltd needed a stronger business-facing website presentation to communicate professionalism, service capability, and trust more clearly online.",
     challenge:
       "For maintenance and operational service companies, presentation often determines first impressions. A weak site can make the company feel less established than it really is.",
     solution:
@@ -117,9 +117,9 @@ export const portfolioItems: PortfolioProject[] = [
     outcome:
       "The result supports a more confident digital presence and helps the company present itself in a way that aligns better with serious business expectations.",
     seoTitle:
-      "Multiimaint Ltd | Corporate Website Mauritius",
+      "MultiiMaint Ltd | Corporate Website Mauritius",
     seoDescription:
-      "Explore how MoBiz.mu created a premium corporate website direction for Multiimaint Ltd with stronger business presentation and cleaner executive structure.",
+      "Explore how MoBiz.mu created a premium corporate website direction for MultiiMaint Ltd with stronger business presentation and cleaner executive structure.",
     updatedAt: "2026-04-01",
   },
   {

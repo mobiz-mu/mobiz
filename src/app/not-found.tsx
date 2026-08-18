@@ -4,6 +4,20 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { ButtonLink } from "@/components/ui/Button";
 
+/*
+ * Chrome logs "preloaded using link preload but not used" for this stylesheet on
+ * every route, and that is Next's doing, not ours — we author no <link> tags
+ * anywhere in src/. `not-found` is a boundary of the root layout's segment tree,
+ * so Next emits <link rel="preload" as="style"> for its CSS on every page in
+ * case a 404 renders, and only attaches the <link rel="stylesheet"> when one
+ * actually does.
+ *
+ * Left alone deliberately. The file is ~2.9KB, fetched once and cached, and the
+ * only way to remove the warning is to fold these styles into globals.css —
+ * which would ship the 404's CSS to all 97 routes for real, to silence a
+ * warning that costs nothing. Verified: zero manual preloads in src/, and no
+ * sampled route loads this chunk as a stylesheet.
+ */
 import "./not-found.css";
 
 export const metadata: Metadata = {

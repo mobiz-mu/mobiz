@@ -92,156 +92,10 @@
 /* ── globe ───────────────────────────────────────────────────────────────── */
 
 /*
- * A real sphere. Every dot is placed with
- * `rotateY(lon) rotateX(lat) translateZ(radius)` — the spherical-to-cartesian
- * mapping written as CSS 3D — so the field foreshortens at the limb, converges
- * at the poles, and hides its own far side via `backface-visibility`.
- *
- * `container-type: size` is what makes this scale: the radius and dot size are
- * expressed in cqmin against this box, so one rule covers every breakpoint
- * instead of a px radius per media query that would drift out of sync with the
- * globe's own width.
+ * The globe itself is now a canvas-rendered orthographic Earth — see
+ * HeroGlobe.tsx and hero-globe.css. Only its box lives here, so the sphere, the
+ * figure and the orbit keep sharing one centre and one set of variables.
  */
-.hero-globe {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  z-index: 1;
-
-  width: var(--globe-d);
-  aspect-ratio: 1 / 1;
-
-  transform: translate(-50%, -50%);
-
-  /*
-   * Its own size container for the dot field. An element never queries itself,
-   * so `--globe-d`'s cqmin above still resolves against the stage while the
-   * dots inside resolve against the globe.
-   */
-  container-type: size;
-
-  /* Mild, not dramatic: a real globe is viewed close to orthographically. */
-  perspective: 260cqmin;
-}
-
-/*
- * Sphere body — the ocean side, a disc behind the near-side dots.
- *
- * Kept dark on purpose. An opaque maroon fill reads as a flat disc and swallows
- * the dot field; the sphere has to be defined by the dots and the lit rim, with
- * the body only supplying depth behind them. The outermost stop fades to zero so
- * there is no hard circular seam — the rim ring draws the edge instead.
- */
-.hero-globe__body {
-  position: absolute;
-  inset: 0;
-
-  border-radius: 50%;
-
-  background:
-    /* Centre illumination — reads as a lit sphere rather than a flat disc. */
-    radial-gradient(circle at 38% 30%, rgba(255, 96, 106, 0.22) 0%, transparent 52%),
-    radial-gradient(
-      circle at 50% 50%,
-      rgba(34, 8, 13, 0.97) 40%,
-      rgba(66, 12, 20, 0.95) 74%,
-      rgba(112, 18, 30, 0.66) 94%,
-      rgba(134, 22, 35, 0) 100%
-    );
-
-  /*
-   * The outer dark ring is what separates the sphere from the red ambient
-   * background behind it; without it the globe's edge dissolves into the glow.
-   */
-  box-shadow:
-    inset 0 0 58px rgba(0, 0, 0, 0.62),
-    0 0 0 1px rgba(0, 0, 0, 0.55),
-    0 0 46px 6px rgba(0, 0, 0, 0.5),
-    0 0 140px rgba(192, 24, 34, 0.26);
-}
-
-/* Axial tilt. Static, so the animated child stays a single transform. */
-.hero-globe__sphere {
-  position: absolute;
-  inset: 0;
-
-  transform-style: preserve-3d;
-  transform: rotateZ(-14deg) rotateX(6deg);
-}
-
-.hero-globe__spin {
-  position: absolute;
-  inset: 0;
-
-  transform-style: preserve-3d;
-
-  /*
-   * 360deg of longitude is the entire sphere, so the loop closes on itself
-   * exactly — no seam, no crossfade, no accumulating drift.
-   */
-  animation: hero-globe-spin var(--globe-spin, 58s) linear infinite;
-}
-
-@keyframes hero-globe-spin {
-  to { transform: rotateY(360deg); }
-}
-
-.hero-globe__dot {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-
-  width: 2.15cqmin;
-  height: 2.15cqmin;
-
-  border-radius: 50%;
-  background: #ff7b85;
-
-  /* The dot faces outward, so the far hemisphere culls itself. */
-  backface-visibility: hidden;
-
-  transform:
-    translate(-50%, -50%)
-    rotateY(var(--o))
-    rotateX(var(--a))
-    translateZ(50cqmin);
-}
-
-/* Terminator: darkens the lower-right limb so it looks lit from upper-left. */
-.hero-globe__shade {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-
-  border-radius: 50%;
-
-  /*
-   * The front face is left completely clear and only the outer quarter darkens,
-   * so the near-side geography stays legible at a glance while the limbs still
-   * fall away. Anything heavier here erased the dot field that carries the
-   * curvature read.
-   */
-  background: radial-gradient(
-    circle at 36% 29%,
-    transparent 46%,
-    rgba(0, 0, 0, 0.10) 68%,
-    rgba(0, 0, 0, 0.30) 88%,
-    rgba(0, 0, 0, 0.50) 100%
-  );
-}
-
-/* Thin lit rim. */
-.hero-globe__rim {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-
-  border-radius: 50%;
-  box-shadow:
-    inset 0 0 0 1.5px rgba(255, 106, 116, 0.52),
-    inset 0 0 30px rgba(255, 80, 92, 0.12),
-    0 0 22px rgba(226, 40, 52, 0.18);
-}
 
 /* Soft outer halo, top-anchored so it can never track page height. */
 .hero-stage__halo {
@@ -714,7 +568,6 @@
  * fully opaque.
  */
 @media (prefers-reduced-motion: reduce) {
-  .hero-globe__spin,
   .hero-ring,
   .hero-ring__upright,
   .hero-card {

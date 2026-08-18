@@ -14,7 +14,7 @@ import { blogPosts } from "@/lib/blog";
 import { getArticleBody } from "@/lib/blog-articles";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Blog & Insights | Business and Digital Advice for Mauritius | MoBiz.mu",
+  title: "Business & Digital Insights for Mauritius | MoBiz.mu",
   description:
     "Practical articles on website design, digital marketing, SEO, accounting, inventory and business systems for companies operating in Mauritius.",
   path: "/blog",

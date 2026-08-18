@@ -1,21 +1,7 @@
 import type { CSSProperties } from "react";
+import { Star } from "lucide-react";
 
-/**
- * "Businesses that Trust Us" — client names and the four headline counters.
- *
- * Server component, zero client JavaScript. The counters count up on viewport
- * entry by reusing the site's existing single IntersectionObserver
- * (`RevealObserver`): it stamps `data-visible="true"` on the wrapper, and CSS
- * animates a registered `<integer>` custom property that a CSS counter renders.
- * No per-section observer, no hydration boundary, no animation library.
- *
- * The numbers below were supplied by Mobiz. They are rendered as plain page
- * copy only — deliberately NOT as AggregateRating/Review structured data, since
- * there is no verified review corpus behind them and the rest of the site keeps
- * that guarantee.
- *
- * Names, not logos: no third-party marks are reproduced anywhere here.
- */
+import { DotPattern } from "@/components/ui/DotPattern";
 
 const CLIENTS = [
   "Dan & Shi Pest Control Ltd",
@@ -28,145 +14,206 @@ const CLIENTS = [
   "KS Contracting Ltd",
   "Méa Kréation",
   "Ram Pottery Ltd",
-  "Multimaint Ltd",
+  "MultiiMaint Ltd",
   "Two Souls Boutique",
   "Anytime Anywhere Tour Operator Ltd",
   "Samrn Company Ltd",
 ] as const;
 
-const ROW_ONE = CLIENTS.slice(0, 7);
-const ROW_TWO = CLIENTS.slice(7);
-
-type Stat = { to: number; unit: string; label: string };
-
-const STATS: Stat[] = [
+const COUNTERS = [
   { to: 68, unit: "+", label: "Projects Delivered" },
   { to: 30, unit: "+", label: "Businesses Supported" },
   { to: 15, unit: "+", label: "Digital Solutions" },
   { to: 99, unit: "%", label: "Client Satisfaction" },
-];
+] as const;
 
-function StatCounter({ stat, index }: { stat: Stat; index: number }) {
+const TRUST_SIGNALS = [
+  {
+    label: "Google Reviews",
+    value: "5.0",
+    srLabel: "Google Reviews, 5 out of 5 stars",
+  },
+  {
+    label: "Facebook Reviews",
+    value: "5.0",
+    srLabel: "Facebook Reviews, 5 out of 5 stars",
+  },
+  {
+    label: "Service Quality",
+    value: "99%",
+    srLabel: "Service Quality, 99 percent",
+  },
+] as const;
+
+function FiveStars() {
   return (
-    <li
-      className="trust-stat"
-      style={
-        {
-          "--trust-to": stat.to,
-          "--trust-delay": `${index * 0.11}s`,
-        } as CSSProperties
-      }
-    >
-      {/*
-        The animated figure is decorative: `::after` content is not dependable
-        for assistive tech, so the real value is announced from the visually
-        hidden phrase below and this whole visual is hidden from the a11y tree.
-      */}
-      <span aria-hidden className="trust-stat__value">
-        <span className="trust-stat__num" />
-        <span className="trust-stat__unit">{stat.unit}</span>
-      </span>
-
-      <span className="sr-only">{`${stat.to}${stat.unit} ${stat.label}`}</span>
-
-      <span aria-hidden className="trust-stat__label">
-        {stat.label}
-      </span>
-    </li>
-  );
-}
-
-function ClientRow({
-  clients,
-  direction,
-  depth,
-}: {
-  clients: readonly string[];
-  direction: "left" | "right";
-  depth: "near" | "far";
-}) {
-  return (
-    <div className={`trusted-marquee trusted-marquee--${depth}`}>
-      <div
-        className={
-          direction === "left"
-            ? "trusted-marquee__track trusted-marquee__track--left"
-            : "trusted-marquee__track trusted-marquee__track--right"
-        }
-      >
-        {[0, 1].map((copy) => (
-          <ul
-            key={copy}
-            className="trusted-marquee__group"
-            /* The second copy exists only to close the loop seamlessly. */
-            aria-hidden={copy === 1 ? true : undefined}
-          >
-            {clients.map((name, index) => (
-              <li key={`${copy}-${name}`} className="trusted-client">
-                <span
-                  aria-hidden
-                  className={`trusted-client__dot trusted-client__dot--${index % 4}`}
-                />
-
-                <span className="trusted-client__name">{name}</span>
-
-                <span
-                  aria-hidden
-                  className={`trusted-client__line trusted-client__line--${index % 4}`}
-                />
-              </li>
-            ))}
-          </ul>
-        ))}
-      </div>
-    </div>
+    <span aria-hidden className="trust-rating__stars">
+      {Array.from({ length: 5 }).map((_, index) => (
+        <Star
+          key={index}
+          className="trust-rating__star"
+          fill="currentColor"
+          strokeWidth={1.4}
+        />
+      ))}
+    </span>
   );
 }
 
 export function TrustedBy() {
   return (
-    <section aria-labelledby="trusted-by-heading" className="trusted-section">
-      <div aria-hidden className="trusted-section__grid" />
-      <div aria-hidden className="trusted-section__glow" />
+    <section aria-labelledby="trusted-by-heading" className="trust">
+      <div className="trust__inner">
+        <h2 id="trusted-by-heading" className="sr-only">
+          Businesses that trust Mobiz
+        </h2>
 
-      <div className="trusted-section__inner">
-        {/* One header for the whole section — names and counters both sit under it. */}
-        <header className="trusted-section__header">
-          <div className="trusted-section__eyebrow">
-            <span aria-hidden className="trusted-section__eyebrow-line" />
+        {/* =====================================================
+            TOP LIVE COUNTERS
+        ====================================================== */}
+        <ul className="trust-counters" data-reveal="up">
+          {COUNTERS.map((counter, index) => (
+            <li
+              key={counter.label}
+              className="trust-counter"
+              style={
+                {
+                  "--trust-to": counter.to,
+                  "--trust-delay": `${index * 0.1}s`,
+                } as CSSProperties
+              }
+            >
+              <span aria-hidden className="trust-counter__value">
+                <span className="trust-counter__num" />
+                <span className="trust-counter__unit">{counter.unit}</span>
+              </span>
 
-            <span>Trusted across Mauritius</span>
+              <span className="sr-only">
+                {`${counter.to}${counter.unit} ${counter.label}`}
+              </span>
 
-            <span aria-hidden className="trusted-section__eyebrow-line" />
-          </div>
-
-          <h2 id="trusted-by-heading" className="trusted-section__title">
-            Businesses that <span>Trust Us</span>
-          </h2>
-
-          <p className="trusted-section__copy">
-            Supporting Mauritian businesses across tourism, retail, professional
-            services, education, e-commerce and digital operations.
-          </p>
-        </header>
-
-        {/*
-          The 3D stage. One perspective, one tilted plane, and the two rows set
-          at different depths travelling in opposite directions — so the whole
-          thing is two composited transforms rather than per-plate animation.
-        */}
-        <div className="trusted-stage">
-          <div className="trusted-stage__plane">
-            <ClientRow clients={ROW_ONE} direction="left" depth="near" />
-            <ClientRow clients={ROW_TWO} direction="right" depth="far" />
-          </div>
-        </div>
-
-        <ul className="trust-stats" data-reveal="depth">
-          {STATS.map((stat, index) => (
-            <StatCounter key={stat.label} stat={stat} index={index} />
+              <span aria-hidden className="trust-counter__label">
+                {counter.label}
+              </span>
+            </li>
           ))}
         </ul>
+
+        {/* =====================================================
+            MAIN — EQUAL HEIGHT LEFT / RIGHT
+        ====================================================== */}
+        <div className="trust-middle" data-reveal="up">
+          {/* ================= LEFT ================= */}
+          <div className="trust-story">
+            <DotPattern className="trust-story__dots" />
+
+            <div aria-hidden className="trust-story__ambient" />
+
+            <div className="trust-story__content">
+              <p className="trust-story__eyebrow">
+                <span aria-hidden className="trust-story__rule" />
+                Built on trust
+              </p>
+
+              <p className="trust-story__statement">
+                <span
+                  className="trust-story__line trust-story__line--strong"
+                  style={{ "--line": 0 } as CSSProperties}
+                >
+                  We help businesses
+                </span>
+
+                <span
+                  className="trust-story__line trust-story__line--soft"
+                  style={{ "--line": 1 } as CSSProperties}
+                >
+                  move forward with
+                </span>
+
+                <span
+                  className="trust-story__line trust-story__line--strong"
+                  style={{ "--line": 2 } as CSSProperties}
+                >
+                  digital solutions built
+                </span>
+
+                <span
+                  className="trust-story__line trust-story__line--soft"
+                  style={{ "--line": 3 } as CSSProperties}
+                >
+                  to deliver, support
+                </span>
+
+                <span
+                  className="trust-story__line trust-story__line--soft"
+                  style={{ "--line": 4 } as CSSProperties}
+                >
+                  and{" "}
+                  <em className="trust-story__accent">
+                    grow.
+                  </em>
+                </span>
+              </p>
+            </div>
+          </div>
+
+          {/* ================= RIGHT ================= */}
+          <div className="trust-companies">
+            <div className="trust-companies__top">
+              <p className="trust-companies__eyebrow">
+                <span aria-hidden className="trust-companies__rule" />
+                Trusted across Mauritius
+              </p>
+
+              <ul className="trust-companies__list">
+                {CLIENTS.map((name, index) => (
+                  <li
+                    key={name}
+                    className="trust-company"
+                    style={{ "--i": index } as CSSProperties}
+                  >
+                    <span
+                      aria-hidden
+                      className="trust-company__dot"
+                    />
+
+                    <span className="trust-company__name">
+                      {name}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Reviews directly below companies */}
+            <ul
+              className="trust-ratings"
+              aria-label="Customer trust indicators"
+            >
+              {TRUST_SIGNALS.map((rating, index) => (
+                <li
+                  key={rating.label}
+                  className="trust-rating"
+                  style={{ "--i": index } as CSSProperties}
+                >
+                  <span className="trust-rating__label">
+                    {rating.label}
+                  </span>
+
+                  <FiveStars />
+
+                  <span className="trust-rating__value">
+                    {rating.value}
+                  </span>
+
+                  <span className="sr-only">
+                    {rating.srLabel}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </div>
     </section>
   );

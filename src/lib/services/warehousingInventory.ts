@@ -20,7 +20,7 @@ export const warehousingInventory: ServicePageContent = {
   path: "/services/warehousing-inventory",
 
   metaTitle:
-    "Warehousing & Inventory Mauritius | Stock Control",
+    "Warehousing & Inventory Software Mauritius | Stock Control",
   metaDescription:
     "Stock counting, reconciliation, barcode and inventory systems, warehouse organisation and process audits in Mauritius. We improve your operation, not rent space.",
   keywords: [

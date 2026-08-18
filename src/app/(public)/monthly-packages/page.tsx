@@ -36,9 +36,9 @@ import { SITE_NAME, SITE_URL, whatsappUrl } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Monthly Website Packages Mauritius | From Rs 1,499/month | MoBiz.mu",
+  title: "Monthly Website Packages Mauritius | From Rs 1,499 | MoBiz.mu",
   description:
-    "Monthly website packages for Mauritius businesses. Website, hosting, Google setup, SEO basics, social media and support from Rs 1,499/month on a 12-month subscription.",
+    "Monthly website packages for Mauritius businesses: website, hosting, Google setup, SEO basics, social media and support from Rs 1,499/month.",
   path: "/monthly-packages",
 });
 

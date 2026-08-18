@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Star } from "lucide-react";
 
+import { GOOGLE_REVIEWS_HREF } from "@/lib/company";
 import type { Testimonial } from "@/components/ui/3d-book-testimonial";
 
 const ReviewBook = dynamic(
@@ -61,8 +62,6 @@ function useNearViewport<T extends HTMLElement>(rootMargin = "300px") {
   return { ref, near };
 }
 
-const REVIEW_URL =
-  "https://g.page/r/CQN8HIPUVP1DEAI/review";
 
 const testimonials: Testimonial[] = [
   {
@@ -207,7 +206,7 @@ export function MauritiusCoverage() {
           </div>
 
           <a
-            href={REVIEW_URL}
+            href={GOOGLE_REVIEWS_HREF}
             target="_blank"
             rel="noopener noreferrer"
             className="group mt-5 inline-flex min-h-11 items-center gap-2 rounded-lg bg-[#C01822] px-5 py-2.5 text-[11px] font-black text-white shadow-[0_12px_30px_rgba(192,24,34,0.22)] transition-[transform,background-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-[#A3121B] hover:shadow-[0_15px_34px_rgba(192,24,34,0.3)]"

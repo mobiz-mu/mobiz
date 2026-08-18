@@ -144,7 +144,17 @@ export const ALL_FAQS: Faq[] = FAQ_CATEGORIES.flatMap((c) => c.faqs);
 
 /* ── Testimonials / what clients value ───────────────────────────────────── */
 
-/** The verified Google review profile — the only review source we point at. */
+/**
+ * The verified Google review profile — the only review source we point at.
+ *
+ * Verified by resolution, not assumption: this short link and the variant that
+ * used to be hard-coded in MauritiusCoverage (CQN8HIPUVP1DEAI) both redirect to
+ * the same Maps place, FID 0x217dabd09f7304f9 / CID 0x43fd54d4831c7c03 —
+ * "MoBiz.mu — Smart Business Solutions for Mauritius", Grand Baie. Google issues
+ * several review-solicitation short links per profile and they differ only in
+ * tracking parameters, so neither was wrong; there should still be exactly one
+ * review destination in the codebase, and this is it.
+ */
 export const GOOGLE_REVIEWS_HREF = "https://g.page/r/CQN8HIPUVP1DEBM/review";
 
 export const CLIENT_VALUES: ValueItem[] = [

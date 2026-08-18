@@ -2,14 +2,6 @@
 
 import * as React from "react";
 import Image from "next/image";
-import {
-  animate,
-  motion,
-  type MotionValue,
-  type PanInfo,
-  useMotionValue,
-  useTransform,
-} from "motion/react";
 
 /* -------------------------------------------------------------------------- */
 /* TYPES                                                                      */
@@ -258,91 +250,109 @@ function getCarouselConfig(width: number): CarouselConfig {
 }
 
 /* -------------------------------------------------------------------------- */
+/* GEOMETRY                                                                   */
+/* -------------------------------------------------------------------------- */
+
+/*
+ * The coverflow used to be driven by `motion`: a MotionValue for progress and
+ * six `useTransform` derivations per slide. That worked, but it made the
+ * animation library the single largest script on the homepage — larger than
+ * react-dom — for one component that sits a scroll below the fold.
+ *
+ * The geometry below is the same arithmetic, extracted into a pure function.
+ * A card transform depends only on its distance from the current progress, so
+ * one rAF pass can write all of them directly: no library, no React state, and
+ * no re-render while dragging.
+ */
+
+const OPACITY_STOPS = [
+  0, 0.05, 0.28, 0.68, 1, 0.68, 0.28, 0.05,
+  0,
+] as const;
+
+/* Piecewise-linear, matching the motion keyframe map over [-4 .. 4]. */
+function opacityFor(offset: number): number {
+  const t =
+    Math.min(4, Math.max(-4, offset)) + 4;
+
+  const i = Math.min(7, Math.floor(t));
+
+  const a = OPACITY_STOPS[i] ?? 0;
+  const b = OPACITY_STOPS[i + 1] ?? 0;
+
+  return a + (b - a) * (t - i);
+}
+
+type CardTransform = {
+  transform: string;
+  opacity: number;
+  zIndex: number;
+};
+
+function transformFor(
+  index: number,
+  progress: number,
+  total: number,
+  config: CarouselConfig,
+): CardTransform {
+  let diff = (index - progress) % total;
+
+  if (diff > total / 2) {
+    diff -= total;
+  }
+
+  if (diff < -total / 2) {
+    diff += total;
+  }
+
+  const distance = Math.abs(diff);
+
+  const x = diff * config.xMultiplier;
+  const y = distance * config.yMultiplier;
+
+  const rotate =
+    distance < 0.05
+      ? 0
+      : diff * config.rotationMultiplier;
+
+  const scale = Math.max(
+    0.68,
+    1 - distance * config.scaleReduction,
+  );
+
+  /*
+   * Same component order motion emitted — translate, scale, rotate — so the
+   * composited result is identical rather than merely similar.
+   */
+  return {
+    transform:
+      `translateX(${x.toFixed(2)}px) translateY(${y.toFixed(2)}px)` +
+      ` scale(${scale.toFixed(4)}) rotate(${rotate.toFixed(3)}deg)`,
+    opacity: opacityFor(diff),
+    zIndex: Math.round(100 - distance * 10),
+  };
+}
+
+/* -------------------------------------------------------------------------- */
 /* CARD                                                                       */
 /* -------------------------------------------------------------------------- */
 
 function TemplateCard({
   slide,
-  index,
-  total,
-  progress,
-  config,
+  initial,
+  register,
 }: {
   slide: TemplateSlide;
-  index: number;
-  total: number;
-  progress: MotionValue<number>;
-  config: CarouselConfig;
+  initial: CardTransform;
+  register: (node: HTMLElement | null) => void;
 }) {
-  const offset = useTransform(progress, (value) => {
-    let diff = (index - value) % total;
-
-    if (diff > total / 2) {
-      diff -= total;
-    }
-
-    if (diff < -total / 2) {
-      diff += total;
-    }
-
-    return diff;
-  });
-
-  const x = useTransform(
-    offset,
-    (value) => value * config.xMultiplier,
-  );
-
-  const y = useTransform(
-    offset,
-    (value) => Math.abs(value) * config.yMultiplier,
-  );
-
-  const rotate = useTransform(offset, (value) => {
-    if (Math.abs(value) < 0.05) {
-      return 0;
-    }
-
-    return value * config.rotationMultiplier;
-  });
-
-  const scale = useTransform(
-    offset,
-    (value) =>
-      Math.max(
-        0.68,
-        1 - Math.abs(value) * config.scaleReduction,
-      ),
-  );
-
-  const opacity = useTransform(
-    offset,
-    [-4, -3, -2, -1, 0, 1, 2, 3, 4],
-    [0, 0.05, 0.28, 0.68, 1, 0.68, 0.28, 0.05, 0],
-  );
-
-  const zIndex = useTransform(
-    offset,
-    (value) =>
-      Math.round(
-        100 - Math.abs(value) * 10,
-      ),
-  );
-
   return (
-    <motion.figure
-      style={{
-        x,
-        y,
-        rotate,
-        scale,
-        opacity,
-        zIndex,
-      }}
+    <figure
+      ref={register}
+      style={initial}
       className="pointer-events-none absolute flex w-auto items-center justify-center overflow-hidden rounded-[18px] border border-white/[0.10] bg-[#0b0b0d] shadow-[0_30px_100px_rgba(0,0,0,0.72)]"
     >
-      
-     <Image
+      <Image
         src={slide.image}
         alt={slide.alt}
         width={slide.width}
@@ -351,7 +361,7 @@ function TemplateCard({
         loading="lazy"
         sizes="(max-width: 389px) 52vw, (max-width: 639px) 48vw, (max-width: 1023px) 310px, (max-width: 1439px) 340px, 380px"
         className="block h-auto w-[52vw] max-w-[230px] object-contain sm:w-[48vw] sm:max-w-[280px] md:w-[310px] md:max-w-[310px] lg:w-[340px] lg:max-w-[340px] xl:w-[360px] xl:max-w-[360px] 2xl:w-[380px] 2xl:max-w-[380px]"
-    />
+      />
 
       {/* Soft glass highlight */}
       <span
@@ -370,7 +380,7 @@ function TemplateCard({
         aria-hidden
         className="pointer-events-none absolute inset-x-0 bottom-0 h-[12%] bg-linear-to-t from-black/20 to-transparent"
       />
-    </motion.figure>
+    </figure>
   );
 }
 
@@ -378,79 +388,308 @@ function TemplateCard({
 /* CAROUSEL                                                                   */
 /* -------------------------------------------------------------------------- */
 
+/* The spring the snap used to run: stiffness 190, damping 28, mass 0.9. */
+const SPRING_STIFFNESS = 190;
+const SPRING_DAMPING = 28;
+const SPRING_MASS = 0.9;
+
+/* A fixed integration step keeps the spring stable at any frame rate. */
+const SPRING_STEP = 1 / 120;
+
+/* The width the server renders at, before the real breakpoint is known. */
+const SSR_CONFIG = getCarouselConfig(1280);
+
+const useIsomorphicLayoutEffect =
+  typeof window === "undefined"
+    ? React.useEffect
+    : React.useLayoutEffect;
+
 export function WebsiteTemplateCarousel() {
-  const progress = useMotionValue(0);
-
-  const startProgress = React.useRef(0);
-
-  const [windowWidth, setWindowWidth] =
-    React.useState(1280);
-
   const total = slides.length;
 
-  React.useEffect(() => {
-    const updateWidth = () => {
-      setWindowWidth(window.innerWidth);
+  const cardsRef = React.useRef<
+    (HTMLElement | null)[]
+  >([]);
+
+  const progressRef = React.useRef(0);
+  const configRef = React.useRef(SSR_CONFIG);
+
+  const frameRef = React.useRef(0);
+  const springRef = React.useRef(0);
+
+  const paint = React.useCallback(() => {
+    const progress = progressRef.current;
+    const config = configRef.current;
+
+    for (
+      let i = 0;
+      i < cardsRef.current.length;
+      i += 1
+    ) {
+      const node = cardsRef.current[i];
+
+      if (!node) {
+        continue;
+      }
+
+      const next = transformFor(
+        i,
+        progress,
+        total,
+        config,
+      );
+
+      node.style.transform = next.transform;
+      node.style.opacity = String(next.opacity);
+      node.style.zIndex = String(next.zIndex);
+    }
+  }, [total]);
+
+  /* Coalesce every pointer move within a frame into a single write. */
+  const schedule = React.useCallback(() => {
+    if (frameRef.current) {
+      return;
+    }
+
+    frameRef.current =
+      window.requestAnimationFrame(() => {
+        frameRef.current = 0;
+        paint();
+      });
+  }, [paint]);
+
+  /*
+   * The markup ships with the 1280 geometry, so the real breakpoint has to be
+   * applied before the browser paints, or the first frame shows desktop
+   * spacing on a phone.
+   */
+  useIsomorphicLayoutEffect(() => {
+    const applyWidth = () => {
+      configRef.current = getCarouselConfig(
+        window.innerWidth,
+      );
+
+      paint();
     };
 
-    updateWidth();
+    applyWidth();
 
     window.addEventListener(
       "resize",
-      updateWidth,
-      {
-        passive: true,
-      },
+      applyWidth,
+      { passive: true },
     );
 
     return () => {
       window.removeEventListener(
         "resize",
-        updateWidth,
+        applyWidth,
       );
+
+      if (frameRef.current) {
+        window.cancelAnimationFrame(
+          frameRef.current,
+        );
+
+        frameRef.current = 0;
+      }
     };
+  }, [paint]);
+
+  /* ---------------------------------------------------------------------- */
+  /* SNAP                                                                   */
+  /* ---------------------------------------------------------------------- */
+
+  const stopSpring = React.useCallback(() => {
+    if (springRef.current) {
+      window.cancelAnimationFrame(
+        springRef.current,
+      );
+
+      springRef.current = 0;
+    }
   }, []);
 
-  const config = React.useMemo(
-    () => getCarouselConfig(windowWidth),
-    [windowWidth],
+  const springTo = React.useCallback(
+    (target: number, velocity: number) => {
+      stopSpring();
+
+      const reduced = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+
+      if (reduced) {
+        progressRef.current = target;
+        paint();
+
+        return;
+      }
+
+      let value = progressRef.current;
+      let speed = velocity;
+      let last = performance.now();
+
+      const tick = (now: number) => {
+        /* A backgrounded tab hands back a huge gap; cap it. */
+        let remaining = Math.min(
+          (now - last) / 1000,
+          0.064,
+        );
+
+        last = now;
+
+        while (remaining > 0) {
+          const step = Math.min(
+            remaining,
+            SPRING_STEP,
+          );
+
+          const force =
+            -SPRING_STIFFNESS *
+              (value - target) -
+            SPRING_DAMPING * speed;
+
+          speed += (force / SPRING_MASS) * step;
+          value += speed * step;
+
+          remaining -= step;
+        }
+
+        if (
+          Math.abs(value - target) < 0.0005 &&
+          Math.abs(speed) < 0.01
+        ) {
+          progressRef.current = target;
+          springRef.current = 0;
+          paint();
+
+          return;
+        }
+
+        progressRef.current = value;
+        paint();
+
+        springRef.current =
+          window.requestAnimationFrame(tick);
+      };
+
+      springRef.current =
+        window.requestAnimationFrame(tick);
+    },
+    [paint, stopSpring],
   );
 
-  function handleDragStart() {
-    startProgress.current =
-      progress.get();
+  React.useEffect(
+    () => stopSpring,
+    [stopSpring],
+  );
+
+  /* ---------------------------------------------------------------------- */
+  /* DRAG                                                                   */
+  /* ---------------------------------------------------------------------- */
+
+  const drag = React.useRef({
+    active: false,
+    pointer: -1,
+    startX: 0,
+    startProgress: 0,
+    lastX: 0,
+    lastTime: 0,
+    velocity: 0,
+  });
+
+  function handlePointerDown(
+    event: React.PointerEvent<HTMLDivElement>,
+  ) {
+    stopSpring();
+
+    event.currentTarget.setPointerCapture(
+      event.pointerId,
+    );
+
+    drag.current = {
+      active: true,
+      pointer: event.pointerId,
+      startX: event.clientX,
+      startProgress: progressRef.current,
+      lastX: event.clientX,
+      lastTime: event.timeStamp,
+      velocity: 0,
+    };
   }
 
-  function handleDragEnd(
-    _:
-      | MouseEvent
-      | TouchEvent
-      | PointerEvent,
-    info: PanInfo,
+  function handlePointerMove(
+    event: React.PointerEvent<HTMLDivElement>,
   ) {
-    const dragDistance =
-      info.offset.x;
+    const state = drag.current;
 
-    const velocity =
-      info.velocity.x;
+    if (
+      !state.active ||
+      state.pointer !== event.pointerId
+    ) {
+      return;
+    }
+
+    const deltaX = event.clientX - state.lastX;
+
+    const deltaTime =
+      event.timeStamp - state.lastTime;
+
+    progressRef.current +=
+      -deltaX / configRef.current.sensitivity;
+
+    if (deltaTime > 0) {
+      /* px/s — the same unit motion reported as PanInfo.velocity. */
+      state.velocity =
+        (deltaX / deltaTime) * 1000;
+    }
+
+    state.lastX = event.clientX;
+    state.lastTime = event.timeStamp;
+
+    schedule();
+  }
+
+  function handlePointerUp(
+    event: React.PointerEvent<HTMLDivElement>,
+  ) {
+    const state = drag.current;
+
+    if (
+      !state.active ||
+      state.pointer !== event.pointerId
+    ) {
+      return;
+    }
+
+    state.active = false;
+
+    if (
+      event.currentTarget.hasPointerCapture(
+        event.pointerId,
+      )
+    ) {
+      event.currentTarget.releasePointerCapture(
+        event.pointerId,
+      );
+    }
+
+    const config = configRef.current;
+
+    const dragDistance =
+      event.clientX - state.startX;
 
     const distanceShift =
-      -dragDistance /
-      config.distanceDivisor;
+      -dragDistance / config.distanceDivisor;
 
     const velocityShift =
-      -velocity /
-      config.velocityDivisor;
+      -state.velocity / config.velocityDivisor;
 
     let shift = Math.round(
-      distanceShift +
-        velocityShift,
+      distanceShift + velocityShift,
     );
 
-    shift = Math.max(
-      -3,
-      Math.min(3, shift),
-    );
+    shift = Math.max(-3, Math.min(3, shift));
 
     /*
      * Make deliberate small swipes move
@@ -460,26 +699,16 @@ export function WebsiteTemplateCarousel() {
       shift === 0 &&
       Math.abs(dragDistance) > 42
     ) {
-      shift =
-        dragDistance < 0
-          ? 1
-          : -1;
+      shift = dragDistance < 0 ? 1 : -1;
     }
 
     const target =
-      Math.round(
-        startProgress.current,
-      ) + shift;
+      Math.round(state.startProgress) + shift;
 
-    animate(
-      progress,
+    /* Drag velocity is px/s; the spring runs in slide units. */
+    springTo(
       target,
-      {
-        type: "spring",
-        stiffness: 190,
-        damping: 28,
-        mass: 0.9,
-      },
+      -state.velocity / config.sensitivity,
     );
   }
 
@@ -508,50 +737,32 @@ export function WebsiteTemplateCarousel() {
 
       <div className="relative flex h-[350px] w-full items-center justify-center sm:h-[450px] md:h-[500px] lg:h-[560px] xl:h-[590px] 2xl:h-[620px]">
         {/* Full carousel drag surface */}
-        <motion.div
-          drag="x"
-          dragConstraints={{
-            left: 0,
-            right: 0,
-          }}
-          dragElastic={0}
-          dragMomentum={false}
-          onDragStart={
-            handleDragStart
-          }
-          onDrag={(_, info) => {
-            const delta =
-              -info.delta.x /
-              config.sensitivity;
-
-            progress.set(
-              progress.get() +
-                delta,
-            );
-          }}
-          onDragEnd={
-            handleDragEnd
-          }
+        <div
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerUp}
           aria-label="Drag to browse website templates"
           role="region"
           className="absolute inset-0 z-[200] cursor-grab touch-pan-y active:cursor-grabbing"
         />
 
-        {slides.map(
-          (slide, index) => (
-            <TemplateCard
-              key={slide.image}
-              slide={slide}
-              index={index}
-              total={total}
-              progress={progress}
-              config={config}
-            />
-          ),
-        )}
+        {slides.map((slide, index) => (
+          <TemplateCard
+            key={slide.image}
+            slide={slide}
+            initial={transformFor(
+              index,
+              0,
+              total,
+              SSR_CONFIG,
+            )}
+            register={(node) => {
+              cardsRef.current[index] = node;
+            }}
+          />
+        ))}
       </div>
     </section>
   );
 }
-
-export default WebsiteTemplateCarousel;

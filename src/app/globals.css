@@ -687,8 +687,22 @@ body {
 
 /* Long static lists (SEO body, FAQ) skip layout/paint while offscreen. */
 .cv-auto {
-  content-visibility: auto;
-  contain-intrinsic-size: auto 600px;
+  /*
+   * `content-visibility: auto` was costing far more than it saved.
+   *
+   * A single 600px placeholder cannot describe sections that are actually
+   * 211px, 259px or 844px tall, so every one of them snapped to its real height
+   * the moment it painted. Measured on the homepage: CLS 0.655 on mobile and
+   * 0.456 on desktop after a scroll to the foot of the page, against 0.003 and
+   * 0.014 before scrolling — i.e. essentially all of it came from this.
+   *
+   * Paint deferral is only safe when the reserved size is right; it is not
+   * knowable statically here, and the rendering saving does not justify a
+   * failing Core Web Vital. Deferral of the genuinely expensive work is handled
+   * where it belongs instead — the globe pauses off-screen, and the scenes
+   * animate only on the compositor.
+   */
+  content-visibility: visible;
 }
 
 
@@ -862,12 +876,21 @@ body {
   left: -12px;
   top: 54%;
 
-  width: 0;
+  /*
+   * Drawn at full length and revealed with scaleX rather than grown with
+   * `width`. Animating width relayouts the whole 22,500px document on every
+   * frame, and this one fires inside the LCP window; the scaled gradient is
+   * pixel-equivalent because the gradient is horizontal.
+   */
+  width: 108%;
   height: 1px;
 
   pointer-events: none;
 
   opacity: 0;
+
+  transform: scaleX(0);
+  transform-origin: left center;
 
   background:
     linear-gradient(
@@ -1115,6 +1138,12 @@ body {
 .hero-service-item__line {
   position: relative;
 
+  /*
+   * Query container so the scanning dot can express its travel in cqw and move
+   * with `transform` instead of `left`. Same path, no layout per frame.
+   */
+  container-type: inline-size;
+
   width: 100%;
   min-width: 42px;
 
@@ -1144,6 +1173,7 @@ body {
   position: absolute;
 
   top: -1px;
+  left: 0;
 
   width: 14px;
   height: 3px;
@@ -1187,6 +1217,9 @@ body {
 .hero-data-streak {
   position: absolute;
 
+  /* Query container for the travelling node — see .hero-service-item__line. */
+  container-type: inline-size;
+
   left: -20%;
 
   width: 140%;
@@ -1229,6 +1262,7 @@ body {
   position: absolute;
 
   top: -2px;
+  left: 0;
 
   width: 5px;
   height: 5px;
@@ -1335,7 +1369,7 @@ body {
 
 @keyframes hero-headline-streak {
   0% {
-    width: 0;
+    transform: scaleX(0);
     opacity: 0;
   }
 
@@ -1344,7 +1378,7 @@ body {
   }
 
   100% {
-    width: 108%;
+    transform: scaleX(1);
     opacity: 0;
   }
 }
@@ -1380,12 +1414,12 @@ body {
 
 @keyframes hero-service-scan {
   0% {
-    left: -18px;
+    transform: translate3d(-18px, 0, 0);
   }
 
   58%,
   100% {
-    left: calc(100% + 18px);
+    transform: translate3d(calc(100cqw + 18px), 0, 0);
   }
 }
 
@@ -1415,11 +1449,11 @@ body {
 
 @keyframes hero-data-node {
   from {
-    left: -1%;
+    transform: translate3d(-1cqw, 0, 0);
   }
 
   to {
-    left: 101%;
+    transform: translate3d(101cqw, 0, 0);
   }
 }
 
@@ -1651,469 +1685,25 @@ body {
 }
 
 /* =========================================================
-   TRUSTED BY — MOBIZ TECH ORBIT SOCIAL PROOF
-   ========================================================= */
+   BUSINESSES THAT TRUST US
+   =========================================================
 
-.trusted-section {
-  position: relative;
-  overflow: hidden;
+   Three zones, no cards: counters -> statement | client names -> bars.
 
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+   Everything animates from the site's existing reveal observer. It stamps
+   `data-visible="true"` on the three containers and CSS does the rest, so the
+   section stays a server component with no client JavaScript of its own.
 
-  background: #070707;
-
-  /*
-   * Trust BAND, not a second hero. Measured target was 30-40% less vertical
-   * height than the first build; every gap below the header came down with it.
-   */
-  padding:
-    clamp(30px, 3.1vw, 44px)
-    0
-    clamp(30px, 3.1vw, 44px);
-}
-
-/* subtle continuation of hero grid */
-.trusted-section__grid {
-  position: absolute;
-  inset: 0;
-
-  pointer-events: none;
-
-  opacity: 0.28;
-
-  background-image:
-    linear-gradient(
-      rgba(255, 255, 255, 0.035) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0.035) 1px,
-      transparent 1px
-    );
-
-  background-size: 74px 74px;
-
-  mask-image:
-    linear-gradient(
-      to bottom,
-      transparent,
-      black 18%,
-      black 82%,
-      transparent
-    );
-}
-
-.trusted-section__glow {
-  position: absolute;
-
-  left: 50%;
-  bottom: -220px;
-
-  width: min(900px, 90vw);
-  height: 420px;
-
-  transform: translateX(-50%);
-
-  pointer-events: none;
-
-  background:
-    radial-gradient(
-      ellipse,
-      rgba(192, 24, 34, 0.14),
-      rgba(192, 24, 34, 0.035) 46%,
-      transparent 72%
-    );
-}
-
-.trusted-section__inner {
-  position: relative;
-  z-index: 2;
-
-  width: 100%;
-}
-
-.trusted-section__header {
-  width: min(760px, calc(100% - 40px));
-
-  margin:
-    0
-    auto
-    clamp(16px, 1.7vw, 22px);
-
-  text-align: center;
-}
-
-.trusted-section__eyebrow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  gap: 10px;
-
-  margin-bottom: 9px;
-
-  color: #ef2b33;
-
-  font-family: var(--font-mono), monospace;
-
-  font-size: 10px;
-  font-weight: 800;
-
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-}
-
-.trusted-section__eyebrow-line {
-  width: 26px;
-  height: 1px;
-
-  background:
-    linear-gradient(
-      90deg,
-      transparent,
-      rgba(239, 43, 51, 0.82)
-    );
-}
-
-.trusted-section__eyebrow-line:last-child {
-  transform: scaleX(-1);
-}
-
-.trusted-section__title {
-  margin: 0;
-
-  color: #ffffff;
-
-  /* Deliberately below the hero H1 — this must not compete with it. */
-  font-size:
-    clamp(
-      1.6rem,
-      2.7vw,
-      2.5rem
-    );
-
-  font-weight: 800;
-
-  line-height: 1.0;
-
-  letter-spacing: -0.035em;
-}
-
-.trusted-section__title span {
-  color: #d5232d;
-}
-
-.trusted-section__copy {
-  max-width: 560px;
-
-  margin:
-    8px
-    auto
-    0;
-
-  color: rgba(255, 255, 255, 0.66);
-
-  font-size:
-    clamp(
-      12.5px,
-      0.85vw,
-      13.5px
-    );
-
-  line-height: 1.5;
-}
-
-/* =========================================================
-   MARQUEE — 3D STAGE
-   ========================================================= */
+   Fallback order is deliberate throughout: unarmed — no JS, JS failed, or
+   prefers-reduced-motion, where the observer never arms — every value renders at
+   its final state. Nothing resets to zero unless something exists to count it
+   back up. */
 
 /*
- * The stage is what makes this read as 3D: one perspective, one statically
- * tilted plane, and the two name rows pushed to different depths. The rows then
- * only animate translateX, so the entire effect costs two composited transforms
- * — no per-plate 3D layer, no JS.
- */
-.trusted-stage {
-  perspective: 1000px;
-  perspective-origin: 50% 46%;
-}
-
-.trusted-stage__plane {
-  display: grid;
-  gap: 12px;
-
-  transform-style: preserve-3d;
-  transform: rotateX(9deg);
-}
-
-/* Near row leans toward the viewer, far row sits back behind it. */
-.trusted-marquee--near {
-  transform: translateZ(30px);
-}
-
-.trusted-marquee--far {
-  transform: translateZ(-46px);
-  opacity: 0.76;
-}
-
-.trusted-marquee {
-  position: relative;
-
-  overflow: hidden;
-
-  width: 100%;
-
-  mask-image:
-    linear-gradient(
-      90deg,
-      transparent 0%,
-      black 5%,
-      black 95%,
-      transparent 100%
-    );
-}
-
-.trusted-marquee__track {
-  display: flex;
-
-  width: max-content;
-
-  will-change: transform;
-}
-
-.trusted-marquee__track--left {
-  animation:
-    trusted-marquee-left
-    42s
-    linear
-    infinite;
-}
-
-.trusted-marquee__track--right {
-  animation:
-    trusted-marquee-right
-    46s
-    linear
-    infinite;
-}
-
-.trusted-marquee:hover .trusted-marquee__track {
-  animation-play-state: paused;
-}
-
-.trusted-marquee__group {
-  display: flex;
-  flex-shrink: 0;
-
-  align-items: center;
-
-  gap: 12px;
-
-  margin: 0;
-  padding:
-    3px
-    6px;
-
-  list-style: none;
-}
-
-/* =========================================================
-   CLIENT NAME — NO LOGO / NO HEAVY CARD
-   ========================================================= */
-
-.trusted-client {
-  position: relative;
-
-  display: flex;
-  align-items: center;
-
-  gap: 8px;
-
-  min-height: 38px;
-
-  padding:
-    0
-    clamp(11px, 1vw, 15px);
-
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  border-radius: 7px;
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.035),
-      rgba(255, 255, 255, 0.012)
-    );
-
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.025);
-
-  transition:
-    transform 200ms cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 200ms ease,
-    background-color 200ms ease;
-}
-
-.trusted-client:hover {
-  transform: translateY(-2px);
-
-  border-color:
-    rgba(192, 24, 34, 0.28);
-
-  background:
-    rgba(255, 255, 255, 0.05);
-}
-
-.trusted-client__name {
-  white-space: nowrap;
-
-  color: rgba(255, 255, 255, 0.94);
-
-  font-size:
-    clamp(
-      11.5px,
-      0.8vw,
-      13px
-    );
-
-  font-weight: 600;
-
-  letter-spacing: -0.008em;
-}
-
-/* colored dot */
-.trusted-client__dot {
-  width: 4px;
-  height: 4px;
-
-  flex: 0 0 auto;
-
-  border-radius: 50%;
-}
-
-.trusted-client__dot--0 {
-  background: #ef2b33;
-
-  box-shadow:
-    0 0 9px
-    rgba(239, 43, 51, 0.7);
-}
-
-.trusted-client__dot--1 {
-  background: #2563eb;
-
-  box-shadow:
-    0 0 9px
-    rgba(37, 99, 235, 0.65);
-}
-
-.trusted-client__dot--2 {
-  background: #eab308;
-
-  box-shadow:
-    0 0 9px
-    rgba(234, 179, 8, 0.6);
-}
-
-.trusted-client__dot--3 {
-  background: #22c55e;
-
-  box-shadow:
-    0 0 9px
-    rgba(34, 197, 94, 0.6);
-}
-
-/* subtle underline scan */
-.trusted-client__line {
-  position: absolute;
-
-  left: 18px;
-  right: 18px;
-  bottom: 0;
-
-  height: 1px;
-
-  opacity: 0.48;
-
-  transform: scaleX(0.36);
-
-  transform-origin: center;
-
-  transition:
-    transform 250ms
-    cubic-bezier(0.16, 1, 0.3, 1),
-    opacity 250ms ease;
-}
-
-.trusted-client:hover .trusted-client__line {
-  opacity: 0.9;
-
-  transform: scaleX(1);
-}
-
-.trusted-client__line--0 {
-  background:
-    linear-gradient(
-      90deg,
-      transparent,
-      #ef2b33,
-      transparent
-    );
-}
-
-.trusted-client__line--1 {
-  background:
-    linear-gradient(
-      90deg,
-      transparent,
-      #2563eb,
-      transparent
-    );
-}
-
-.trusted-client__line--2 {
-  background:
-    linear-gradient(
-      90deg,
-      transparent,
-      #eab308,
-      transparent
-    );
-}
-
-.trusted-client__line--3 {
-  background:
-    linear-gradient(
-      90deg,
-      transparent,
-      #22c55e,
-      transparent
-    );
-}
-
-/* =========================================================
-   TRUST COUNTERS
-   ========================================================= */
-
-/*
- * Counting up in pure CSS.
- *
- * `--trust-n` is a registered <integer>, so it INTERPOLATES rather than flipping
- * discretely, and a CSS counter turns it into visible digits. That is what lets
- * the count-up run with no client JavaScript at all.
- *
- * The viewport trigger is the site's existing single IntersectionObserver: it
- * stamps `data-visible="true"`, which is the only thing that starts the
- * animation. `inherits: true` matters — the animation runs on the element and
- * the digits are drawn by its ::after, which would otherwise fall back to the
- * initial value.
- *
- * Fallback order is deliberate. Unarmed (no JS, JS failed, or
- * prefers-reduced-motion, where the observer never arms) the figure renders at
- * its final value immediately; it is only reset to 0 once something exists to
- * count it back up.
+ * Counting in pure CSS. A registered <integer> INTERPOLATES rather than
+ * flipping, and a CSS counter turns it into visible digits. `inherits: true`
+ * matters: the animation runs on the element while the digits are drawn by its
+ * ::after, which would otherwise fall back to the initial value.
  */
 @property --trust-n {
   syntax: "<integer>";
@@ -2121,98 +1711,93 @@ body {
   initial-value: 0;
 }
 
-.trust-stats {
+.trust {
+  position: relative;
+
+  /* Compact by intent — one connected trust story, not three stacked blocks. */
+  padding: clamp(46px, 5.4vw, 84px) 0 clamp(48px, 5.6vw, 88px);
+
+  background: #050505;
+}
+
+/* One restrained ambient wash. No grid, no panels, no section chrome. */
+.trust::before {
+  content: "";
+
+  position: absolute;
+  left: 50%;
+  top: 22%;
+  z-index: 0;
+
+  width: min(1100px, 92%);
+  height: 46%;
+
+  transform: translate(-50%, -50%);
+
+  pointer-events: none;
+
+  background: radial-gradient(
+    ellipse 60% 100% at 50% 50%,
+    rgba(192, 24, 34, 0.1),
+    transparent 72%
+  );
+}
+
+.trust__inner {
+  position: relative;
+  z-index: 1;
+
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+/* ── Zone A: counters ─────────────────────────────────────────────────────── */
+
+/*
+ * Full width, four columns, each figure centred in its own column. No card, no
+ * border, no surface — the numbers sit directly on the page.
+ */
+.trust-counters {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
 
-  gap: clamp(9px, 1.1vw, 14px);
+  gap: clamp(20px, 3vw, 40px);
 
-  width: min(1000px, calc(100% - 40px));
-  margin: clamp(18px, 2vw, 26px) auto 0;
+  margin: 0;
   padding: 0;
 
   list-style: none;
 }
 
-.trust-stat {
-  position: relative;
-
+.trust-counter {
   display: flex;
   flex-direction: column;
   align-items: center;
 
-  gap: 3px;
-
-  padding: clamp(11px, 1.1vw, 15px) clamp(8px, 1vw, 13px);
-
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 11px;
-
-  /* Thin border, faint dark gradient, one small red ambient — no glow. */
-  background:
-    radial-gradient(ellipse 70% 100% at 50% 118%, rgba(192, 24, 34, 0.13), transparent 70%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.008)),
-    rgba(9, 9, 11, 0.72);
+  gap: 6px;
 
   text-align: center;
 }
 
-/*
- * Desktop-only hover. Capped at a 3px lift with no scale and no bounce; the
- * border and the red ambient do the rest.
- */
-@media (hover: hover) and (min-width: 768px) {
-  .trust-stat {
-    transition:
-      transform 240ms cubic-bezier(0.16, 1, 0.3, 1),
-      border-color 240ms ease,
-      box-shadow 240ms ease;
-  }
-
-  .trust-stat:hover {
-    transform: translateY(-3px);
-    border-color: rgba(255, 255, 255, 0.17);
-
-    box-shadow:
-      0 10px 26px rgba(0, 0, 0, 0.42),
-      inset 0 0 22px rgba(192, 24, 34, 0.10);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .trust-stat {
-    transition: none;
-  }
-
-  .trust-stat:hover {
-    transform: none;
-  }
-}
-
-.trust-stat__value {
+.trust-counter__value {
   display: inline-flex;
   align-items: baseline;
 
+  color: #f4f4f6;
+
   font-family: var(--font-anton), var(--font-space-grotesk), system-ui, sans-serif;
-  font-size: clamp(1.7rem, 2.9vw, 2.45rem);
+  font-size: clamp(2.6rem, 5.4vw, 4.6rem);
   font-weight: 400;
   line-height: 1;
-  letter-spacing: -0.01em;
-
-  /* Off-white: the red is reserved for the + and % accents. */
-  color: #f2f2f4;
+  letter-spacing: -0.02em;
 }
 
 /*
- * The digit box is width-reserved. Every target here is two digits, so counting
- * 0 -> 68 would otherwise widen the box mid-animation and register as layout
- * shift in a section the user is looking at.
- *
- * 2.3ch, not 2ch. Anton has proportional figures and ignores tabular-nums, so
- * `ch` (the advance of "0") under-reserves: measured, "68" rendered 55px inside
- * a 53px 2ch box and grew the row by 2px mid-count.
+ * Width-reserved. Every target is two digits, so counting 0 -> 68 would widen
+ * the box mid-animation and shift the row. 2.3ch, not 2ch: Anton has
+ * proportional figures and ignores tabular-nums.
  */
-.trust-stat__num {
+.trust-counter__num {
   display: inline-block;
   min-width: 2.3ch;
 
@@ -2220,40 +1805,273 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
-.trust-stat__num::after {
+.trust-counter__num::after {
   counter-reset: trust-n var(--trust-n);
   content: counter(trust-n);
 }
 
-.trust-stat__unit {
-  margin-left: 0.04em;
+.trust-counter__unit {
+  margin-left: 0.03em;
 
   color: #ef2b33;
-  font-size: 0.56em;
+  font-size: 0.5em;
 }
 
-.trust-stat__label {
-  color: rgba(255, 255, 255, 0.7);
+.trust-counter__label {
+  color: rgba(255, 255, 255, 0.56);
 
-  font-size: clamp(10.5px, 0.78vw, 12px);
+  font-size: clamp(11px, 0.85vw, 13px);
   font-weight: 500;
-  letter-spacing: 0.015em;
-  line-height: 1.3;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
-/* Static final value unless something is actually going to animate it. */
-.trust-stat__num {
+/* ── Zone B: equal-height split ───────────────────────────────────────────── */
+
+/*
+ * One grid row with both children stretching. That is what guarantees the two
+ * columns share an outer height rather than being eyeballed.
+ */
+.trust-middle {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+
+  gap: clamp(28px, 4vw, 64px);
+
+  margin-top: clamp(40px, 4.6vw, 72px);
+}
+
+.trust-story,
+.trust-companies {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  height: 100%;
+}
+
+/* Dotted field, masked so it fades out instead of drawing a visible box. */
+.trust-story__dots {
+  position: absolute;
+  left: -14px;
+  top: -10px;
+  z-index: -1;
+
+  width: calc(100% + 28px);
+  height: min(240px, 78%);
+
+  fill: rgba(226, 52, 64, 0.34);
+
+  mask-image: radial-gradient(ellipse 70% 74% at 22% 30%, #000 0%, transparent 72%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 74% at 22% 30%, #000 0%, transparent 72%);
+}
+
+.trust-story__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin: 0 0 clamp(14px, 1.6vw, 22px);
+
+  color: #ef2b33;
+
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.trust-story__rule {
+  width: 26px;
+  height: 1px;
+
+  background: linear-gradient(90deg, rgba(239, 43, 51, 0.9), transparent);
+}
+
+.trust-story__statement {
+  margin: 0;
+
+  font-size: clamp(1.35rem, 2.5vw, 2.2rem);
+  line-height: 1.24;
+  letter-spacing: -0.025em;
+}
+
+.trust-story__line {
+  display: block;
+}
+
+.trust-story__line--strong {
+  color: #ffffff;
+  font-weight: 650;
+}
+
+.trust-story__line--soft {
+  color: rgba(255, 255, 255, 0.58);
+  font-weight: 300;
+}
+
+.trust-story__accent {
+  color: #ef2b33;
+  font-style: normal;
+  font-weight: 650;
+}
+
+/* ── client names ─────────────────────────────────────────────────────────── */
+
+.trust-companies__eyebrow {
+  margin: 0 0 clamp(14px, 1.6vw, 22px);
+
+  color: rgba(255, 255, 255, 0.4);
+
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/*
+ * Two columns of plain text. No pill, no card, no border — the names carry
+ * themselves, and `break-inside` keeps a long one from splitting across columns.
+ */
+.trust-companies__list {
+  columns: 2;
+  column-gap: clamp(18px, 2.4vw, 36px);
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.trust-company {
+  break-inside: avoid;
+
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+
+  padding: clamp(5px, 0.6vw, 8px) 0;
+
+  color: rgba(255, 255, 255, 0.88);
+
+  font-size: clamp(12.5px, 1vw, 14.5px);
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: -0.008em;
+}
+
+.trust-company__dot {
+  flex: 0 0 auto;
+
+  width: 4px;
+  height: 4px;
+
+  border-radius: 50%;
+  background: rgba(226, 52, 64, 0.75);
+}
+
+/* ── Zone C: performance bars ─────────────────────────────────────────────── */
+
+.trust-bars {
+  display: grid;
+  gap: clamp(16px, 1.8vw, 24px);
+
+  margin: clamp(40px, 4.6vw, 72px) 0 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.trust-bar__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+
+  margin: 0 0 9px;
+
+  gap: 12px;
+}
+
+.trust-bar__label {
+  color: rgba(255, 255, 255, 0.82);
+
+  font-size: clamp(12.5px, 1vw, 14.5px);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.trust-bar__value {
+  color: #ffffff;
+
+  font-size: clamp(13px, 1.05vw, 15px);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.trust-bar__num {
+  display: inline-block;
+  min-width: 2ch;
+
+  text-align: right;
+}
+
+.trust-bar__num::after {
+  counter-reset: trust-n var(--trust-n);
+  content: counter(trust-n);
+}
+
+.trust-bar__unit {
+  color: #ef2b33;
+}
+
+.trust-bar__track {
+  display: block;
+
+  height: 4px;
+
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+/*
+ * The fill scales rather than animating width, so the bar composites instead of
+ * running layout on every frame.
+ */
+.trust-bar__fill {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  transform-origin: left center;
+  transform: scaleX(var(--bar-to, 1));
+
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(192, 24, 34, 0.55), #ef2b33);
+  box-shadow: 0 0 12px rgba(239, 43, 51, 0.4);
+}
+
+/* ── entry animation, driven by the shared reveal observer ────────────────── */
+
+/* Static final values unless something is going to animate them. */
+.trust-counter__num,
+.trust-bar__num {
   --trust-n: var(--trust-to);
 }
 
-[data-reveal-armed] .trust-stat__num {
+[data-reveal-armed] .trust-counter__num,
+[data-reveal-armed] .trust-bar__num {
   --trust-n: 0;
 }
 
-[data-reveal-armed] [data-visible="true"] .trust-stat__num {
+[data-reveal-armed] [data-visible="true"] .trust-counter__num,
+[data-reveal-armed] [data-visible="true"] .trust-bar__num {
   animation:
     trust-count
-    1.7s
+    1.6s
     cubic-bezier(0.22, 1, 0.36, 1)
     var(--trust-delay, 0s)
     both;
@@ -2264,209 +2082,99 @@ body {
   to { --trust-n: var(--trust-to); }
 }
 
-/* =========================================================
-   ANIMATION
-   ========================================================= */
-
-@keyframes trusted-marquee-left {
-  from {
-    transform:
-      translate3d(0, 0, 0);
-  }
-
-  to {
-    transform:
-      translate3d(-50%, 0, 0);
-  }
+[data-reveal-armed] .trust-bar__fill {
+  transform: scaleX(0);
 }
 
-@keyframes trusted-marquee-right {
-  from {
-    transform:
-      translate3d(-50%, 0, 0);
-  }
-
-  to {
-    transform:
-      translate3d(0, 0, 0);
-  }
+[data-reveal-armed] [data-visible="true"] .trust-bar__fill {
+  animation:
+    trust-fill
+    1.5s
+    cubic-bezier(0.22, 1, 0.36, 1)
+    var(--trust-delay, 0s)
+    both;
 }
 
-/* =========================================================
-   MOBILE
-   ========================================================= */
+@keyframes trust-fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(var(--bar-to)); }
+}
+
+/*
+ * Names stagger in once, then stay put — readable and stable, not a marquee.
+ * One observed container drives all fourteen, so this costs no extra observers.
+ */
+[data-reveal-armed] .trust-company {
+  opacity: 0;
+  transform: translateY(9px);
+}
+
+[data-reveal-armed] [data-visible="true"] .trust-company {
+  opacity: 1;
+  transform: none;
+
+  transition:
+    opacity 560ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 560ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(var(--i, 0) * 45ms);
+}
+
+/* ── responsive ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 1023px) {
+  .trust-middle {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Equal height is a desktop-split concern; stacked, it means nothing. */
+  .trust-story,
+  .trust-companies {
+    height: auto;
+  }
+}
 
 @media (max-width: 767px) {
-  .trusted-section {
-    padding:
-      46px
-      0
-      48px;
+  .trust__inner {
+    width: calc(100% - 32px);
   }
 
-  .trusted-section__header {
-    width:
-      calc(100% - 36px);
-
-    margin-bottom: 31px;
-  }
-
-  .trusted-section__eyebrow {
-    gap: 9px;
-
-    font-size: 8px;
-
-    letter-spacing: 0.15em;
-  }
-
-  .trusted-section__eyebrow-line {
-    width: 24px;
-  }
-
-  .trusted-section__title {
-    font-size:
-      clamp(
-        2rem,
-        9vw,
-        3rem
-      );
-  }
-
-  .trusted-section__copy {
-    font-size: 13px;
-
-    line-height: 1.65;
-  }
-
-  .trusted-stage__plane {
-    gap: 12px;
-
-    /*
-     * Flat below this width. A tilted plane keystones the rows in from both
-     * sides, and at narrow widths that eats the names rather than adding depth.
-     */
-    transform: none;
-  }
-
-  .trusted-marquee--near,
-  .trusted-marquee--far {
-    transform: none;
-  }
-
-  .trusted-marquee--far {
-    opacity: 0.86;
-  }
-
-  .trust-stats {
+  .trust-counters {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
-    width: calc(100% - 28px);
-    margin-top: 16px;
+    gap: clamp(22px, 6vw, 34px);
   }
 
-  .trust-stat {
-    gap: 2px;
-    padding: 10px 8px;
-    border-radius: 10px;
+  .trust-counter__value {
+    font-size: clamp(2.4rem, 12vw, 3.2rem);
   }
 
-
-
-  .trusted-marquee {
-    mask-image:
-      linear-gradient(
-        90deg,
-        transparent,
-        black 11%,
-        black 89%,
-        transparent
-      );
-  }
-
-  .trusted-marquee__group {
-    gap: 10px;
-  }
-
-  .trusted-client {
-    min-height: 34px;
-
-    padding:
-      0
-      10px;
-
-    gap: 7px;
-
-    border-radius: 7px;
-  }
-
-  .trusted-client__name {
-    font-size: 12px;
-  }
-
-  .trusted-client__dot {
-    width: 4px;
-    height: 4px;
-  }
-
-  .trusted-marquee__track--left {
-    animation-duration: 48s;
-  }
-
-  .trusted-marquee__track--right {
-    animation-duration: 52s;
+  .trust-story__statement {
+    font-size: clamp(1.3rem, 6.2vw, 1.7rem);
   }
 }
 
-/* =========================================================
-   REDUCED MOTION
-   ========================================================= */
+@media (max-width: 479px) {
+  /* One column: two columns of names stop being readable below this. */
+  .trust-companies__list {
+    columns: 1;
+  }
+}
 
+/* ── reduced motion ───────────────────────────────────────────────────────── */
+
+/*
+ * The observer never arms under reduced motion, so counters and bars already
+ * hold their final values. This only stops the name transition.
+ */
 @media (prefers-reduced-motion: reduce) {
-  /*
-   * The rows fall back to a static, centred, wrapped list, so the tilted plane
-   * has nothing left to give depth to — flatten it rather than keystone a
-   * stationary block.
-   */
-  .trusted-stage {
-    perspective: none;
+  .trust-company {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
   }
 
-  .trusted-stage__plane,
-  .trusted-marquee--near,
-  .trusted-marquee--far {
-    transform: none;
-  }
-
-  .trusted-marquee--far {
-    opacity: 1;
-  }
-
-  .trusted-marquee {
-    overflow: visible;
-
-    mask-image: none;
-  }
-
-  .trusted-marquee__track {
-    width: auto;
-
+  .trust-bar__fill {
     animation: none !important;
-  }
-
-  .trusted-marquee__group {
-    flex-wrap: wrap;
-
-    justify-content: center;
-
-    width: 100%;
-  }
-
-  .trusted-marquee__group[aria-hidden="true"] {
-    display: none;
-  }
-
-  .trusted-client {
-    transition: none;
+    transform: scaleX(var(--bar-to)) !important;
   }
 }
 
@@ -3949,5 +3657,706 @@ body {
 ) {
   .wa-step {
     animation: none;
+  }
+}
+
+
+/* =========================================================
+   TRUST SECTION
+   ========================================================= */
+
+.trust {
+  position: relative;
+  overflow: hidden;
+  background: transparent;
+  padding-block: clamp(2.5rem, 4vw, 4rem);
+}
+
+.trust__inner {
+  width: min(calc(100% - 2rem), 1540px);
+  margin-inline: auto;
+}
+
+
+/* =========================================================
+   LIVE COUNTERS
+   ========================================================= */
+
+.trust-counters {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: start;
+
+  margin: 0 0 clamp(2.5rem, 4vw, 3.75rem);
+  padding: 0;
+
+  list-style: none;
+}
+
+.trust-counter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+
+  background: transparent;
+  border: 0;
+}
+
+.trust-counter__value {
+  display: inline-flex;
+  align-items: flex-end;
+  justify-content: center;
+
+  line-height: 0.82;
+}
+
+.trust-counter__num {
+  min-width: 2.3ch;
+
+  font-family: var(--font-anton), sans-serif;
+  font-size: clamp(4.5rem, 6.5vw, 7rem);
+
+  color: #f7f7f7;
+
+  text-align: right;
+}
+
+.trust-counter__unit {
+  margin-left: 0.06em;
+  padding-bottom: 0.08em;
+
+  font-family: var(--font-anton), sans-serif;
+  font-size: clamp(1.6rem, 2.5vw, 2.8rem);
+
+  line-height: 1;
+
+  color: var(--brand-red, #ef3340);
+}
+
+.trust-counter__label {
+  margin-top: 0.65rem;
+
+  font-size: 0.74rem;
+  font-weight: 700;
+
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+
+  color: rgba(255, 255, 255, 0.5);
+}
+
+
+/* =========================================================
+   MAIN 2-COLUMN LAYOUT
+   ========================================================= */
+
+.trust-middle {
+  position: relative;
+
+  display: grid;
+  grid-template-columns:
+    minmax(0, 0.96fr)
+    minmax(0, 1.04fr);
+
+  align-items: stretch;
+
+  gap: clamp(3rem, 5vw, 5rem);
+}
+
+.trust-middle::after {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  bottom: 0;
+  left: 48.5%;
+
+  width: 1px;
+
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(255, 255, 255, 0.1) 12%,
+    rgba(255, 255, 255, 0.1) 88%,
+    transparent
+  );
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   LEFT STORY
+   ========================================================= */
+
+.trust-story {
+  position: relative;
+
+  height: 100%;
+  min-width: 0;
+
+  overflow: hidden;
+
+  background: transparent;
+  border: 0;
+}
+
+.trust-story__content {
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  min-height: 100%;
+}
+
+.trust-story__ambient {
+  position: absolute;
+
+  top: -15%;
+  left: -12%;
+
+  width: 520px;
+  height: 360px;
+
+  background: radial-gradient(
+    ellipse,
+    rgba(239, 51, 64, 0.07),
+    transparent 68%
+  );
+
+  pointer-events: none;
+}
+
+.trust-story__dots {
+  position: absolute;
+
+  inset: -2rem;
+
+  opacity: 0.2;
+
+  color: var(--brand-red, #ef3340);
+
+  mask-image: radial-gradient(
+    ellipse at 25% 26%,
+    black,
+    transparent 68%
+  );
+
+  -webkit-mask-image: radial-gradient(
+    ellipse at 25% 26%,
+    black,
+    transparent 68%
+  );
+}
+
+
+/* =========================================================
+   EYEBROWS
+   ========================================================= */
+
+.trust-story__eyebrow,
+.trust-companies__eyebrow {
+  display: flex;
+  align-items: center;
+
+  gap: 0.75rem;
+
+  margin: 0 0 1.4rem;
+
+  font-size: 0.65rem;
+  font-weight: 700;
+
+  letter-spacing: 0.21em;
+  text-transform: uppercase;
+}
+
+.trust-story__eyebrow {
+  color: rgba(239, 51, 64, 0.76);
+}
+
+.trust-companies__eyebrow {
+  color: rgba(255, 255, 255, 0.43);
+}
+
+.trust-story__rule,
+.trust-companies__rule {
+  display: block;
+
+  width: 1.8rem;
+  height: 1px;
+}
+
+.trust-story__rule {
+  background: rgba(239, 51, 64, 0.58);
+}
+
+.trust-companies__rule {
+  background: rgba(239, 51, 64, 0.4);
+}
+
+
+/* =========================================================
+   LEFT — LINE-BY-LINE ANIMATION
+   ========================================================= */
+
+.trust-story__statement {
+  display: flex;
+  flex-direction: column;
+
+  margin: 0;
+
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+}
+
+.trust-story__line {
+  display: block;
+
+  width: fit-content;
+
+  font-size: clamp(2.4rem, 4vw, 4.2rem);
+
+  opacity: 0;
+
+  transform:
+    translate3d(0, 28px, 0)
+    skewY(1.8deg);
+
+  filter: blur(4px);
+
+  transition:
+    opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 900ms cubic-bezier(0.16, 1, 0.3, 1),
+    filter 700ms ease;
+
+  transition-delay:
+    calc(80ms + (var(--line) * 110ms));
+}
+
+.trust-middle[data-visible="true"] .trust-story__line {
+  opacity: 1;
+
+  transform:
+    translate3d(0, 0, 0)
+    skewY(0deg);
+
+  filter: blur(0);
+}
+
+.trust-story__line--strong {
+  font-weight: 700;
+  color: #f7f7f7;
+}
+
+.trust-story__line--soft {
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.54);
+}
+
+.trust-story__accent {
+  position: relative;
+
+  font-style: normal;
+  font-weight: 700;
+
+  color: var(--brand-red, #ef3340);
+}
+
+.trust-story__accent::after {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  right: 0;
+  bottom: -0.08em;
+
+  height: 2px;
+
+  background: var(--brand-red, #ef3340);
+
+  transform: scaleX(0);
+  transform-origin: left;
+
+  transition:
+    transform 850ms cubic-bezier(0.16, 1, 0.3, 1) 720ms;
+}
+
+.trust-middle[data-visible="true"]
+  .trust-story__accent::after {
+  transform: scaleX(1);
+}
+
+
+/* =========================================================
+   RIGHT SIDE
+   ========================================================= */
+
+.trust-companies {
+  display: flex;
+  flex-direction: column;
+
+  height: 100%;
+  min-width: 0;
+
+  background: transparent;
+  border: 0;
+}
+
+.trust-companies__top {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* =========================================================
+   CLIENT NAMES — MORE COMPACT
+   ========================================================= */
+
+.trust-companies__list {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  align-content: start;
+
+  gap:
+    clamp(0.7rem, 1.15vw, 0.95rem)
+    clamp(1.5rem, 3vw, 3.25rem);
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.trust-company {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 0.6rem;
+
+  min-width: 0;
+
+  font-size: clamp(0.78rem, 0.9vw, 0.94rem);
+  font-weight: 600;
+
+  line-height: 1.3;
+
+  color: rgba(255, 255, 255, 0.75);
+
+  opacity: 0;
+
+  transform: translate3d(12px, 0, 0);
+
+  transition:
+    opacity 500ms ease,
+    transform 650ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  transition-delay:
+    calc(150ms + (var(--i) * 35ms));
+}
+
+.trust-middle[data-visible="true"] .trust-company {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.trust-company__dot {
+  width: 0.26rem;
+  height: 0.26rem;
+
+  margin-top: 0.4rem;
+
+  flex: none;
+
+  border-radius: 999px;
+
+  background: var(--brand-red, #ef3340);
+
+  box-shadow:
+    0 0 7px rgba(239, 51, 64, 0.2);
+}
+
+.trust-company__name {
+  min-width: 0;
+}
+
+
+/* =========================================================
+   REVIEWS — UNDER COMPANIES
+   ========================================================= */
+
+.trust-ratings {
+  display: grid;
+
+  gap: 0;
+
+  margin: clamp(1.5rem, 2vw, 2rem) 0 0;
+
+  padding: clamp(1.2rem, 1.8vw, 1.55rem) 0 0;
+
+  border-top:
+    1px solid rgba(255, 255, 255, 0.08);
+
+  list-style: none;
+}
+
+.trust-rating {
+  display: grid;
+
+  grid-template-columns:
+    minmax(8rem, 1fr)
+    auto
+    3rem;
+
+  align-items: center;
+
+  column-gap: 1rem;
+
+  min-height: 3.2rem;
+
+  border-bottom:
+    1px solid rgba(255, 255, 255, 0.07);
+
+  background: transparent;
+
+  opacity: 0;
+
+  transform: translateY(8px);
+
+  transition:
+    opacity 550ms ease,
+    transform 600ms ease;
+
+  transition-delay:
+    calc(650ms + (var(--i) * 90ms));
+}
+
+.trust-middle[data-visible="true"] .trust-rating {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.trust-rating__label {
+  min-width: 0;
+
+  font-size: 0.82rem;
+  font-weight: 650;
+
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.trust-rating__stars {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 0.18rem;
+
+  color: #fbbf24;
+}
+
+.trust-rating__star {
+  width: 0.92rem;
+  height: 0.92rem;
+
+  filter:
+    drop-shadow(0 0 5px rgba(251, 191, 36, 0.12));
+}
+
+.trust-rating__value {
+  justify-self: end;
+
+  font-size: 0.84rem;
+  font-weight: 750;
+
+  color: #fff;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1023px) {
+  .trust-middle {
+    gap: 2.5rem;
+  }
+
+  .trust-middle::after {
+    display: none;
+  }
+
+  .trust-story__line {
+    font-size: clamp(2.15rem, 4.8vw, 3.25rem);
+  }
+
+  .trust-companies__list {
+    gap: 0.8rem 1.25rem;
+  }
+
+  .trust-rating {
+    grid-template-columns:
+      minmax(7rem, 1fr)
+      auto
+      2.7rem;
+
+    column-gap: 0.75rem;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 767px) {
+  .trust {
+    padding-block: 2.75rem;
+  }
+
+  .trust__inner {
+    width: min(calc(100% - 1.5rem), 1540px);
+  }
+
+  .trust-counters {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    row-gap: 2rem;
+
+    margin-bottom: 3rem;
+  }
+
+  .trust-counter__num {
+    font-size: clamp(3.7rem, 18vw, 5rem);
+  }
+
+  .trust-middle {
+    grid-template-columns: 1fr;
+
+    gap: 2.75rem;
+  }
+
+  .trust-story,
+  .trust-companies {
+    height: auto;
+  }
+
+  .trust-story__content {
+    justify-content: flex-start;
+  }
+
+  .trust-story__line {
+    font-size: clamp(2rem, 10.5vw, 3.2rem);
+  }
+
+  .trust-companies__eyebrow {
+    margin-bottom: 1.25rem;
+  }
+
+  .trust-ratings {
+    margin-top: 1.5rem;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 479px) {
+  .trust-companies__list {
+    grid-template-columns: 1fr;
+
+    gap: 0.68rem;
+  }
+
+  .trust-company {
+    font-size: 0.82rem;
+  }
+
+  .trust-rating {
+    grid-template-columns:
+      minmax(7rem, 1fr)
+      auto
+      2.5rem;
+
+    column-gap: 0.5rem;
+
+    min-height: 3rem;
+  }
+
+  .trust-rating__label {
+    font-size: 0.76rem;
+  }
+
+  .trust-rating__stars {
+    gap: 0.08rem;
+  }
+
+  .trust-rating__star {
+    width: 0.74rem;
+    height: 0.74rem;
+  }
+
+  .trust-rating__value {
+    font-size: 0.78rem;
+  }
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 359px) {
+  .trust-story__line {
+    font-size: clamp(1.85rem, 10vw, 2.55rem);
+  }
+
+  .trust-rating {
+    grid-template-columns:
+      minmax(6.2rem, 1fr)
+      auto
+      2.3rem;
+  }
+
+  .trust-rating__star {
+    width: 0.68rem;
+    height: 0.68rem;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .trust-story__line,
+  .trust-company,
+  .trust-rating {
+    opacity: 1;
+
+    transform: none;
+
+    filter: none;
+
+    transition: none;
+  }
+
+  .trust-story__accent::after {
+    transform: scaleX(1);
+    transition: none;
   }
 }

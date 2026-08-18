@@ -3,7 +3,7 @@ import { ServicesHubPage } from "@/components/templates/ServicesHubPage";
 import { buildMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Mauritius Services | Local Website, SEO & Accounting Support | MoBiz.mu",
+  title: "Local Website, SEO & Accounting Services Mauritius | MoBiz.mu",
   description:
     "MoBiz.mu works with businesses across Mauritius. Explore website design, SEO and accounting support by town, plus our five service divisions.",
   path: "/mauritius-services",

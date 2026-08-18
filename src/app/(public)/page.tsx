@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   // otherwise append the brand to a title that already carries it.
   title: {
     absolute:
-      "MoBiz.mu | Website Design, Accounting & Business Solutions in Mauritius",
+      "Website Design, Marketing & Accounting Mauritius | MoBiz.mu",
   },
   description:
     "MoBiz.mu helps Mauritius businesses grow with premium website design, ecommerce, digital marketing, SEO, accounting, VAT filing, warehousing and business solutions.",

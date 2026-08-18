@@ -66,13 +66,21 @@ export const SOCIAL_LINKS = [
 /* ── Social share image ───────────────────────────────────────────────────── */
 
 /**
- * The official Open Graph / Twitter card image.
+ * The official Open Graph / Twitter card image, 1200x630.
  *
- * Derived from the supplied master `public/documents/og-image.png` (already
- * 1200x630). Crawlers for WhatsApp, Facebook and LinkedIn require an ABSOLUTE
+ * JPEG, not PNG. The artwork is photographic — a globe, light trails and a
+ * portrait — so the PNG could only hold it by quantising to a 256-colour
+ * palette, and still cost 249KB. The same picture as progressive JPEG at
+ * quality 88 with 4:4:4 chroma is 174KB: smaller AND no longer banded. 4:4:4
+ * matters here because the headline is red-on-black, and subsampled chroma
+ * smears exactly that edge. There is no transparency to preserve.
+ *
+ * JPEG is safe for every Open Graph consumer (Facebook, LinkedIn, X, WhatsApp,
+ * Slack); no `type` is declared in the metadata, so the extension is the only
+ * contract. Crawlers for WhatsApp, Facebook and LinkedIn require an ABSOLUTE
  * URL, so this is always emitted against the production origin.
  */
-export const OG_IMAGE_PATH = "/images/social/og-image.png";
+export const OG_IMAGE_PATH = "/images/social/og-image.jpg";
 export const OG_IMAGE_WIDTH = 1200;
 export const OG_IMAGE_HEIGHT = 630;
 export const OG_IMAGE_ALT = "Mobiz.mu — digital business solutions in Mauritius";

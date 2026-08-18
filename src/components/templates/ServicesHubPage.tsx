@@ -24,6 +24,11 @@ type ServicesHubPageProps = {
   /** Extra links shown at the foot — used by /mauritius-services for local pages. */
   relatedLinks?: { title: string; href: string; description?: string }[];
   relatedTitle?: string;
+  /**
+   * Route-specific hero. /services ships its own compact ecosystem hero; every
+   * other consumer falls through to the shared PageHero below, unchanged.
+   */
+  hero?: React.ReactNode;
 };
 
 /**
@@ -41,9 +46,11 @@ export function ServicesHubPage({
   breadcrumbs,
   relatedLinks,
   relatedTitle = "Popular services",
+  hero,
 }: ServicesHubPageProps) {
   return (
     <>
+      {hero ?? (
       <PageHero
         eyebrow={eyebrow}
         title={title}
@@ -56,8 +63,9 @@ export function ServicesHubPage({
           <OrbitScene items={HERO_ORBIT_ITEMS} duration={42} compact />
         }
       />
+      )}
 
-      <Section spacing="default" className="bg-ink-900">
+      <Section id="service-divisions" spacing="default" className="bg-ink-900">
         <Container>
           <Reveal>
             <SectionHeading

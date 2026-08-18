@@ -92,7 +92,7 @@ const PROJECTS: Project[] = [
   {
     image:
       "/images/portfolio/projects/multiimaint.webp",
-    name: "Multiimaint Ltd",
+    name: "MultiiMaint Ltd",
     description:
       "A professional service website created to present maintenance solutions clearly and help customers discover and enquire about available services.",
     href: "/portfolio/multiimaint-ltd",

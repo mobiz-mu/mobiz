@@ -307,7 +307,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
     metaTitle:
       "Booking Website Mauritius | Reservations & Enquiries",
     metaDescription:
-      "MoBiz.mu builds booking websites in Mauritius for car rentals, tours, hotels, villas, salons, clinics and service businesses with enquiry forms and WhatsApp integration.",
+      "MoBiz.mu builds booking websites in Mauritius for car rentals, tours, hotels, villas, salons and clinics, with enquiry forms and WhatsApp built in.",
     primaryKeyword: "booking website Mauritius",
     secondaryKeywords: [
       "online booking system Mauritius",
@@ -1338,7 +1338,7 @@ export const businessSeoPages: Record<BusinessSeoPageKey, BusinessSeoPageData> =
     metaTitle:
       "Web Application Development Mauritius | Custom Business Platforms",
     metaDescription:
-      "MoBiz.mu develops web applications in Mauritius including dashboards, booking systems, accounting interfaces, inventory systems, CRM tools and custom business platforms.",
+      "MoBiz.mu develops web applications in Mauritius: dashboards, booking systems, accounting interfaces, inventory systems, CRM and custom platforms.",
     primaryKeyword: "web application development Mauritius",
     secondaryKeywords: [
       "custom web application Mauritius",

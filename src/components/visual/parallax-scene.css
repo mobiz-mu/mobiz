@@ -1,0 +1,290 @@
+/*
+ * Shared depth system for the service scenes.
+ *
+ * Two custom properties drive everything: `--px` and `--py`, both -1..1, written
+ * by ParallaxScene on pointer move. Every layer multiplies them by its own
+ * factor, so one pair of numbers produces a whole parallax field with no
+ * per-element JavaScript.
+ *
+ * Damping is the long eased `transition` on each layer rather than a JS spring:
+ * the deeper the layer, the longer it takes to arrive, which is what makes the
+ * scene feel like it has weight instead of tracking the cursor rigidly.
+ *
+ * Movement budget is deliberately small — the brief is camera parallax, not
+ * flying elements: stage tilt maxes at 2.5deg / 3.5deg, and the furthest
+ * foreground travel is 26px.
+ */
+
+.pscene {
+  --px: 0;
+  --py: 0;
+
+  position: relative;
+  isolation: isolate;
+
+  width: 100%;
+  /* 5:4 gives the scene real vertical presence against the copy column. */
+  aspect-ratio: 5 / 4;
+
+  perspective: 1400px;
+  perspective-origin: 50% 50%;
+}
+
+/* Ambient light sits BEHIND the product, never washed over its surfaces. */
+.pscene__ambient {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  z-index: 0;
+
+  width: 92%;
+  height: 82%;
+
+  transform: translate(-50%, -50%)
+    translate3d(calc(var(--px) * 10px), calc(var(--py) * 7px), 0);
+  transition: transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      ellipse at 50% 60%,
+      color-mix(in srgb, var(--accent) 26%, transparent) 0%,
+      color-mix(in srgb, var(--accent) 8%, transparent) 42%,
+      transparent 72%
+    );
+
+  /* Distant light is soft; only decoration is ever blurred. */
+  filter: blur(6px);
+}
+
+.pscene__grid {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+
+  transform: translate3d(calc(var(--px) * 4px), calc(var(--py) * 3px), 0);
+  transition: transform 1100ms cubic-bezier(0.22, 1, 0.36, 1);
+
+  opacity: 0.5;
+
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.028) 1px, transparent 1px);
+  background-size: 46px 46px;
+
+  mask-image: radial-gradient(ellipse 70% 62% at 50% 50%, #000 30%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 62% at 50% 50%, #000 30%, transparent 78%);
+}
+
+/* The whole product tilts toward the pointer. */
+.pscene__stage {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+
+  transform-style: preserve-3d;
+  transform:
+    rotateX(calc(var(--py) * -2.5deg))
+    rotateY(calc(var(--px) * 3.5deg));
+  transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pscene__layer {
+  position: absolute;
+  inset: 0;
+
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* Back plane barely moves — it reads as far away. */
+.pscene__layer--back {
+  transform: translate3d(calc(var(--px) * 5px), calc(var(--py) * 4px), -60px);
+  transition: transform 1000ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pscene__layer--main {
+  transform: translate3d(calc(var(--px) * 12px), calc(var(--py) * 9px), 0);
+  transition: transform 820ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pscene__layer--lift {
+  transform: translate3d(calc(var(--px) * 19px), calc(var(--py) * 13px), 40px);
+  transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Foreground chips travel most and settle first. */
+.pscene__layer--front {
+  transform: translate3d(calc(var(--px) * 26px), calc(var(--py) * 18px), 80px);
+  transition: transform 620ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ── surfaces ────────────────────────────────────────────────────────────── */
+
+/*
+ * The glass recipe every panel shares: dark body, a top-left highlight that
+ * reads as a reflection, a thin rim, and layered shadows — one broad and soft
+ * for the drop, one tight for contact, one accent-tinted for the light.
+ */
+.ps-panel {
+  position: relative;
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+
+  background:
+    linear-gradient(158deg, rgba(255, 255, 255, 0.075) 0%, rgba(255, 255, 255, 0.012) 34%, transparent 62%),
+    linear-gradient(180deg, #14151a 0%, #0c0d11 100%);
+
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.55),
+    0 8px 24px rgba(0, 0, 0, 0.35),
+    0 0 60px color-mix(in srgb, var(--accent) 9%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.ps-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 6px 10px;
+
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9px;
+
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.02)),
+    rgba(10, 11, 14, 0.92);
+
+  box-shadow:
+    0 14px 34px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.ps-chip__dot {
+  width: 5px;
+  height: 5px;
+
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--accent) 70%, transparent);
+}
+
+.ps-label {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ps-value {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.ps-accent {
+  color: var(--accent-text, var(--accent));
+}
+
+/* ── micro-animation ─────────────────────────────────────────────────────── */
+
+@keyframes ps-draw { to { stroke-dashoffset: 0; } }
+
+@keyframes ps-rise {
+  from { transform: scaleY(0.06); }
+  to { transform: scaleY(1); }
+}
+
+@keyframes ps-toast {
+  0%, 8% { opacity: 0; transform: translateY(8px) scale(0.98); }
+  18%, 62% { opacity: 1; transform: translateY(0) scale(1); }
+  74%, 100% { opacity: 0; transform: translateY(-4px) scale(0.99); }
+}
+
+@keyframes ps-sweep {
+  0% { transform: translateX(-110%); }
+  55%, 100% { transform: translateX(360%); }
+}
+
+@keyframes ps-blink {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+
+@keyframes ps-cursor {
+  0%, 12% { transform: translate3d(18%, 210%, 0); }
+  30%, 42% { transform: translate3d(128%, 196%, 0); }
+  60%, 72% { transform: translate3d(66%, 470%, 0); }
+  90%, 100% { transform: translate3d(18%, 210%, 0); }
+}
+
+/* Mobile / no-hover: slow autonomous drift instead of pointer tracking. */
+@keyframes ps-drift-a {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-4px, -6px, 0) scale(1.008); }
+}
+
+@keyframes ps-drift-b {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(5px, 4px, 0); }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .pscene__layer--main {
+    animation: ps-drift-a 13s ease-in-out infinite;
+  }
+
+  .pscene__layer--lift {
+    animation: ps-drift-b 11s ease-in-out infinite;
+  }
+
+  .pscene__layer--front {
+    animation: ps-drift-a 9s ease-in-out infinite reverse;
+  }
+}
+
+/* ── reduced motion ──────────────────────────────────────────────────────── */
+
+/*
+ * Everything stops and nothing disappears: charts sit fully drawn, bars at full
+ * height, the notification visible. The scene has to read as a finished product
+ * shot when frozen, which is also how it is judged when paused.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .pscene__ambient,
+  .pscene__grid,
+  .pscene__stage,
+  .pscene__layer {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .ps-anim,
+  .ps-anim * {
+    animation: none !important;
+  }
+
+  .ps-draw-path {
+    stroke-dashoffset: 0 !important;
+  }
+
+  .ps-bar {
+    transform: scaleY(1) !important;
+  }
+
+  .ps-toast {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

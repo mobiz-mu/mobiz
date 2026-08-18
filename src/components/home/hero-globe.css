@@ -1,0 +1,53 @@
+/*
+ * Hero globe container.
+ *
+ * The canvas is transparent and unstyled on purpose: no card, no border, no
+ * rounded rectangle. Only the circular Earth the canvas paints should be
+ * perceptible — the element itself has to disappear into the hero.
+ *
+ * Sizing still comes from the stage's shared variables, so globe centre, figure
+ * centre and orbit centre remain the same point.
+ */
+
+.hero-globe {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+
+  width: var(--globe-d);
+  aspect-ratio: 1 / 1;
+
+  transform: translate(-50%, -50%);
+}
+
+.hero-globe__canvas {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  background: transparent;
+}
+
+/* Atmospheric bloom, kept behind the sphere so it never washes the surface. */
+.hero-globe__halo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: -1;
+
+  width: 132%;
+  aspect-ratio: 1 / 1;
+
+  transform: translate(-50%, -50%);
+
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      circle,
+      rgba(192, 24, 34, 0.2) 0%,
+      rgba(192, 24, 34, 0.08) 42%,
+      transparent 68%
+    );
+}

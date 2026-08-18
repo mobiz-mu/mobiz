@@ -20,7 +20,7 @@ export const digitalMarketing: ServicePageContent = {
   path: "/services/digital-marketing",
 
   metaTitle:
-    "Digital Marketing Mauritius | Campaigns, Ads & Social",
+    "Digital Marketing Mauritius | Google Ads, SEO & Social",
   metaDescription:
     "SEO, Google Ads, Meta Ads, Google Business Profile and social media for Mauritius businesses, with clear monthly reporting and no invented promises.",
   keywords: [
