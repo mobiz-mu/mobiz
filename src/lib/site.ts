@@ -5,7 +5,16 @@
  * production site. If a value isn't verified, it does not belong in this file.
  */
 
-export const SITE_URL = "https://mobiz.mu";
+/*
+ * The canonical host is `www`, because that is what production actually serves.
+ *
+ * mobiz.mu redirects to www.mobiz.mu on every path, so pointing canonicals,
+ * metadataBase, the sitemap, Open Graph URLs and JSON-LD at the apex was telling
+ * Google to index a URL that always redirects. Every absolute URL on the site is
+ * derived from this constant, so this is the only line that needs to agree with
+ * the deployment.
+ */
+export const SITE_URL = "https://www.mobiz.mu";
 export const SITE_NAME = "MoBiz.mu";
 export const SITE_TAGLINE = "Build. Market. Manage. Grow.";
 

@@ -4,20 +4,36 @@
  * Everything the chat route needs to talk to the provider lives here so the
  * model / limits can change without touching the UI or the route logic.
  *
- * The provider is OpenAI's Chat Completions API, called server-side with a
- * plain fetch (no SDK dependency shipped anywhere). The key is read from the
- * server-only `OPENAI_API_KEY` env var — never `NEXT_PUBLIC_*`.
+ * The provider is OpenAI's Responses API, called server-side with a plain fetch
+ * (no SDK dependency shipped anywhere). The key is read from the server-only
+ * `OPENAI_API_KEY` env var — never `NEXT_PUBLIC_*`.
+ *
+ * No tools are declared, so the model cannot web-search. Every answer comes from
+ * the grounded system prompt, which is built from the site's own service and
+ * package data. That is deliberate: it keeps answers correct about Mobiz, fast,
+ * and cheap.
  */
 
 export const AI_CONFIG = {
-  /** OpenAI Chat Completions endpoint (server-to-server only). */
-  endpoint: "https://api.openai.com/v1/chat/completions",
-  /** Fast, low-cost model with strong EN/FR. Overridable via env. */
-  model: process.env.OPENAI_MODEL?.trim() || "gpt-4o-mini",
+  /** OpenAI Responses endpoint (server-to-server only). */
+  endpoint: "https://api.openai.com/v1/responses",
+  /** Verified available on this account before selection. Overridable via env. */
+  model: process.env.OPENAI_MODEL?.trim() || "gpt-5.4-mini",
+  /*
+   * Reasoning off.
+   *
+   * Checked against the model rather than assumed: gpt-5.4-mini rejects
+   * `minimal` and accepts none | low | medium | high | xhigh. Measured on the
+   * live API, `none` spends 0 reasoning tokens where `medium` spent 95 for the
+   * same question, and answered ~2x faster. Pricing, package, service and
+   * contact questions are lookups against the grounded prompt, not problems that
+   * need deliberation, so deep reasoning buys latency and nothing else.
+   */
+  reasoningEffort: "none",
+  /** Short, practical answers — this is a support widget, not an essay. */
+  verbosity: "low",
   /** Customer support, not long-form generation — keep output tight. */
   maxOutputTokens: 500,
-  /** Low temperature for stable, on-script answers. */
-  temperature: 0.3,
   /** Per-message character cap (defence + cost control). */
   maxMessageChars: 1200,
   /** Max messages accepted in one request body. */

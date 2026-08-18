@@ -9,6 +9,20 @@ const nextConfig: NextConfig = {
     // One quality step keeps the image cache small; 75 is the visual/byte sweet spot.
     qualities: [75],
     formats: ["image/avif", "image/webp"],
+
+    /*
+     * Measured on production: every optimized image came back
+     * `Cache-Control: public, max-age=0, must-revalidate`, so the logo and every
+     * portfolio/blog thumbnail re-validated on each navigation — which is what
+     * made images look like they "popped in late".
+     *
+     * The optimizer takes the larger of this value and the upstream
+     * Cache-Control, and unversioned files in `public/` send max-age=0, which is
+     * where the 0 came from. 30 days is long enough to make repeat views instant
+     * and short enough that replacing a file at the same path still propagates
+     * without a deploy-time cache bust.
+     */
+    minimumCacheTTL: 60 * 60 * 24 * 30,
   },
 
   experimental: {
@@ -38,7 +52,39 @@ const nextConfig: NextConfig = {
       },
       { key: "X-DNS-Prefetch-Control", value: "on" },
     ];
-    return [{ source: "/:path*", headers: securityHeaders }];
+    /*
+     * Caching for files served straight out of `public/`.
+     *
+     * Deliberately NOT `immutable`: these paths are not content-hashed, so an
+     * immutable year would strand a replaced image in browsers indefinitely. A
+     * day of browser cache with a week of stale-while-revalidate gives repeat
+     * visits an instant hit, serves stale-then-refresh for a week, and still
+     * picks up a swapped file within a day. Assets that genuinely need forever
+     * caching are imported from source instead, so Next hashes their filenames.
+     */
+    const imageCache = [
+      {
+        key: "Cache-Control",
+        value: "public, max-age=86400, stale-while-revalidate=604800",
+      },
+    ];
+
+    // Icons change about once a rebrand; a week costs nothing.
+    const iconCache = [
+      { key: "Cache-Control", value: "public, max-age=604800" },
+    ];
+
+    return [
+      { source: "/:path*", headers: securityHeaders },
+      { source: "/images/:path*", headers: imageCache },
+      { source: "/icon.png", headers: iconCache },
+      { source: "/icon-32.png", headers: iconCache },
+      { source: "/icon-48.png", headers: iconCache },
+      { source: "/icons/:path*", headers: iconCache },
+      { source: "/apple-icon.png", headers: iconCache },
+      { source: "/favicon.ico", headers: iconCache },
+      { source: "/site.webmanifest", headers: iconCache },
+    ];
   },
 
   async redirects() {

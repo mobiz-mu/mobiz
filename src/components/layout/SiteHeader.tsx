@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ArrowRight } from "lucide-react";
@@ -8,6 +7,7 @@ import { ArrowRight } from "lucide-react";
 import { Logo } from "./Logo";
 import { ServicesMenu } from "./ServicesMenu";
 import { MobileMenu } from "./MobileMenu";
+import { HoverPrefetchLink } from "@/components/ui/HoverPrefetchLink";
 import { mainNavLinks } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
 
@@ -145,7 +145,7 @@ export function SiteHeader() {
                 pathname.startsWith(`${link.href}/`);
 
               return (
-                <Link
+                <HoverPrefetchLink
                   key={link.href}
                   href={link.href}
                   aria-current={active ? "page" : undefined}
@@ -194,7 +194,7 @@ export function SiteHeader() {
                       "
                     />
                   ) : null}
-                </Link>
+                </HoverPrefetchLink>
               );
             })}
           </nav>
@@ -214,7 +214,7 @@ export function SiteHeader() {
               2xl:gap-3
             "
           >
-            <Link
+            <HoverPrefetchLink
               href="/contact"
               className="
                 group
@@ -267,7 +267,7 @@ export function SiteHeader() {
                   group-hover:translate-x-0.5
                 "
               />
-            </Link>
+            </HoverPrefetchLink>
 
             {/* TABLET / MOBILE MENU */}
             <button

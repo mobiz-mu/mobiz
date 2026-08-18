@@ -1,8 +1,20 @@
-import Link from "next/link";
 import Image from "next/image";
+import lockup from "@/assets/mobiz-lockup.png";
+import { HoverPrefetchLink } from "@/components/ui/HoverPrefetchLink";
 import { cn } from "@/lib/utils";
 
-/** Intrinsic size of the derived lockup (public/images/logos/mobiz-lockup.png). */
+/*
+ * Imported, not referenced by public path.
+ *
+ * A string src makes Next serve the lockup through /_next/image, and production
+ * returned `Cache-Control: max-age=0, must-revalidate` for that endpoint — so the
+ * first thing customers look at re-validated on every single navigation. A static
+ * import gives the file a content hash and an immutable year-long cache, and it
+ * hands width/height to next/image from the file itself, so the box is reserved
+ * without us restating the dimensions.
+ */
+
+/** Intrinsic size of the derived lockup. */
 const LOCKUP_W = 483;
 const LOCKUP_H = 200;
 const ASPECT = LOCKUP_W / LOCKUP_H; // 2.415
@@ -49,7 +61,18 @@ export function Logo({ height = 40, className, priority = false }: LogoProps) {
   const width = Math.floor(height * ASPECT);
 
   return (
-    <Link
+    /*
+     * Hover/touch prefetch, not viewport prefetch.
+     *
+     * The logo renders on every route and always links home. On the homepage
+     * itself that is a self-referencing prefetch — Next fetched `/`'s own RSC
+     * payload every time the logo entered the viewport, which on `/` means
+     * "immediately", competing with the very hero it sits above. On inner
+     * routes an automatic prefetch here is also low-value: most visitors don't
+     * click the logo without a reason to. Hover/touch/focus prefetch keeps the
+     * click-to-home feeling instant for anyone who actually reaches for it.
+     */
+    <HoverPrefetchLink
       href="/"
       aria-label="MoBiz.mu — Home"
       className={cn(
@@ -59,7 +82,7 @@ export function Logo({ height = 40, className, priority = false }: LogoProps) {
       )}
     >
       <Image
-        src="/images/logos/mobiz-lockup.png"
+        src={lockup}
         alt=""
         width={width}
         height={height}
@@ -68,7 +91,7 @@ export function Logo({ height = 40, className, priority = false }: LogoProps) {
         className="h-auto w-auto"
         style={{ width, height }}
       />
-    </Link>
+    </HoverPrefetchLink>
   );
 }
 

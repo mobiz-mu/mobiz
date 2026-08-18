@@ -1,19 +1,60 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
+import "./home.css";
 import { Hero } from "@/components/home/Hero";
 import { TrustedBy } from "@/components/home/TrustedBy";
 import { anton } from "@/components/home/fonts";
 import { Challenges } from "@/components/home/Challenges";
-import { ServicesTabs } from "@/components/home/ServicesTabs";
-import { WebsiteTemplateCarousel } from "@/components/home/WebsiteTemplateCarousel";
 import { ServiceSpotlight } from "@/components/home/ServiceSpotlight";
-import { PortfolioPreview } from "@/components/home/PortfolioPreview";
 import { PricingPreview } from "@/components/home/PricingPreview";
 import { AssistanceSection } from "@/components/home/AssistanceSection";
 import { WhyMobiz } from "@/components/home/WhyMobiz";
-import { MauritiusCoverage } from "@/components/home/MauritiusCoverage";
-import { BlogPreview } from "@/components/home/BlogPreview";
 import { CTASection } from "@/components/ui/CTASection";
+import { ServicesTabsIsland } from "@/components/home/ServicesTabsIsland";
+import { WebsiteTemplateCarouselIsland } from "@/components/home/WebsiteTemplateCarouselIsland";
+import { BlogPreviewIsland } from "@/components/home/BlogPreviewIsland";
+import { MauritiusCoverage } from "@/components/home/MauritiusCoverage";
 import { SITE_URL } from "@/lib/site";
+
+/*
+ * Below-fold sections.
+ *
+ * `ServicesTabsIsland`, `WebsiteTemplateCarouselIsland` and `BlogPreviewIsland`
+ * are plain imports (not `next/dynamic`): each is a tiny client component that
+ * server-renders a static "poster" — the real, finished section markup — and
+ * only dynamically imports its fully interactive version once the section is
+ * near the viewport. That means the interactive JS chunk is never requested
+ * during initial page load at all, which a `next/dynamic(ssr:true)` wrapper
+ * alone cannot achieve (it moves the component to its own chunk, but React
+ * still hydrates it in the initial pass, so the chunk is still fetched up
+ * front). See each Island's own file for the per-component reasoning.
+ *
+ * `MauritiusCoverage` is a plain server component — its only interactive
+ * piece (the pageflip review book) is isolated inside `ReviewBookIsland`,
+ * which applies the same near-viewport gate. Everything else in that section
+ * (heading, stars, CTA) ships as static HTML with no client JS of its own.
+ *
+ * `PortfolioPreview` still uses `next/dynamic` with `ssr: true` (the default —
+ * stated explicitly so the choice reads as deliberate): it renders real
+ * markup into the server HTML, so SEO content and no-JS visitors are
+ * unaffected, but this is a *chunking* boundary, not a hydration-timing one.
+ * Its 3D coverflow measures real rendered card width via `ResizeObserver` and
+ * feeds that through a per-breakpoint power-function transform — reproducing
+ * that exactly in static CSS (without JS) would need four breakpoint-specific
+ * copies of all 12 project cards, which risks the frozen portfolio appearance
+ * for a component that already stopped competing with the hero's JS via
+ * chunk-splitting. Left as-is rather than shipped as an unverified "deferral".
+ *
+ * What the chunk split fixes for the still-`next/dynamic` component: it was
+ * plain-imported, so Turbopack bundled it into the SAME chunk as the
+ * above-fold HeroGlobe (measured at 111.5KB raw) — the browser could not
+ * fetch/parse HeroGlobe's hydration code without also fetching and parsing a
+ * carousel nobody has scrolled to yet. It now gets its own chunk boundary, so
+ * the above-fold path no longer waits on it.
+ */
+const PortfolioPreview = dynamic(
+  () => import("@/components/home/PortfolioPreview"),
+);
 
 export const metadata: Metadata = {
   // `absolute` opts out of the root "%s | MoBiz.mu" template, which would
@@ -35,8 +76,10 @@ export const metadata: Metadata = {
  * alternate sides and surfaces so five consecutive sections read as a sequence
  * rather than a stack.
  *
- * Server component throughout. The only client boundaries are the services tab
- * strip and the scroll-reveal wrappers.
+ * Server component throughout. The five below-fold interactive sections
+ * (services tabs, template carousel, portfolio, coverage/book, blog) are each
+ * their own dynamic client boundary — see the imports above — so their JS
+ * loads as separate chunks instead of alongside the above-fold hero.
  */
 export default function HomePage() {
   return (
@@ -50,8 +93,8 @@ export default function HomePage() {
         <TrustedBy />
       </div>
       <Challenges />
-      <ServicesTabs />
-      <WebsiteTemplateCarousel />
+      <ServicesTabsIsland />
+      <WebsiteTemplateCarouselIsland />
       <ServiceSpotlight
         division="website-design-development"
         side="right"
@@ -111,7 +154,7 @@ export default function HomePage() {
       <AssistanceSection />
       <WhyMobiz />
       <MauritiusCoverage />
-      <BlogPreview />
+      <BlogPreviewIsland />
 
       <CTASection
         title="Let's build something that works."

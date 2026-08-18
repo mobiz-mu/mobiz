@@ -8,6 +8,10 @@ import type { ChatApiResponse } from "@/lib/ai/types";
 /**
  * Mobiz.mu AI assistant endpoint.
  *
+ * Talks to OpenAI's Responses API with reasoning disabled, because these are
+ * lookup questions against a grounded prompt rather than problems needing
+ * deliberation — measured at roughly half the latency of `medium` effort.
+ *
  * Server-only by construction: the provider key is read from `OPENAI_API_KEY`
  * (never `NEXT_PUBLIC_*`) and neither the key nor the system prompt is ever
  * included in a response. If the key is absent the route returns a clean
@@ -105,12 +109,19 @@ export async function POST(request: Request): Promise<Response> {
       },
       body: JSON.stringify({
         model: AI_CONFIG.model,
-        temperature: AI_CONFIG.temperature,
-        max_tokens: AI_CONFIG.maxOutputTokens,
-        messages: [
-          { role: "system", content: buildSystemPrompt() },
-          ...recent.map((m) => ({ role: m.role, content: m.content })),
-        ],
+        /*
+         * Responses API shape: the grounded prompt goes in `instructions`, the
+         * bounded conversation goes in `input` as roles. No `tools` key, so the
+         * model has no web search — every answer is drawn from the site's own
+         * service and package data.
+         */
+        instructions: buildSystemPrompt(),
+        input: recent.map((m) => ({ role: m.role, content: m.content })),
+        max_output_tokens: AI_CONFIG.maxOutputTokens,
+        reasoning: { effort: AI_CONFIG.reasoningEffort },
+        text: { verbosity: AI_CONFIG.verbosity },
+        /* Customer conversations are not retained on the provider side. */
+        store: false,
       }),
     });
 
@@ -128,10 +139,25 @@ export async function POST(request: Request): Promise<Response> {
       );
     }
 
+    /*
+     * The Responses API returns an `output` array of typed items rather than
+     * `choices`. `output_text` is the convenience aggregate; the walk below is
+     * the fallback for when only the structured form is present.
+     */
     const data = (await response.json()) as {
-      choices?: { message?: { content?: string } }[];
+      output_text?: string;
+      output?: { type?: string; content?: { type?: string; text?: string }[] }[];
     };
-    const reply = data.choices?.[0]?.message?.content?.trim();
+
+    const reply = (
+      data.output_text ??
+      (data.output ?? [])
+        .filter((item) => item.type === "message")
+        .flatMap((item) => item.content ?? [])
+        .filter((part) => part.type === "output_text")
+        .map((part) => part.text ?? "")
+        .join("")
+    ).trim();
 
     if (!reply) {
       return json(

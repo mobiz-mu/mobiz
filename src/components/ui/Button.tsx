@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
 import { ArrowRight } from "lucide-react";
+import { HoverPrefetchLink } from "./HoverPrefetchLink";
 import { cn } from "@/lib/utils";
 
 type Variant = "primary" | "secondary" | "ghost" | "whatsapp";
@@ -84,11 +85,24 @@ export function ButtonLink({
     );
   }
 
+  /*
+   * Hover/touch/focus prefetch, not viewport prefetch.
+   *
+   * `ButtonLink` is the CTA used everywhere — including sitting directly in the
+   * hero's initial viewport, where Next's default `auto` prefetch fires the
+   * moment the page loads and competes for bandwidth with the hero it's part
+   * of. `HoverPrefetchLink` prefetches on the first real signal of intent
+   * (hover, touchstart, keyboard focus) instead, so the click still feels
+   * instant without taxing first paint. Verified this is not a regression:
+   * `prefetch={false}` alone drops hover prefetch too (confirmed against a
+   * live hover event, zero RSC requests fired) — the hover trigger has to be
+   * implemented explicitly, which is what this component does.
+   */
   return (
-    <Link href={href} className={classes} {...rest}>
+    <HoverPrefetchLink href={href} className={classes} {...rest}>
       {children}
       {withArrow ? <ArrowRight aria-hidden className="size-4 shrink-0" /> : null}
-    </Link>
+    </HoverPrefetchLink>
   );
 }
 

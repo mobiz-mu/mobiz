@@ -54,9 +54,18 @@ export const metadata: Metadata = {
   manifest: "/site.webmanifest",
 
   icons: {
+    /*
+     * Sized icons, not the 512 master.
+     *
+     * The browser was fetching /icon.png — 512x512, 19.9KB — on every navigation
+     * to paint a 16px tab icon. Declaring the real sizes lets it take the 1.1KB
+     * variant instead. The 512 file stays in `public/` because the Organization
+     * JSON-LD below points at it, but nothing in the page loads it any more.
+     */
     icon: [
       { url: "/favicon.ico", sizes: "any" },
-      { url: "/icon.png", type: "image/png" },
+      { url: "/icon-32.png", type: "image/png", sizes: "32x32" },
+      { url: "/icon-48.png", type: "image/png", sizes: "48x48" },
     ],
     apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
     shortcut: ["/favicon.ico"],
